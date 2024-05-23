@@ -1,0 +1,22 @@
+{
+  "name": "neakhatka",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "sanvisal",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "application/*"
+  ],
+  
+  "scripts": {
+    "start:docker": "docker compose up --build",
+    "stop:docker": "docker compose down",
+    "start-company-service": "yarn workspace company-service run start:dev",
+    "start-api-gateway-service": "yarn workspace api-gateway run start:dev",
+    "start-auth-service": "yarn workspace auth-service run start:dev",
+    "start-profile-service": "yarn workspace profile-service run start:dev",
+    "start-notification" : "yarn workspace notification run start:dev"
+  }
+}
