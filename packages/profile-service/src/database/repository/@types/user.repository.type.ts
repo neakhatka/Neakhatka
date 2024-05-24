@@ -1,15 +1,13 @@
 
 export interface createuser {
-    firstName: string,
-    lastName:string,
+    FullName: string;
     email:string,
 }
 
 
 export interface updateuser{
     profilePicture?: string;
-    firstName?: string;
-    lastName?: string;
+    FullName?: string;
     email?: string;
     contactPhone?: string;
     gender?: string;

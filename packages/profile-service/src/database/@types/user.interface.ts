@@ -2,8 +2,7 @@
 export interface IUserDocument {
     _id?: string ,
     profilePicture?: string;
-    firstName: string;
-    lastName: string;
+    FullName: string;
     email: string;
     contactPhone?: string;
     gender?: string;

@@ -1,10 +1,10 @@
 const ROUTE_PATHS = {
   PROFILE: {
-    CREATE:"/signup",
-    GET_ALL: "/all-profile",
-    UPDATE: "/update-profile/:id", // As an example
+    CREATE:"/",
+    GET_ALL: "/all",
+    UPDATE: "/:id", // As an example
     GET_BY_ID: "/:id",
-    DELETE: "/delete-profile/:id",
+    DELETE: "/:id",
     // Add other auth-related routes here
   },
   // Define other route groups as needed
