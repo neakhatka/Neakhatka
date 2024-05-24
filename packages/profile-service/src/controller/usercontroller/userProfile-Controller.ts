@@ -10,14 +10,15 @@ import {
   Delete,
 } from "tsoa";
 import { UserService } from "../../service/userService/userProfileService";
-import { IUserDocument } from "../../database/@types/user.interface";
+// import { IUserDocument } from "../../database/@types/user.interface";
 import ROUTE_PATHS from "../../routes/v1/useProfile.Route";
 import { StatusCode } from "../../utils/consts/status.code";
+import { createuser, updateuser } from "../../database/repository/@types/user.repository.type";
 
 @Route("/v1/users")
 export class UserController extends Controller {
   @Post(ROUTE_PATHS.PROFILE.CREATE)
-  public async CreateUser(@Body() requestBody: IUserDocument): Promise<any> {
+  public async CreateUser(@Body() requestBody: createuser): Promise<any> {
     console.log("Recived data", requestBody);
     try {
       const userService = new UserService();
@@ -60,7 +61,7 @@ export class UserController extends Controller {
   @SuccessResponse(StatusCode.OK, "Successfully Update profile")
   public async updateUserController(
     @Path() id: string,
-    @Body() updateData: Partial<IUserDocument>
+    @Body() updateData: Partial<updateuser>
   ): Promise<any> {
     try {
       const userservice = new UserService();
@@ -90,7 +91,7 @@ export class UserController extends Controller {
       } else {
         return { message: "Profile Not Found" };
       }
-    } catch (error) { 
+    } catch (error) {
       throw error;
     }
   }

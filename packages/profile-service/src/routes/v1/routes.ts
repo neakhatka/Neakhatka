@@ -11,29 +11,18 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "IUserDocument": {
+    "createuser": {
         "dataType": "refObject",
         "properties": {
-            "_id": {"dataType":"string"},
-            "profilePicture": {"dataType":"string"},
             "FullName": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactPhone": {"dataType":"string"},
-            "gender": {"dataType":"string"},
-            "location": {"dataType":"string"},
-            "dateOfBirth": {"dataType":"datetime","required":true},
-            "nationality": {"dataType":"string"},
-            "address": {"dataType":"string"},
-            "educationBackground": {"dataType":"string"},
-            "favoriteCards": {"dataType":"array","array":{"dataType":"string"}},
-            "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Partial_IUserDocument_": {
+    "Partial_updateuser_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"_id":{"dataType":"string"},"profilePicture":{"dataType":"string"},"FullName":{"dataType":"string"},"email":{"dataType":"string"},"contactPhone":{"dataType":"string"},"gender":{"dataType":"string"},"location":{"dataType":"string"},"dateOfBirth":{"dataType":"datetime"},"nationality":{"dataType":"string"},"address":{"dataType":"string"},"educationBackground":{"dataType":"string"},"favoriteCards":{"dataType":"array","array":{"dataType":"string"}},"createdAt":{"dataType":"datetime"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"profilePicture":{"dataType":"string"},"FullName":{"dataType":"string"},"email":{"dataType":"string"},"contactPhone":{"dataType":"string"},"gender":{"dataType":"string"},"location":{"dataType":"string"},"dateOfBirth":{"dataType":"datetime"},"nationality":{"dataType":"string"},"address":{"dataType":"string"},"educationBackground":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -52,7 +41,7 @@ export function RegisterRoutes(app: Router) {
 
             async function UserController_CreateUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"IUserDocument"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"createuser"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -113,7 +102,7 @@ export function RegisterRoutes(app: Router) {
             async function UserController_updateUserController(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                    updateData: {"in":"body","name":"updateData","required":true,"ref":"Partial_IUserDocument_"},
+                    updateData: {"in":"body","name":"updateData","required":true,"ref":"Partial_updateuser_"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
