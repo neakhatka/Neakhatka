@@ -1,4 +1,4 @@
-import { ICompanyDocument } from "../../model/company.repository.model";
+// import { ICompanyDocument } from "../../model/company.repository.model";
 
 export interface companycreateschema {
   companyName: string;
@@ -8,7 +8,8 @@ export interface companycreateschema {
 //   id: string;
 // }
 
-export interface companyupdateschema extends Partial<ICompanyDocument> {
+// export interface companyupdateschema extends Partial<ICompanyDocument> {
+  export interface companyupdateschema {
   companyName?: string;
   logo?: string;
   contactPhone?: number;

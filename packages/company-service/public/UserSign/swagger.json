@@ -56,9 +56,6 @@
 					},
 					"companyDescription": {
 						"type": "string"
-					},
-					"userId": {
-						"type": "string"
 					}
 				},
 				"type": "object",
@@ -75,7 +72,7 @@
 			"name": "MIT"
 		},
 		"contact": {
-			"name": "Sokritha Yen"
+			"name": "San Visal"
 		}
 	},
 	"paths": {
@@ -108,10 +105,10 @@
 		},
 		"/v1/company/{id}": {
 			"get": {
-				"operationId": "Get_By_id",
+				"operationId": "GetByid",
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "Successfully retrieved profile",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -135,12 +132,10 @@
 				"operationId": "Update",
 				"responses": {
 					"302": {
-						"description": "",
+						"description": "Successfully Update profile",
 						"content": {
 							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/companyupdateschema"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -166,6 +161,30 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "Successfully Delete  profile",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},
