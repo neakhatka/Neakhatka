@@ -12,7 +12,7 @@ import axios from "axios";
 import { ROUTE_PATH } from "../routes/v1/routes-refer";
 import UserService from "../service/user.service";
 import { generateSignature } from "../utils/jwt";
-import { UserSignInSchema, UsersignUpSchema } from "../schema/user-schema"; 
+import { UserSignInSchema, UsersignUpSchema } from "../schema/user-schema";
 import AuthModel from "../database/model/user.repository"; // Ensure correct path
 import { publishDirectMessage } from "../queues/auth.producer";
 import { authChannel } from "../server";
@@ -55,7 +55,7 @@ export class AuthController extends Controller {
 
       // Step 2.
       const verificationToken = await userService.SaveVerificationToken({
-        userId: newUser._id,
+        userId: newUser._id as string
       });
 
       const messageDetails = {
