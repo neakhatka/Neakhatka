@@ -7,66 +7,24 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"IUserDocument": {
+			"createuser": {
 				"properties": {
-					"_id": {
-						"type": "string"
-					},
-					"profilePicture": {
-						"type": "string"
-					},
 					"FullName": {
 						"type": "string"
 					},
 					"email": {
 						"type": "string"
-					},
-					"contactPhone": {
-						"type": "string"
-					},
-					"gender": {
-						"type": "string"
-					},
-					"location": {
-						"type": "string"
-					},
-					"dateOfBirth": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"nationality": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"educationBackground": {
-						"type": "string"
-					},
-					"favoriteCards": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
 					}
 				},
 				"required": [
 					"FullName",
-					"email",
-					"dateOfBirth"
+					"email"
 				],
 				"type": "object",
 				"additionalProperties": true
 			},
-			"Partial_IUserDocument_": {
+			"Partial_updateuser_": {
 				"properties": {
-					"_id": {
-						"type": "string"
-					},
 					"profilePicture": {
 						"type": "string"
 					},
@@ -97,16 +55,6 @@
 					},
 					"educationBackground": {
 						"type": "string"
-					},
-					"favoriteCards": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
 					}
 				},
 				"type": "object",
@@ -147,7 +95,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IUserDocument"
+								"$ref": "#/components/schemas/createuser"
 							}
 						}
 					}
@@ -207,7 +155,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_IUserDocument_"
+								"$ref": "#/components/schemas/Partial_updateuser_"
 							}
 						}
 					}

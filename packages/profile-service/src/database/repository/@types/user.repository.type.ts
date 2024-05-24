@@ -4,7 +4,6 @@ export interface createuser {
     email:string,
 }
 
-
 export interface updateuser{
     profilePicture?: string;
     FullName?: string;

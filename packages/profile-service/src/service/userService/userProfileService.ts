@@ -2,12 +2,13 @@ import UserRepository from "../../database/repository/userRepository/userProfile
 import { IUserDocument } from "../../database/@types/user.interface";
 import DuplitcateError from "../../error/duplitcate-error";
 import APIError from "../../error/api-error";
+import { createuser, updateuser } from "../../database/repository/@types/user.repository.type";
 export class UserService {
   private userRepo: UserRepository;
   constructor() {
     this.userRepo = new UserRepository();
   }
-  async createuser(UserDetail: IUserDocument) {
+  async createuser(UserDetail: createuser) {
     try {
       const User = await this.userRepo.createuser(UserDetail);
       return User;
@@ -44,7 +45,7 @@ export class UserService {
     updateData,
   }: {
     id: string;
-    updateData: Partial<IUserDocument>;
+    updateData: Partial<updateuser>;
   }) {
     try {
       return await this.userRepo.updateUser({ id, updateData });

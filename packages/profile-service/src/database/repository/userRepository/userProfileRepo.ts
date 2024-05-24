@@ -3,9 +3,10 @@ import { UserProfile } from "../../models/userprofile/userprofilel-model";
 import { IUserDocument } from "../../@types/user.interface";
 import DuplitcateError from "../../../error/duplitcate-error";
 import APIError from "../../../error/api-error";
+import { createuser, updateuser } from "../@types/user.repository.type";
 class UserRepository {
   // create user
-  async createuser(UserDetail: IUserDocument) {
+  async createuser(UserDetail: createuser) {
     try {
       const existingUser = await this.FindUserByEmail({
         email: UserDetail.email,
@@ -44,12 +45,13 @@ class UserRepository {
     }
   }
   // update profile
+
   async updateUser({
     id,
     updateData,
   }: {
     id: string;
-    updateData: Partial<IUserDocument>;
+    updateData: Partial<updateuser>;
   }) {
     try {
       const isExist = await this.findById({ id });
@@ -60,10 +62,8 @@ class UserRepository {
       const newuserupdate = await UserProfile.findByIdAndUpdate(
         id,
         {
-          set: {
-            Fullname: updateData.FullName,
-            profilePicture: updateData.profilePicture,
-            contactPhone: updateData.contactPhone,
+          $set: {
+            updateData,
           },
         },
         { new: true }
@@ -72,6 +72,8 @@ class UserRepository {
     } catch (error) {
       if (error instanceof APIError) {
         throw new APIError("Unable to update user in database");
+      } else {
+        throw new Error("An unexpected error occurred");
       }
     }
   }
