@@ -33,7 +33,6 @@ const models: TsoaRoute.Models = {
             "numberOfEmployees": {"dataType":"double"},
             "address": {"dataType":"string"},
             "companyDescription": {"dataType":"string"},
-            "userId": {"dataType":"string"},
         },
         "additionalProperties": true,
     },
@@ -80,9 +79,9 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/v1/company/:id',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Get_By_id)),
+            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetByid)),
 
-            async function CompanyController_Get_By_id(request: ExRequest, response: ExResponse, next: any) {
+            async function CompanyController_GetByid(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
             };
@@ -96,7 +95,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new CompanyController();
 
               await templateService.apiHandler({
-                methodName: 'Get_By_id',
+                methodName: 'GetByid',
                 controller,
                 response,
                 next,
@@ -133,6 +132,36 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: 302,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/v1/company/:id',
+            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
+            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Delete)),
+
+            async function CompanyController_Delete(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new CompanyController();
+
+              await templateService.apiHandler({
+                methodName: 'Delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 204,
               });
             } catch (err) {
                 return next(err);

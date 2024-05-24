@@ -1,20 +1,23 @@
-import { Schema, model, Document, Model } from "mongoose";
+import { Schema, model,
+  //  Document,
+    // Model
+   } from "mongoose";
 
-export interface ICompanyDocument extends Document {
-  companyName?: string;
-  logo?: string;
-  contactPhone?: number;
-  websiteLink?: string;
-  location?: string;
-  contactEmail?: string | undefined;
-  contactPerson: string;
-  numberOfEmployees: number;
-  address: string;
-  companyDescription: string;
-  userId?: string;
-}
+// export interface ICompanyDocument extends Document {
+//   companyName?: string;
+//   logo?: string;
+//   contactPhone?: number;
+//   websiteLink?: string;
+//   location?: string;
+//   contactEmail?: string | undefined;
+//   contactPerson: string;
+//   numberOfEmployees: number;
+//   address: string;
+//   companyDescription: string;
+//   userId?: string;
+// }
 
-interface ICompanyModel extends Model<ICompanyDocument> {}
+// interface ICompanyModel extends Model<ICompanyDocument> {}
 
 const companySchema = new Schema(
   {
@@ -42,9 +45,10 @@ const companySchema = new Schema(
   }
 );
 
-const CompanyModel = model<ICompanyDocument, ICompanyModel>(
-  "Company",
-  companySchema
-);
+// const CompanyModel = model<ICompanyDocument, ICompanyModel>(
+//   "Company",
+//   companySchema
+// );
+const CompanyModel = model("CompanyMOdel",companySchema)
 
 export { CompanyModel };

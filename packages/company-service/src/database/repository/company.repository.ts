@@ -17,7 +17,7 @@ class CompanyRepo {
       if (existedemail) {
         throw new DuplitcateError("this error have been use!");
       }
-      const company = await new CompanyModel(companydetail);
+      const company = new CompanyModel(companydetail);
       const result = await company.save();
       return result;
     } catch (error) {
@@ -40,7 +40,7 @@ class CompanyRepo {
     }
   }
 
-  async Find_By_id({ id }: { id: string }) {
+  async FindById({ id }: { id: string }) {
     try {
       const existed = await CompanyModel.findById(id);
       return existed;
@@ -52,14 +52,18 @@ class CompanyRepo {
 
   async Update({ id, update }: { id: string; update: companyupdateschema }) {
     try {
-      const existed = await this.Find_By_id({ id });
+      const existed = await this.FindById({ id });
       if (!existed) {
         throw new APIError("User does not exist", StatusCode.NotFound);
         // console.log("Unable to update this Profile");
       }
-      const companyupdate = (await CompanyModel.findByIdAndUpdate(id, update, {
-        new: true,
-      })) as companyupdateschema;
+      const companyupdate = (await CompanyModel.findByIdAndUpdate(
+        id,
+        { $set: { update } },
+        {
+          new: true,
+        }
+      )) as companyupdateschema;
       return companyupdate;
     } catch (error) {
       if (error instanceof APIError) {
@@ -69,16 +73,13 @@ class CompanyRepo {
     }
   }
 
-  async Delete({ id }:{id:string}): Promise<void> {
+  async Delete({ id }: { id: string }) {
     try {
-      const existed = await this.Find_By_id({ id });
+      const existed = await this.FindById({ id });
       if (!existed) {
         throw new APIError("Unable to find in database", StatusCode.NoContent);
       }
-      const deleteprofile = await CompanyModel.findByIdAndDelete(id);
-      if (!deleteprofile) {
-        throw new Error("Company not found");
-      }
+      return await CompanyModel.findByIdAndDelete(id);
     } catch (error) {
       throw error;
     }

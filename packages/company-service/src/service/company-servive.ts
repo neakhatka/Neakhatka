@@ -5,6 +5,8 @@ import {
   companyupdateschema,
 } from "../database/repository/@types/company.repo.type";
 import CompanyRepo from "../database/repository/company.repository";
+import APIError from "../error/api-error";
+import DuplitcateError from "../error/duplicate-error";
 
 class CompanyService {
   private companyrepo: CompanyRepo;
@@ -17,26 +19,27 @@ class CompanyService {
       const company = await this.companyrepo.Create(companydetail);
       return company;
     } catch (error) {
-      // console.log(error);
-      throw error;
+      if (error instanceof DuplitcateError) {
+        throw new Error("Unable to create user");
+      }
     }
   }
 
-  async Find_By_Id({ id }: { id: string }) {
+  async FindById({ id }: { id: string }) {
     try {
-      return await this.companyrepo.Find_By_id({ id });
+      return await this.companyrepo.FindById({ id });
     } catch (error) {
       // console.log(error);
-      throw error;
+      throw new APIError("Unable to get user with this ID");
     }
   }
 
-  async Delete({id}:{id:string}): Promise<void> {
+  async Delete({ id }: { id: string }) {
     try {
-      await this.companyrepo.Delete({id});
+      return await this.companyrepo.Delete({ id });
     } catch (error: any) {
-      console.log("error on service layer",error);
-      throw error;
+      console.log("error on service layer", error);
+      throw new APIError("Unable to delete User profile");
     }
   }
 
@@ -45,7 +48,7 @@ class CompanyService {
       return await this.companyrepo.Update({ id, update });
     } catch (error) {
       // console.log(error);
-      throw error;
+      throw new APIError("Unable to update User profile!");
     }
   }
 }
