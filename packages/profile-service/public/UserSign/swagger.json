@@ -15,10 +15,7 @@
 					"profilePicture": {
 						"type": "string"
 					},
-					"firstName": {
-						"type": "string"
-					},
-					"lastName": {
+					"FullName": {
 						"type": "string"
 					},
 					"email": {
@@ -58,13 +55,62 @@
 					}
 				},
 				"required": [
-					"firstName",
-					"lastName",
+					"FullName",
 					"email",
 					"dateOfBirth"
 				],
 				"type": "object",
 				"additionalProperties": true
+			},
+			"Partial_IUserDocument_": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"profilePicture": {
+						"type": "string"
+					},
+					"FullName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"gender": {
+						"type": "string"
+					},
+					"location": {
+						"type": "string"
+					},
+					"dateOfBirth": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"nationality": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"educationBackground": {
+						"type": "string"
+					},
+					"favoriteCards": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
 			}
 		},
 		"securitySchemes": {}
@@ -81,7 +127,7 @@
 		}
 	},
 	"paths": {
-		"/v1/users/signup": {
+		"/v1/users": {
 			"post": {
 				"operationId": "CreateUser",
 				"responses": {
@@ -106,6 +152,90 @@
 						}
 					}
 				}
+			}
+		},
+		"/v1/users/{id}": {
+			"get": {
+				"operationId": "GetCardById",
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved profile",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateUserController",
+				"responses": {
+					"200": {
+						"description": "Successfully Update profile",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_IUserDocument_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteUserContrioller",
+				"responses": {
+					"204": {
+						"description": "Successfully Delete  profile",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},

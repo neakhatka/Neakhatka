@@ -28,7 +28,6 @@ class UserRepository {
   async GetAllUserRepo(): Promise<IUserDocument[]> {
     try {
       return await UserProfile.find();
-      
     } catch (error) {
       throw new APIError("Enable to find user");
     }
@@ -62,8 +61,7 @@ class UserRepository {
         id,
         {
           set: {
-            firstname: updateData.firstName,
-            lastname: updateData.lastName,
+            Fullname: updateData.FullName,
             profilePicture: updateData.profilePicture,
             contactPhone: updateData.contactPhone,
           },

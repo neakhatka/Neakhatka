@@ -18,7 +18,7 @@
       "<rootDir>/src/**/__tests__/**/*.test.ts"
     ]
   },
-  "author": "Sokritha Yen",
+  "author": "San Visal",
   "dependencies": {
     "@types/mongodb-memory-server": "^2.3.0",
     "@types/on-headers": "^1.0.3",

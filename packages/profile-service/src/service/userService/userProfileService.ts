@@ -5,7 +5,7 @@ import APIError from "../../error/api-error";
 export class UserService {
   private userRepo: UserRepository;
   constructor() {
-    this.userRepo = new  UserRepository();
+    this.userRepo = new UserRepository();
   }
   async createuser(UserDetail: IUserDocument) {
     try {
@@ -37,7 +37,7 @@ export class UserService {
     }
   }
 
-  // update card
+  // update user
 
   async updateProfileService({
     id,
@@ -54,7 +54,7 @@ export class UserService {
     }
   }
 
-  // delete card
+  // delete user
   async DeleteProfileService({ id }: { id: string }) {
     try {
       return await this.userRepo.deleteUser({ id });
