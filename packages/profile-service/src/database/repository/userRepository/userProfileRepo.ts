@@ -4,6 +4,7 @@ import { IUserDocument } from "../../@types/user.interface";
 import DuplitcateError from "../../../error/duplitcate-error";
 import APIError from "../../../error/api-error";
 import { createuser, updateuser } from "../@types/user.repository.type";
+import { StatusCode } from "../../../utils/consts/status.code";
 class UserRepository {
   // create user
   async createuser(UserDetail: createuser) {
@@ -81,6 +82,10 @@ class UserRepository {
   // delete profile
   async deleteUser({ id }: { id: string }) {
     try {
+      const existedID = await this.findById({id});
+      if(!existedID){
+        throw new APIError("Unable to find iin database",StatusCode.NoContent)
+      }
       return await UserProfile.findByIdAndDelete(id);
     } catch (error) {
       throw error;
