@@ -1,51 +1,68 @@
+import APIError from "../../error/api-error";
+import { StatusCode } from "../../util/consts/status.code";
 import { Post } from "../model/post.repo.model";
-import { postcreateschema } from "./@types/post.repo.type";
+import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
 // import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
 
 class PostJob {
-  async Create(postdetail:postcreateschema ) {
+  async Create(postdetail: postcreateschema) {
     try {
       const create = new Post(postdetail);
-      return create;
+      const post = await create.save();
+      return post;
     } catch (error) {
       console.log(error);
     }
   }
+
+  async FindById({ id }: { id: string }) {
+    try {
+      const existed = await Post.findById(id);
+      return existed;
+    } catch (error) {
+      console.log(error);
+      throw new APIError("Unable to That Post Card");
+    }
+  }
+
+  async Update({ id, update }: { id: string; update: postupdateschema }) {
+    try {
+      const existed = await this.FindById({ id });
+      if (!existed) {
+        // console.log("Unable to Update this post");
+        return "Post Card Not Exsite";
+      }
+      const updatepost = await Post.findByIdAndUpdate(
+        id,
+        { $set: { update } },
+        { new: true }
+      );
+      return updatepost;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof APIError) {
+        throw new APIError("Unable to update that post");
+      } else {
+        throw new Error("An unexpected error occurred");
+      }
+    }
+  }
+
+  async Delete({ id }: { id: string }) {
+    try {
+      const existed = await this.FindById({ id });
+      if (!existed) {
+        throw new APIError("Unable to find iin database", StatusCode.NoContent);
+      }
+      return await Post.findByIdAndDelete(id);
+    } catch (error) {
+      // console.log(error);
+      if (error instanceof APIError) {
+        throw new APIError("Unable to Delete User in database");
+      }
+    }
+  }
 }
-
-export default PostJob
-  // async Find_By_Id({ id }: { id: string }) {
-  //   try {
-  //     const existed = await Post.findById(id);
-  //     return existed;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-  // async Delete({ id }: { id: string }) {
-  //   try {
-  //     const existed = await this.Find_By_Id({ id });
-  //     if (!existed) {
-  //       console.log("Unable to delete this post");
-  //     }
-  //     const deletepost = await Post.findByIdAndDelete(id);
-  //     return deletepost;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // async Update({ id, update }: { id: string; update: postupdateschema }) {
-  //   try {
-  //     const existed = await this.Find_By_Id({ id });
-  //     if (!existed) {
-  //       console.log("Unable to Update this post");
-  //     }
-  //     const Update = await Post.findByIdAndUpdate(id, update, { new: true });
-  //     return Update;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+export default PostJob;
 // }
 // export default PostJob;
