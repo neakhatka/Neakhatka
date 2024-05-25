@@ -28,6 +28,7 @@ export class UserController extends Controller {
       return userProfile;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 

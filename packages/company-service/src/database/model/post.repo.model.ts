@@ -1,4 +1,4 @@
-import  { Schema ,model} from "mongoose";
+import { Schema, model } from "mongoose";
 const postingSchema: Schema = new Schema(
   {
     companyId: { type: String, required: true },
@@ -18,12 +18,12 @@ const postingSchema: Schema = new Schema(
       type: String,
       enum: ["full-time", "part-time"],
       required: true,
-      default: "full-time", 
+      default: "full-time",
     },
     available_position: { type: Number, required: true, default: 0 },
     language: { type: String, required: true, default: "" },
     deadline: { type: Date, required: true },
-    salaries: { type: Number, required: true, default: 0 }, 
+    salaries: { type: Number, required: true, default: 0 },
     createdAt: { type: Date },
   },
   {
@@ -32,6 +32,6 @@ const postingSchema: Schema = new Schema(
   }
 );
 
-const Post =model("Post", postingSchema)
+const Post = model("Post", postingSchema);
 
 export { Post };

@@ -60,6 +60,169 @@
 				},
 				"type": "object",
 				"additionalProperties": true
+			},
+			"postcreateschema": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"requirements": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"responsibilities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"people": {
+						"type": "number",
+						"format": "double"
+					},
+					"location": {
+						"type": "string"
+					},
+					"duration": {
+						"type": "number",
+						"format": "double"
+					},
+					"gender": {
+						"type": "string",
+						"enum": [
+							"male",
+							"female",
+							"other"
+						]
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"full-time",
+							"part-time"
+						]
+					},
+					"available_position": {
+						"type": "number",
+						"format": "double"
+					},
+					"language": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"deadline": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"salaries": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"title",
+					"description",
+					"requirements",
+					"responsibilities",
+					"people",
+					"location",
+					"duration",
+					"gender",
+					"type",
+					"available_position",
+					"language",
+					"deadline",
+					"salaries"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"postupdateschema": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"requirements": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"responsibilities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"people": {
+						"type": "number",
+						"format": "double"
+					},
+					"location": {
+						"type": "string"
+					},
+					"duration": {
+						"type": "number",
+						"format": "double"
+					},
+					"gender": {
+						"items": {
+							"type": "string",
+							"enum": [
+								"male",
+								"female",
+								"other"
+							]
+						},
+						"type": "array"
+					},
+					"type": {
+						"items": {
+							"type": "string",
+							"enum": [
+								"full-time",
+								"part-time"
+							]
+						},
+						"type": "array"
+					},
+					"available_position": {
+						"type": "number",
+						"format": "double"
+					},
+					"language": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"deadline": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"salaries": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -185,6 +348,119 @@
 						}
 					}
 				]
+			}
+		},
+		"/v1/company/posting": {
+			"post": {
+				"operationId": "Postng",
+				"responses": {
+					"200": {
+						"description": "Posting Successfully",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/postcreateschema"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/company/post/{id}": {
+			"get": {
+				"operationId": "GetPostCard",
+				"responses": {
+					"302": {
+						"description": "Post Card Found",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeletePost",
+				"responses": {
+					"204": {
+						"description": "Delete Successfully",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/company/post{id}": {
+			"put": {
+				"operationId": "Updatepost",
+				"responses": {
+					"200": {
+						"description": "Update Successfully",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/postupdateschema"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
