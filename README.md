@@ -165,7 +165,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Neakhatka - neakhatka@gmail.com
+Neakhatka - neakhatka@gmail.com <br/>
 Team members - svatmanith76@gmail.com - sanvisal2302@gmail.com - rathna.chh@gmail.com
 
 Project Link: [https://github.com/neakhatka/neakhatka](https://github.com/neakhatka/neakhatka)
