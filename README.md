@@ -73,7 +73,21 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
   
 
-
+### Project Structure
+neakhatka/
+├── app
+├── packages/
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── company-service/
+│   ├── notification/
+│   ├── profile-service/
+│   ├── volumes/
+├── .gitignore
+├── docker-compose.yaml
+├── package-lock.json
+├── package.json
+├── README.md
 
 
 
