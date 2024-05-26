@@ -150,7 +150,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- LICENSE -->
 ## License
 
@@ -167,8 +166,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Neakhatka - neakhatka@gmail.com
+Team members - svatmanith76@gmail.com - sanvisal2302@gmail.com - rathna.chh@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/neakhatka/neakhatka](https://github.com/neakhatka/neakhatka)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
