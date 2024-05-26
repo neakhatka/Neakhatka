@@ -74,7 +74,9 @@ This section should list any major frameworks/libraries used to bootstrap your p
   
 
 ### Project Structure
+
 <p>The project follows a microservices architecture within a monorepo setup. Below is an overview of the directory structure and the purpose of each component:</p>
+
 ```
 neakhatka/
 ├── app
