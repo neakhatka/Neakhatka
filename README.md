@@ -107,19 +107,33 @@ neakhatka/
 
 To run the project, ensure you have Docker and Yarn installed on your system. Follow these steps:
 
-### Install Dependencies:
+1. Clone the Repository:
+
+Open your terminal and run the following command to clone the project repository:
+
+```sh
+git clone https://github.com/neakhatka/neakhatka.git
+
+```
+
+2. Navigate to the Project Directory:
+
+```sh
+cd neakhatka
+```
+
+3. Install Dependencies:
 
 Navigate to the root directory of the project and run:
-* yarn
+
   ```sh
   yarn install
   ```
 
-### Start the Project using Docker:
+4. Start the Project using Docker:
 
 Use the following command to start all services defined in the docker-compose.yaml file:
 
-* yarn
   ```sh
   yarn start:docker
   ```
