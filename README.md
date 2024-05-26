@@ -74,6 +74,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
   
 
 ### Project Structure
+```
 neakhatka/
 ├── app
 ├── packages/
@@ -88,6 +89,8 @@ neakhatka/
 ├── package-lock.json
 ├── package.json
 ├── README.md
+
+```
 
 
 
