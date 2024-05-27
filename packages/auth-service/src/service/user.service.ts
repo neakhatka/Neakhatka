@@ -15,7 +15,7 @@ import DuplicateError from "../errors/duplicate-error";
 import APIError from "../errors/api-error";
 import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
-
+import axios from 'axios';
 class UserService {
   private userRepo: UserRepository;
   private accountVerificationRepo: AccountVerificationRepository;
@@ -42,8 +42,22 @@ class UserService {
       }
 
       // Step 2
-      const newUser = await this.userRepo.CreateUser(newUserParams);
+      let respone;
+      if(userDetails.role==="user"){
+        respone = await axios.post("http:localhost:4003/v1/users",newUserParams)
+
+      }else if (userDetails.role==="employer"){
+        respone = await axios.post("http:localhost:4004/v1/company",newUserParams)
+
+      }else {
+        throw new APIError("Invalid role specified.", StatusCode.BadRequest);
+    }
+      const authuser = await this.userRepo.CreateUser(newUserParams);
+      const newUser= respone.data
+      console.log("auth information: ", authuser)
       return newUser;
+
+
     } catch (error: unknown) {
       // Step 3
       if (error instanceof DuplicateError) {
@@ -55,7 +69,7 @@ class UserService {
           // Resent the token
           const token =
             await this.accountVerificationRepo.FindVerificationTokenById({
-              id: existedUser!._id,
+              id: existedUser!._id as string,
             });
 
           if (!token) {
@@ -86,6 +100,8 @@ class UserService {
             "A user with this email already exists. Verification email resent.",
             StatusCode.Conflict
           );
+        // const role = 
+
         } else {
           throw new APIError(
             "A user with this email already exists. Please login.",

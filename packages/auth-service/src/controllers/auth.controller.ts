@@ -55,7 +55,7 @@ export class AuthController extends Controller {
 
       // Step 2.
       const verificationToken = await userService.SaveVerificationToken({
-        userId: newUser._id,
+        userId: newUser._id as string,
       });
 
       const messageDetails = {
