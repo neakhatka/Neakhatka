@@ -55,7 +55,7 @@ class UserService {
           // Resent the token
           const token =
             await this.accountVerificationRepo.FindVerificationTokenById({
-              id: existedUser!._id,
+              id: existedUser!._id as string
             });
 
           if (!token) {
