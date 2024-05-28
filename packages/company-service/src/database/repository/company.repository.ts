@@ -1,5 +1,5 @@
 import APIError from "../../error/api-error";
-import DuplitcateError from "../../error/duplicate-error";
+import DuplicateError from "../../error/duplicate-error";
 import { CompanyModel } from "../model/company.repository.model";
 import {
   // DeleteCompanyRequest,
@@ -15,21 +15,21 @@ class CompanyRepo {
         contactEmail: companydetail.contactEmail,
       });
       if (existedemail) {
-        throw new DuplitcateError("this error have been use!");
+        throw new DuplicateError("This email has been used!");
       }
       const company = new CompanyModel(companydetail);
       const result = await company.save();
       return result;
     } catch (error) {
       console.log("error", error);
-      if (error instanceof DuplitcateError) {
+      if (error instanceof DuplicateError) {
         throw error;
       }
-      throw new APIError("Unable to Create to Database");
+      throw new Error("Database error");
     }
   }
 
-  async Find_Email({ contactEmail }: { contactEmail: string }) {
+  async Find_Email({ contactEmail }: { contactEmail: string }): Promise<any> {
     try {
       const existed = await CompanyModel.findOne({
         contactEmail: contactEmail,

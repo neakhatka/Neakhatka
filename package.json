@@ -11,7 +11,8 @@
   ],
   
   "scripts": {
-    "start:docker": "docker compose up --build",
+    "start:build": "docker compose up --build",
+    "start:docker": "docker compose up",
     "stop:docker": "docker compose down",
     "start-company-service": "yarn workspace company-service run start:dev",
     "start-api-gateway-service": "yarn workspace api-gateway run start:dev",

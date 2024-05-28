@@ -26,7 +26,7 @@ const companySchema = new Schema(
     contactPhone: { type: Number, required: false, default: 0 },
     contactEmail: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
       lowercase: true,
       trim: true,

@@ -9,16 +9,104 @@
 		"schemas": {
 			"createuser": {
 				"properties": {
+					"authid": {
+						"type": "string"
+					},
+					"profilePicture": {
+						"type": "string"
+					},
 					"FullName": {
 						"type": "string"
 					},
 					"email": {
 						"type": "string"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"gender": {
+						"type": "string"
+					},
+					"location": {
+						"type": "string"
+					},
+					"dateOfBirth": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"nationality": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"educationBackground": {
+						"type": "string"
 					}
 				},
 				"required": [
+					"authid",
 					"FullName",
 					"email"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"IUserDocument": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"authid": {
+						"type": "string"
+					},
+					"profilePicture": {
+						"type": "string"
+					},
+					"FullName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"gender": {
+						"type": "string"
+					},
+					"location": {
+						"type": "string"
+					},
+					"dateOfBirth": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"nationality": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"educationBackground": {
+						"type": "string"
+					},
+					"favoriteCards": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"authid",
+					"FullName",
+					"email",
+					"dateOfBirth"
 				],
 				"type": "object",
 				"additionalProperties": true
@@ -100,6 +188,26 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetAllUserController",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IUserDocument"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/v1/users/{id}": {

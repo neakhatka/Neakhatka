@@ -14,6 +14,7 @@ import { UserService } from "../../service/userService/userProfileService";
 import ROUTE_PATHS from "../../routes/v1/useProfile.Route";
 import { StatusCode } from "../../utils/consts/status.code";
 import { createuser, updateuser } from "../../database/repository/@types/user.repository.type";
+import { IUserDocument } from "../../database/@types/user.interface";
 
 @Route("/v1/users")
 export class UserController extends Controller {
@@ -32,12 +33,12 @@ export class UserController extends Controller {
     }
   }
 
-  // @Get(ROUTE_PATHS.PROFILE.GET_ALL)
-  // //   @Get("/all-profile")
-  // public async GetAllUserController(): Promise<IUserDocument[]> {
-  //   const userService = new UserService();
-  //   return await userService.GetAllProfileervice();
-  // }
+  @Get(ROUTE_PATHS.PROFILE.GET_ALL)
+  //   @Get("/all-profile")
+  public async GetAllUserController(): Promise<IUserDocument[]> {
+    const userService = new UserService();
+    return await userService.GetAllProfileservice();
+  }
 
   @Get(ROUTE_PATHS.PROFILE.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")

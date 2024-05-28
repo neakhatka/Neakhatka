@@ -15,7 +15,7 @@ import DuplicateError from "../errors/duplicate-error";
 import APIError from "../errors/api-error";
 import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
-
+import axios from "axios";
 class UserService {
   private userRepo: UserRepository;
   private accountVerificationRepo: AccountVerificationRepository;
@@ -42,8 +42,12 @@ class UserService {
       }
 
       // Step 2
-      const newUser = await this.userRepo.CreateUser(newUserParams);
-      return newUser;
+
+      const authuser = await this.userRepo.CreateUser(newUserParams);
+      // const newUser= respone.data
+      console.log("auth information: ", authuser);
+      // return newUser;
+      return authuser;
     } catch (error: unknown) {
       // Step 3
       if (error instanceof DuplicateError) {
@@ -55,7 +59,7 @@ class UserService {
           // Resent the token
           const token =
             await this.accountVerificationRepo.FindVerificationTokenById({
-              id: existedUser!._id as string
+              id: existedUser!._id as string,
             });
 
           if (!token) {
@@ -86,6 +90,7 @@ class UserService {
             "A user with this email already exists. Verification email resent.",
             StatusCode.Conflict
           );
+          // const role =
         } else {
           throw new APIError(
             "A user with this email already exists. Please login.",
@@ -142,7 +147,46 @@ class UserService {
     // Remove the verification token0
     await this.accountVerificationRepo.DeleteVerificationToken({ token });
 
+    await this.SentRequestBaseOnRole(user);
+
     return user;
+  }
+  private async SentRequestBaseOnRole(user: any): Promise<void> {
+    const axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      if (user.role === "user") {
+        await axios.post(
+          "http://localhost:4003/v1/users",
+          {
+            authid: user._id.toString(),
+            FullName: user.username,
+            email: user.email,
+          },
+          axiosConfig
+        );
+      } else if (user.role === "employer") {
+        await axios.post(
+          "http:localhost:4004/v1/company",
+          {
+            userId: user._id,
+            companyName: user.username, // Assuming username is used as company name
+            contactEmail: user.email,
+          },
+          axiosConfig
+        );
+      }
+    } catch (error) {
+      console.log(error)
+      logger.error("Error sending request based on role: ", error);
+      throw new APIError(
+        "Failed to send request to the appropriate service",
+        StatusCode.InternalServerError
+      );
+    }
   }
 
   // Todo login
@@ -201,3 +245,14 @@ class UserService {
 }
 
 export default UserService;
+
+//   let respone;
+//   if(userDetails.role==="user"){
+//     respone = await axios.post("http:localhost:4003/v1/users",newUserParams)
+
+//   }else if (userDetails.role==="employer"){
+//     respone = await axios.post("http:localhost:4004/v1/company",newUserParams)
+
+//   }else {
+//     throw new APIError("Invalid role specified.", StatusCode.BadRequest);
+// }

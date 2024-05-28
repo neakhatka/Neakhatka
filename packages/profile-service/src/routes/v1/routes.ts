@@ -14,8 +14,38 @@ const models: TsoaRoute.Models = {
     "createuser": {
         "dataType": "refObject",
         "properties": {
+            "authid": {"dataType":"string","required":true},
+            "profilePicture": {"dataType":"string"},
             "FullName": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
+            "contactPhone": {"dataType":"string"},
+            "gender": {"dataType":"string"},
+            "location": {"dataType":"string"},
+            "dateOfBirth": {"dataType":"datetime"},
+            "nationality": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "educationBackground": {"dataType":"string"},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IUserDocument": {
+        "dataType": "refObject",
+        "properties": {
+            "_id": {"dataType":"string"},
+            "authid": {"dataType":"string","required":true},
+            "profilePicture": {"dataType":"string"},
+            "FullName": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "contactPhone": {"dataType":"string"},
+            "gender": {"dataType":"string"},
+            "location": {"dataType":"string"},
+            "dateOfBirth": {"dataType":"datetime","required":true},
+            "nationality": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "educationBackground": {"dataType":"string"},
+            "favoriteCards": {"dataType":"array","array":{"dataType":"string"}},
+            "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": true,
     },
@@ -54,6 +84,35 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'CreateUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/v1/users',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.GetAllUserController)),
+
+            async function UserController_GetAllUserController(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new UserController();
+
+              await templateService.apiHandler({
+                methodName: 'GetAllUserController',
                 controller,
                 response,
                 next,
