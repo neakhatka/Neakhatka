@@ -5,10 +5,13 @@ import getConfig from '@notifications/utils/config';
 
 export async function createQueueConnection(): Promise<Channel | undefined> {
   try {
+    console.log('hello world');
+
     // Create Connection to RabbitMQ
     const connection: Connection = await client.connect(
       `${getConfig().rabbitMQ}`
     );
+    console.log('hello world');
 
     const channel: Channel = await connection.createChannel();
 
