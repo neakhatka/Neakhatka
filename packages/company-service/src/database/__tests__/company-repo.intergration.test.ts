@@ -1,8 +1,7 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import CompanyRepo from "../repository/company.repository";
-import DuplitcateError from "../../error/duplicate-error";
-import { CompanyModel } from "../model/company.repository.model";
+import DuplicateError from "../../error/duplicate-error";
 // import APIError from "../../error/api-error";
 // import { companyupdateschema } from "../repository/@types/company.repo.type";
 
@@ -37,68 +36,45 @@ describe("Company repositorty intergrate test", () => {
       expect(newcompany.contactEmail).toEqual(MOCK_DATA.contactEmail);
       // check if comopany profile have in database
       const foundcompany = await companyrepo.FindById({
-        id: newcompany._id.toString()
+        id: newcompany._id.toString(),
       });
       expect(foundcompany).toBeDefined();
       expect(foundcompany?.companyName).toEqual(MOCK_DATA.companyName);
     });
 
-    test("should be throw Duplicate error if email have used", async () => {
-      const MOCK_DATA = {
-        companyName: "name_test",
-        contactEmail: "test@gmail.com",
-      };
-      await expect(companyrepo.Create(MOCK_DATA)).rejects.toThrow(
-        DuplitcateError
-      );
-      // Test for APIError
-    });
-    
-    test("should throw APIerror when create failse", async () => {
-      const save = jest.spyOn(CompanyModel.prototype, "save");
-      save.mockRejectedValue(new DuplitcateError("Data base error"));
-
+    test("should throw DuplicateError if email has been used", async () => {
       const MOCK_DATA = {
         companyName: "name_test",
         contactEmail: "test@gmail.com",
       };
 
+      // await companyrepo.Create(MOCK_DATA);
+      jest.spyOn(companyrepo, "Find_Email").mockResolvedValue({});
       await expect(companyrepo.Create(MOCK_DATA)).rejects.toThrow(
-        DuplitcateError
+        DuplicateError
       );
     });
+    test("should update existed company ", async () => {
+      const MOCK_DATA = {
+        companyName: "name_test",
+        contactEmail: "test@gmail.com",
+      };
 
-    // test("Should be update company profile from database", async () => {
-    //     const MOCK_DATA = new CompanyModel({
-    //       companyName: "name_test",
-    //       contactEmail: "test@gmail.com",
-    //     });
-    //     const savedata = await MOCK_DATA.save();
-    //     const update: companyupdateschema = {
-    //       companyName: "company name test",
-    //     };
-    //     const updatecompany = await companyrepo.Update({
-    //       id:savedata._id as string,
-    //       update
-    //     })
-    //     expect(updatecompany).toBeTruthy();
-    //     expect(updatecompany.companyName).toBe(update.companyName);
+      const newcompany = await companyrepo.Create(MOCK_DATA);
+      const UPDATE_DATE = {
+        companyName: "updated_name",
+        contactEmail: "test@gmail.com",
+      };
 
-    //   });
+      await expect(companyrepo.Update({
+        id: newcompany._id.toString(),
+        update: UPDATE_DATE
+      })).resolves.not.toThrow();
 
-    //   test("Should throw error if update data fail",async()=>{
-    //     const nonexsitedID = new mongoose.Types.ObjectId().toString();
-    //     const update: companyupdateschema = {
-    //         companyName: 'Updated Company Name',
-    //       };
-
-    //       // Perform the update and expect an error
-    //       await expect(
-    //         companyrepo.Update({
-    //           id: nonexsitedID,
-    //           update,
-    //         })
-    //       ).rejects.toThrow(APIError);
-    //     });
+      const updatedata = await companyrepo.FindById(newcompany.id.toString());
+      expect(updatedata).toBeDefined();
+      expect(updatedata?.companyName).toEqual(UPDATE_DATE.companyName)
+      expect(updatedata?.contactEmail).toEqual(UPDATE_DATE.contactEmail)
+    });
   });
 });

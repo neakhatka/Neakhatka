@@ -14,10 +14,9 @@ services:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 30s
       timeout: 10s
-      retries: 3
-
+      retries: 5
   api-gateway:
-    container_name: gateway-service
+    container_name: gateway-container
     build:
       context: ./packages/api-gateway
       dockerfile: Dockerfile.dev
@@ -25,9 +24,14 @@ services:
     ports:
       - "4000:4000"
     env_file: ./packages/api-gateway/configs/.env
-
+    environment:
+      AUTH_SERVICE_URL: http://auth-container:4001
+      USER_SERVICE_URL: http://localhost:4003
+      NOTIFICATION_SERVICE_URL: http://localhost:4002
+    volumes:
+      - ./packages/api-gateway/src:/app/src
   auth-service:
-    container_name: auth-service
+    container_name: auth-container
     build:
       context: ./packages/auth-service
       dockerfile: Dockerfile.dev
@@ -35,16 +39,11 @@ services:
     ports:
       - "4001:4001"
     env_file: ./packages/auth-service/configs/.env
-
-  company-service:
-    container_name: company-service
-    build:
-      context: ./packages/company-service
-      dockerfile: Dockerfile.dev
-    restart: always
-    ports:
-      - "4004:4004"
-    env_file: ./packages/company-service/configs/.env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./packages/auth-service/src:/app/src
 
   notification:
     container_name: notification-container
@@ -59,4 +58,24 @@ services:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - ../notification/src:/app/src
+      - ./packages/notification/src:/app/src
+
+  profile-service:
+    container_name: profile-container
+    build:
+      context: ./packages/profile-service
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - "4003:4003"
+    env_file: ./packages/profile-service/configs/.env
+
+  company-service:
+    container_name: company-container
+    build:
+      context: ./packages/company-service
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - "4004:4004"
+    env_file: ./packages/company-service/configs/.env

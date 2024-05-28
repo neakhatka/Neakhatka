@@ -11,6 +11,13 @@ const errorHandler = (
 ): Response => {
   logger.error(`Auth Service - errorHandler():  ${err}`);
 
+  if (err instanceof AggregateError) {
+    err.errors.forEach((individualError) => {
+      logger.error(`AggregateError contains: ${individualError}`);
+    });
+  }
+
+
   // If the error is an instance of our own throw ERROR
   if (err instanceof BaseCustomError) {
     return res.status(err.getStatusCode()).json(err.serializeErrorOutput());

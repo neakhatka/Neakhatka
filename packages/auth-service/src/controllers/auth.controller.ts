@@ -22,6 +22,7 @@ import { logger } from "../utils/logger";
 import APIError from "../errors/api-error";
 import validateInput from "../middlewares/validate-input";
 
+
 interface SignUpRequestBody {
   username: string;
   email: string;
@@ -78,7 +79,9 @@ export class AuthController extends Controller {
         // data: newUser,
       };
     } catch (error) {
+      console.log(error)
       throw error;
+    
     }
   }
 

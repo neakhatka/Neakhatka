@@ -2,6 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const userschema: Schema = new Schema({
   profilePicture: { type: String, required: false },
+  authid:{ type: String, required: false },
   FullName: { type: String, required: true },
   // lastName: { type: String, required: true },
   email: {
@@ -14,7 +15,7 @@ const userschema: Schema = new Schema({
   contactPhone: { type: String, required: false },
   gender: { type: String, required: false },
   location: { type: String, required: false },
-  dateOfBirth: { type: String, required: true },
+  dateOfBirth: { type: String, required: false },
   nationality: { type: String, required: false },
   address: { type: String, required: false },
   educationBackground: { type: String, required: false },
