@@ -70,10 +70,32 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [![Static Badge](https://img.shields.io/badge/Node.js-499442?style=for-the-badge&logo=node.js&logoColor=fff&color=499442)](https://nodejs.org/en)
 * [![Static Badge](https://img.shields.io/badge/Tyscript-3178C6?style=for-the-badge&logo=typescript&logoColor=fff&color=3178C6)](https://www.typescriptlang.org/)
 * [![Static Badge](https://img.shields.io/badge/Express.js-000?style=for-the-badge&logo=express&logoColor=fff&color=000)](https://expressjs.com/)
+* [![Static Badge](https://img.shields.io/badge/Mongodb-%23023430?style=for-the-badge&logo=mongodb&logoColor=fff&color=%23023430)](https://www.mongodb.com/)
+
 
   
 
+### Project Structure
 
+<p>The project follows a microservices architecture within a monorepo setup. Below is an overview of the directory structure and the purpose of each component:</p>
+
+```
+neakhatka/
+├── app
+├── packages/
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── company-service/
+│   ├── notification/
+│   ├── profile-service/
+│   ├── volumes/
+├── .gitignore
+├── docker-compose.yaml
+├── package-lock.json
+├── package.json
+├── README.md
+
+```
 
 
 
@@ -85,34 +107,38 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To run the project, ensure you have Docker and Yarn installed on your system. Follow these steps:
 
-### Prerequisites
+1. Clone the Repository:
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+Open your terminal and run the following command to clone the project repository:
+
+```sh
+git clone https://github.com/neakhatka/neakhatka.git
+
+```
+
+2. Navigate to the Project Directory:
+
+```sh
+cd neakhatka
+```
+
+3. Install Dependencies:
+
+Navigate to the root directory of the project and run:
+
   ```sh
-  npm install npm@latest -g
+  yarn install
   ```
 
-### Installation
+4. Start the Project using Docker:
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+Use the following command to start all services defined in the docker-compose.yaml file:
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+  ```sh
+  yarn start:docker
+  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -126,11 +152,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- LICENSE -->
-## License
+## UI design
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+* [![Static Badge](https://img.shields.io/badge/Figma-2C2D34?style=for-the-badge&logo=figma&logoColor=fff&color=%232C2D34)](https://www.figma.com/design/Cvvmjfhl1K2c8EkXBRK3OF/Neakhatka?node-id=22-18&t=3YcYKBcPRNFPZCh9-1)
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -142,9 +168,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Neakhatka - neakhatka@gmail.com
+Neakhatka - neakhatka@gmail.com <br/>
+Team members - svatmanith76@gmail.com - sanvisal2302@gmail.com - rathna.chh@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/neakhatka/neakhatka](https://github.com/neakhatka/neakhatka)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
