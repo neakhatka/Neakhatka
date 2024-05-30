@@ -48,12 +48,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Neakhatka is dedicated to connecting students and recent graduates with valuable internship experiences across Cambodia. Our user-friendly website offers a comprehensive database of internship opportunities in various industries, helping you kickstart your career and gain practical experience. Start your journey towards a successful career today with <a href="https://www.canva.com/design/DAGE7Fg9Oqg/anzWbiic07MlDBmKUWN5wA/edit?utm_content=DAGE7Fg9Oqg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Neakhatka</a>!
+Neakhatka is dedicated to connecting students and recent graduates with valuable internship experiences across Cambodia. Our user-friendly website offers a comprehensive database of internship opportunities in various industries, helping you kickstart your career and gain practical experience. Start your journey towards a successful career today with <a href="https://www.canva.com/design/DAGE7Fg9Oqg/anzWbiic07MlDBmKUWN5wA/edit?utm_content=DAGE7Fg9Oqg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank">Neakhatka</a>!
 
 
 ## Our vision
 Change the way companies and internship seekers connect, make it easier and more effective.
-<a href="https://www.canva.com/design/DAGGJAb9sDU/FqSE7DVtbMQpw5yNbCbpOA/edit?utm_content=DAGGJAb9sDU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Product vision board</a>
+<a href="https://www.canva.com/design/DAGGJAb9sDU/FqSE7DVtbMQpw5yNbCbpOA/edit?utm_content=DAGGJAb9sDU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank">Product vision board</a>
 
 ## Our mission
 Built a simplify platform that help both companies and seekers that matching requirement and seeker’s skill
