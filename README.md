@@ -48,17 +48,24 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Neakhatka is dedicated to connecting students and recent graduates with valuable internship experiences across Cambodia. Our user-friendly website offers a comprehensive database of internship opportunities in various industries, helping you kickstart your career and gain practical experience. Start your journey towards a successful career today with Neakhatka!
+Neakhatka is dedicated to connecting students and recent graduates with valuable internship experiences across Cambodia. Our user-friendly website offers a comprehensive database of internship opportunities in various industries, helping you kickstart your career and gain practical experience. Start your journey towards a successful career today with <a href="https://www.canva.com/design/DAGE7Fg9Oqg/anzWbiic07MlDBmKUWN5wA/edit?utm_content=DAGE7Fg9Oqg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Neakhatka</a>!
 
 
 ## Our vision
 Change the way companies and internship seekers connect, make it easier and more effective.
+<a href="https://www.canva.com/design/DAGGJAb9sDU/FqSE7DVtbMQpw5yNbCbpOA/edit?utm_content=DAGGJAb9sDU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Product vision board</a>
 
 ## Our mission
 Built a simplify platform that help both companies and seekers that matching requirement and seeker’s skill
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## UI design
+
+* [![Static Badge](https://img.shields.io/badge/Figma-2C2D34?style=for-the-badge&logo=figma&logoColor=fff&color=%232C2D34)](https://www.figma.com/design/Cvvmjfhl1K2c8EkXBRK3OF/Neakhatka?node-id=22-18&t=3YcYKBcPRNFPZCh9-1)
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Built With
@@ -151,18 +158,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- LICENSE -->
-## UI design
-
-* [![Static Badge](https://img.shields.io/badge/Figma-2C2D34?style=for-the-badge&logo=figma&logoColor=fff&color=%232C2D34)](https://www.figma.com/design/Cvvmjfhl1K2c8EkXBRK3OF/Neakhatka?node-id=22-18&t=3YcYKBcPRNFPZCh9-1)
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- BMC -->
-## Business Model Canvas
-<a href="https://www.canva.com/design/DAGE7Fg9Oqg/anzWbiic07MlDBmKUWN5wA/edit?utm_content=DAGE7Fg9Oqg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Business Model Canvas</a>
 
 
 <!-- CONTACT -->
