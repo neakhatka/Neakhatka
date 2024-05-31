@@ -69,6 +69,8 @@ services:
     ports:
       - "4003:4003"
     env_file: ./packages/profile-service/configs/.env
+    volumes:
+      - ./packages/profile-service/src:/app/src
 
   company-service:
     container_name: company-container
@@ -79,3 +81,7 @@ services:
     ports:
       - "4004:4004"
     env_file: ./packages/company-service/configs/.env
+    volumes:
+      - ./packages/company-service/src:/app/src
+    
+    
