@@ -5,7 +5,7 @@ import path from "path";
 function Createconfig(configPath: string) {
   dotenv.config({ path: configPath });
 
-  const Requirementcofig = ["MONGODB_URL", "LOG_LEVEL", "PORT", "API_GATEWAY"];
+  const Requirementcofig = ["MONGODB_URL", "LOG_LEVEL", "PORT", "API_GATEWAY","AUTH_SERVICE"];
   const missingConfig = Requirementcofig.filter((key) => !process.env[key]);
 
   if (missingConfig.length > 0) {
@@ -18,6 +18,7 @@ function Createconfig(configPath: string) {
     logLevel: process.env.LOG_LEVEL,
     port: process.env.PORT,
     apiGateway: process.env.API_GATEWAY,
+    authservice:process.env.AUTH_SERVICE
   };
 }
 const getConfig = (currentEnv: string = "development") => {

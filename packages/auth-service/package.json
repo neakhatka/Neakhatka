@@ -36,7 +36,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon ./src/server.ts",
+    "start:dev": "nodemon --legacy-watch ./src/server.ts",
     "start:prod": "node dist/server.js",
     "build": "tsc",
     "gen:spec": "tsoa spec",

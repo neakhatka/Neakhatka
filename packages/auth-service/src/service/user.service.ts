@@ -16,6 +16,7 @@ import APIError from "../errors/api-error";
 import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
 import axios from "axios";
+
 class UserService {
   private userRepo: UserRepository;
   private accountVerificationRepo: AccountVerificationRepository;
@@ -24,13 +25,8 @@ class UserService {
     this.userRepo = new UserRepository();
     this.accountVerificationRepo = new AccountVerificationRepository();
   }
+
   // NOTE: THIS METHOD WILL USE BY SIGNUP WITH EMAIL & OAUTH
-  // TODO:
-  // 1. Hash The Password If Register With Email
-  // 2. Save User to DB
-  // 3. If Error, Check Duplication
-  // 3.1. Duplication case 1: Sign Up Without Verification
-  // 3.2. Duplication case 2: Sign Up With The Same Email
   async Create(userDetails: UserSignupParams): Promise<UserSignUpResult> {
     try {
       // Step 1
@@ -42,12 +38,8 @@ class UserService {
       }
 
       // Step 2
-
-      const authuser = await this.userRepo.CreateUser(newUserParams);
-      // const newUser= respone.data
-      console.log("auth information: ", authuser);
-      // return newUser;
-      return authuser;
+      const authUser = await this.userRepo.CreateUser(newUserParams);
+      return authUser;
     } catch (error: unknown) {
       // Step 3
       if (error instanceof DuplicateError) {
@@ -56,7 +48,7 @@ class UserService {
         });
 
         if (!existedUser?.isVerified) {
-          // Resent the token
+          // Resend the token
           const token =
             await this.accountVerificationRepo.FindVerificationTokenById({
               id: existedUser!._id as string,
@@ -85,12 +77,10 @@ class UserService {
             "Verify email message has been sent to notification service"
           );
 
-          // Throw or handle the error based on your application's needs
           throw new APIError(
             "A user with this email already exists. Verification email resent.",
             StatusCode.Conflict
           );
-          // const role =
         } else {
           throw new APIError(
             "A user with this email already exists. Please login.",
@@ -101,26 +91,24 @@ class UserService {
       throw error;
     }
   }
-  // TODO
-  // 1. Generate Verify Token
-  // 2. Save the Verify Token in the Database
+
+  // Generate and Save Verification Token
   async SaveVerificationToken({ userId }: { userId: string }) {
     try {
       // Step 1
       const emailVerificationToken = generateEmailVerificationToken();
       // Step 2
-      const accountverification = new accountVerificationModel({
+      const accountVerification = new accountVerificationModel({
         userId,
         emailVerificationToken,
       });
 
-      const newAccountVerification = await accountverification.save();
+      const newAccountVerification = await accountVerification.save();
       return newAccountVerification;
     } catch (error) {
       throw error;
     }
   }
-
   async VerifyEmailToken({ token }: { token: string }) {
     const isTokenExist =
       await this.accountVerificationRepo.FindVerificationToken({ token });
@@ -139,49 +127,54 @@ class UserService {
     if (!user) {
       throw new APIError("User does not exist.", StatusCode.NotFound);
     }
-
     // Mark the user's email as verified
     user.isVerified = true;
     await user.save();
 
-    // Remove the verification token0
+    // Remove the verification token
     await this.accountVerificationRepo.DeleteVerificationToken({ token });
+    console.log("User", user);
 
     await this.SentRequestBaseOnRole(user);
-
     return user;
   }
-  private async SentRequestBaseOnRole(user: any): Promise<void> {
-    const axiosConfig = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+
+  async SentRequestBaseOnRole(user: any): Promise<void> {
     try {
       if (user.role === "user") {
-        await axios.post(
-          "http://localhost:4003/v1/users",
+        const response = await axios.post(
+          "http://profile-service:4003/v1/users",
           {
             authid: user._id.toString(),
             FullName: user.username,
             email: user.email,
           },
-          axiosConfig
-        );
-      } else if (user.role === "employer") {
-        await axios.post(
-          "http:localhost:4004/v1/company",
           {
-            userId: user._id,
-            companyName: user.username, // Assuming username is used as company name
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response.data);
+      } else if (user.role === "employer") {
+        const response = await axios.post(
+          "http://company-service:4004/v1/company",
+          {
+            userId: user._id.toString(),
+            companyName: user.username,
             contactEmail: user.email,
           },
-          axiosConfig
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
+        console.log(response.data);
       }
     } catch (error) {
-      console.log(error)
-      logger.error("Error sending request based on role: ", error);
+      console.log(error);
+      logger.error(`Error sending request based on role: ${error}`);
       throw new APIError(
         "Failed to send request to the appropriate service",
         StatusCode.InternalServerError
@@ -189,21 +182,14 @@ class UserService {
     }
   }
 
-  // Todo login
+  // Login method
   async Login(UserDetails: UsersignInSchemType) {
-    // TODO:
-    // 1. Find user by email
-    // 2. Validate the password
-    // 3. Generate Token & Return
-
-    // Step 1
     const user = await this.userRepo.FindUser({ email: UserDetails.email });
 
     if (!user) {
-      throw new APIError("User not exist", StatusCode.NotFound);
+      throw new APIError("User does not exist", StatusCode.NotFound);
     }
 
-    // Step 2
     const isPwdCorrect = await ValidatePassword({
       enterpassword: UserDetails.password,
       savedPassword: user.password as string,
@@ -216,7 +202,6 @@ class UserService {
       );
     }
 
-    // Step 3
     const token = await generateSignature({ userId: user._id });
     return token;
   }
@@ -245,14 +230,3 @@ class UserService {
 }
 
 export default UserService;
-
-//   let respone;
-//   if(userDetails.role==="user"){
-//     respone = await axios.post("http:localhost:4003/v1/users",newUserParams)
-
-//   }else if (userDetails.role==="employer"){
-//     respone = await axios.post("http:localhost:4004/v1/company",newUserParams)
-
-//   }else {
-//     throw new APIError("Invalid role specified.", StatusCode.BadRequest);
-// }

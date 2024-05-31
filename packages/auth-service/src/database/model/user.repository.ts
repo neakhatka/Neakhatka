@@ -37,7 +37,7 @@ const authSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "user", "guest"],
+      enum: ["admin", "user", "guest","employer"],
       default: "user",
     },
     isVerified: {
