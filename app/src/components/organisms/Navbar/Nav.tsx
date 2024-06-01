@@ -1,4 +1,4 @@
-"use client";
+// Nav.tsx
 import React, { useEffect, useState } from "react";
 import {
   Navbar,
@@ -14,25 +14,27 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/legacy/image";
 import { useCount } from "../../../contexts/CountContext";
-interface MenuItem {
-  text: string;
-  link: string;
-}
-
+import { action } from '@storybook/addon-actions';
 
 interface MenuItem {
   text: string;
   link: string;
 }
 
-export default function Nav() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState<string>("");
-  const { count } = useCount();
+export const Nav = ({
+  isMenuOpen = false,
+  activeLink = "",
+  count = 0,
+}: {
+  isMenuOpen?: boolean;
+  activeLink?: string;
+  count?: number;
+}) => {
+  const [menuOpen, setMenuOpen] = useState(isMenuOpen);
+  const [currentLink, setCurrentLink] = useState(activeLink);
 
   useEffect(() => {
-    // Set the active link based on the current path
-    setActiveLink(window.location.pathname);
+    setCurrentLink(window.location.pathname);
   }, []);
 
   const menuItems: MenuItem[] = [
@@ -44,16 +46,22 @@ export default function Nav() {
     { text: "Login", link: "/login" },
   ];
 
-  const isActive = (link: string) => activeLink === link;
+  const isActive = (link: string) => currentLink === link;
+
+  const handleMenuToggle = () => {
+    setMenuOpen(!menuOpen);
+    action('Menu Toggled')(!menuOpen);
+  };
 
   return (
     <Navbar
       className="py-1"
       shouldHideOnScroll
-      onMenuOpenChange={setIsMenuOpen}
+      isMenuOpen={menuOpen}
+      onMenuOpenChange={handleMenuToggle}
     >
       <NavbarContent>
-        <NavbarBrand >
+        <NavbarBrand>
           <Link href="/">
             <Image src="/logo.svg" alt="logo" width={45} height={45} />
           </Link>
@@ -98,12 +106,13 @@ export default function Nav() {
           </Link>
         </NavbarItem>
         <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
+          onClick={handleMenuToggle}
         />
       </NavbarContent>
 
-      <NavbarMenu style={{ background: isMenuOpen ? "#fff" : "#fff" }}>
+      <NavbarMenu style={{ background: menuOpen ? "#fff" : "#fff" }}>
         {menuItems.map((item, index) => (
           <NavbarMenuItem className="mt-5" key={`${item}-${index}`}>
             <Link
@@ -126,4 +135,4 @@ export default function Nav() {
       </NavbarMenu>
     </Navbar>
   );
-}
+};
