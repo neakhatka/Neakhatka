@@ -29,15 +29,24 @@ const proxyConfigs: ProxyConfig = {
         req: IncomingMessage,
         _res: Response
       ) => {
+        const expressReq = req as Request;
+        // Log the request payload
+        expressReq.on("data", (chunk) => {
+          logger.info(`Request Body Chunk: ${chunk}`);
+        });
+
+        // Extract JWT token from session
+        const token = expressReq.session!.jwt;
+        if (token) {
+          proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
+        } else {
+          logger.warn(`No JWT token found in session for AUTH_SERVICE`);
+        }
         logger.info(
           `Proxied request URL: ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
         );
         logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
-        const expressReq = req as Request;
-
-        // Extract JWT token from session
-        const token = expressReq.session!.jwt;
-        proxyReq.setHeader("Authorization", `Bearer ${token}`);
       },
       proxyRes: (proxyRes, req, res) => {
         let originalBody: Buffer[] = [];
@@ -54,8 +63,11 @@ const proxyConfigs: ProxyConfig = {
           };
 
           try {
+            logger.info(`Gateway recieved bodystrign ${bodyString}`);
+
             responseBody = JSON.parse(bodyString);
 
+            logger.info(`Gateway received responsebody ${responseBody}`);
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
@@ -64,6 +76,7 @@ const proxyConfigs: ProxyConfig = {
             // Store JWT in session
             if (responseBody.token) {
               (req as Request).session!.jwt = responseBody.token;
+              logger.info(`New JWT token stored in session for AUTH_SERVICE`);
             }
 
             // Modify response to send only the message to the client
@@ -106,15 +119,22 @@ const proxyConfigs: ProxyConfig = {
         req: IncomingMessage,
         _res: Response
       ) => {
+        const expressReq = req as Request;
+        // Extract JWT token from session
+        const token = expressReq.session?.jwt;
+        if (token) {
+          proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          logger.info(
+            `JWT Token set in Authorization header for COMPANY_SERVICE`
+          );
+        } else {
+          logger.warn(`No JWT token found in session for COMPANY_SERVICE`);
+        }
+
         logger.info(
           `Proxied request URL: ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
         );
         logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
-        const expressReq = req as Request;
-
-        // Extract JWT token from session
-        const token = expressReq.session!.jwt;
-        proxyReq.setHeader("Authorization", `Bearer ${token}`);
       },
       proxyRes: (proxyRes, req, res) => {
         let originalBody: Buffer[] = [];
@@ -130,6 +150,11 @@ const proxyConfigs: ProxyConfig = {
           };
           try {
             responseBody = JSON.parse(bodyString);
+            logger.info(
+              `Parsed response from COMPANY_SERVICE: ${JSON.stringify(
+                responseBody
+              )}`
+            );
 
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
@@ -139,6 +164,9 @@ const proxyConfigs: ProxyConfig = {
             // Store JWT in session
             if (responseBody.token) {
               (req as Request).session!.jwt = responseBody.token;
+              logger.info(
+                `New JWT token stored in session for COMPANY_SERVICE`
+              );
             }
 
             // Modify response to send only the message to the client
