@@ -26,7 +26,7 @@ export const ValidatePassword = async ({
 
 export const generateSignature = async (payload: object): Promise<string> => {
   try {
-    return await jwt.sign(payload, privatekey, {
+    return await jwt.sign({payload: payload}, privatekey, {
       expiresIn: parseInt(getConfig().jwtExpiresIn!),
       algorithm: "RS256",
     });
