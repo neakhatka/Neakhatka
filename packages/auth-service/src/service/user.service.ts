@@ -132,7 +132,7 @@ class UserService {
     await user.save();
 
     // Remove the verification token
-    await this.accountVerificationRepo.DeleteVerificationToken({ token });
+    // await this.accountVerificationRepo.DeleteVerificationToken({ token });
     console.log("User", user);
 
     await this.SentRequestBaseOnRole(user);

@@ -4,7 +4,7 @@ export interface createuser {
     profilePicture?: string;
     FullName: string;
     email:string,
-    contactPhone?: string;
+    contactPhone?: number;
     gender?: string;
     location?: string;
     dateOfBirth?: Date;
@@ -17,7 +17,7 @@ export interface updateuser{
     profilePicture?: string;
     FullName?: string;
     email?: string;
-    contactPhone?: string;
+    contactPhone?: number;
     gender?: string;
     location?: string;
     dateOfBirth?: Date;

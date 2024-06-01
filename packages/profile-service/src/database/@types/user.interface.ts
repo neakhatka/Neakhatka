@@ -5,7 +5,7 @@ export interface IUserDocument {
     profilePicture?: string;
     FullName: string;
     email: string;
-    contactPhone?: string;
+    contactPhone?:number;
     gender?: string;
     location?: string;
     dateOfBirth: Date;
