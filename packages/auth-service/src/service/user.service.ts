@@ -202,7 +202,7 @@ class UserService {
       );
     }
 
-    const token = await generateSignature({ userId: user._id });
+    const token = await generateSignature({UserID: user._id});
     return token;
   }
 

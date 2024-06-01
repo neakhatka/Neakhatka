@@ -100,9 +100,7 @@ export class AuthController extends Controller {
       const user = await userService.VerifyEmailToken({ token });
 
       // Step 2.
-      const jwtToken = await generateSignature({
-        userId: user._id,
-      });
+      const jwtToken = await generateSignature({userId: user._id});
 
       // Step 3.
       const userDetail = await userService.FindUserByEmail({
@@ -198,7 +196,7 @@ export class AuthController extends Controller {
         await newUser.save();
       }
       const jwtToken = await generateSignature({
-        userId: newUser._id,
+        userId: newUser._id as string
       });
 
       console.log(jwtToken);
