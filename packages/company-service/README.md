@@ -103,7 +103,9 @@ If you have any questions, issues, or suggestions, please feel free to reach out
 - *Maintainer Email:* [neakhatka@gmail.com](mailto:neakhatka@gmail.com)
 
 ### Social Media
-- Follow us on Facebook: @neakhatka
+- Follow us on Facebook: [Neakhatka](https://web.facebook.com/profile.php?id=61550779933720&_rdc=1&_rdr)
+- Follow us on X: [Neakhatka](https://x.com/neakhatka?mx=2)
+
 ### Troubleshooting
 If you encounter any issues, check the following:
 - Ensure Node.js and npm/yarn are installed and up to date.
