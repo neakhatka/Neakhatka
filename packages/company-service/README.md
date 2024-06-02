@@ -12,7 +12,7 @@
 4. [Contact](#contact)
 
 ### Company Service
-The Company Service is a microservice designed to manage company-related data within our job management application. This service provides endpoints to create, read, update, and delete company records, as well as to handle company-specific operations.
+The Company Service is a microservice designed to manage company-related data within our job management application. This service provides endpoints to create, read, update, and delete company records, as well as to handle company-specific operations,like post job .
 
 ### Built With
 * [![Static Badge](https://img.shields.io/badge/Docker%20Desktop-1D63ED?style=for-the-badge&logo=docker&logoColor=fff)](https://www.docker.com/products/docker-desktop/)
@@ -69,15 +69,16 @@ Before you begin, ensure you have met the following requirements:
 
 ### Making Requests
 To use the Company Service, you will typically make HTTP requests to it. Here are some common examples:
+### Company Service
 
 1. **GET Request Example**
     ```sh
-    curl -X GET http://localhost:4001/path/to/your/service
+    curl -X GET http://localhost:4004/v1/company
     ```
 
 2. **POST Request Example**
     ```sh
-    curl -X GET http://localhost:4001/path/to/your/service
+    curl -X GET http://localhost4004/v1/company
     -H "Content-Type: application/json" \
     -d '{
     "companyName": "Example Company",
@@ -93,7 +94,32 @@ To use the Company Service, you will typically make HTTP requests to it. Here ar
     "userId": "user123"
     }'
     ```
+### Post Service
+1. **GET Request Example**
+    ```sh
+    curl -X GET http://localhost:4004/v1/company/posting
+    ```
 
+2. **POST Request Example**
+    ```sh
+    curl -X GET http://localhost4004/v1/company/posting
+    -H "Content-Type: application/json" \
+    -d '
+    {
+    "title": "example",
+    "description": "your description",
+    "requirements": ["Bachelor"],
+    "responsibilities": "your",
+    "people": 3,
+    "location": "New York, NY",
+    "duration": 12,
+    "gender": "other",
+    "type": "full-time",
+    "available_position": 2,
+   "language": "English",
+  "deadline": "2024-12-31T23:59:59.000Z",
+  "salaries": 50000 
+    ```
 ## Contact
 
 If you have any questions, issues, or suggestions, please feel free to reach out to us. Here are some ways you can contact the maintainers of this project:

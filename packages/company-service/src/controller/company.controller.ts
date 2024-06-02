@@ -41,6 +41,22 @@ export class CompanyController extends Controller {
       // throw error;
     }
   }
+  @SuccessResponse(StatusCode.Found, "Data Found")
+  @Get(ROUTE_PATHS.COMPANY.GETALL)
+  public async GetAll():Promise<any>{
+    try {
+      const companyservice = new CompanyService();
+      const result = await companyservice.GetAll();
+      return result;
+    } catch (error: any) {
+      throw {
+        status: StatusCode.NotFound,
+        message: "Can not found",
+        detail: error.message,
+      };
+    }
+  }
+
   @Get(ROUTE_PATHS.COMPANY.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")
   public async GetByid(@Path() id: string): Promise<any> {
@@ -105,13 +121,33 @@ export class CompanyController extends Controller {
   @SuccessResponse(StatusCode.OK, "Posting Successfully")
   public async Postng(@Body() requestBody: postcreateschema): Promise<any> {
     try {
+      console.log(requestBody);
       const postservice = new PostService();
       const post = await postservice.Create(requestBody);
       return post;
     } catch (error) {
+      console.log("post error:", error);
       throw error;
     }
   }
+
+  @Get(ROUTE_PATHS.POSTING.GET_ALL_POST)
+  @SuccessResponse(StatusCode.Found, "Data Found")
+  public async GetAllPost():Promise<any>{
+    try {
+      const postservice = new PostService();
+      const post = await postservice.GetAllPost();
+      return post;
+    } catch (error: any) {
+      console.log(error)
+      throw {
+        status: StatusCode.NotFound,
+        message: "Can not found ",
+        detail: error.message,
+      };
+    }
+  }
+
   @Get(ROUTE_PATHS.POSTING.GET_BY_ID)
   @SuccessResponse(StatusCode.Found, "Post Card Found")
   public async GetPostCard(@Path() id: string): Promise<any> {
@@ -130,13 +166,16 @@ export class CompanyController extends Controller {
     @Body() update: postupdateschema
   ): Promise<any> {
     try {
+      console.log("Update Data:", update);
       const postservice = new PostService();
       const updatepost = await postservice.Updatepost({ id, update });
       if (!updatepost) {
         this.setStatus(404); // Set HTTP status code to 404
         return { message: "Post card Not Found" };
       }
+      return { message: "Update successfully" };
     } catch (error: any) {
+      console.log(error);
       this.setStatus(500); // Set HTTP status code to 500 for server errors
       return { message: error.message || "Internal Server Error" };
     }

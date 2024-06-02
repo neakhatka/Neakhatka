@@ -18,6 +18,13 @@ class PostService {
       console.log(error);
     }
   }
+  async GetAllPost(): Promise<any> {
+    try {
+      return await this.postrepo.GetAll();
+    } catch (error) {
+      throw new Error("Unable to find user");
+    }
+  }
   async FindById({ id }: { id: string }) {
     try {
       return await this.postrepo.FindById({ id });

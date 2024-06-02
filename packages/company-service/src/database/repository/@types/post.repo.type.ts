@@ -22,8 +22,8 @@ export interface postupdateschema {
   people?: number;
   location?: string;
   duration?: number;
-  gender?: ("male" | "female" | "other")[];
-  type?: ("full-time" | "part-time")[];
+  gender?: "male" | "female" | "other";
+  type?: "full-time" | "part-time";
   available_position?: number;
   language?: string[];
   deadline?: Date;

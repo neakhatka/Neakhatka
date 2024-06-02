@@ -73,7 +73,7 @@ To use the Profile Service, you will typically make HTTP requests to it. Here ar
 
 1. **GET Request Example**
     ```sh
-    curl -X GET http://localhost:4001/path/to/your/service
+    curl -X GET http://localhost:4003/v1/users
     ```
 
 ## Contact

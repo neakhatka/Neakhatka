@@ -179,25 +179,19 @@
 						"format": "double"
 					},
 					"gender": {
-						"items": {
-							"type": "string",
-							"enum": [
-								"male",
-								"female",
-								"other"
-							]
-						},
-						"type": "array"
+						"type": "string",
+						"enum": [
+							"male",
+							"female",
+							"other"
+						]
 					},
 					"type": {
-						"items": {
-							"type": "string",
-							"enum": [
-								"full-time",
-								"part-time"
-							]
-						},
-						"type": "array"
+						"type": "string",
+						"enum": [
+							"full-time",
+							"part-time"
+						]
 					},
 					"available_position": {
 						"type": "number",
@@ -264,6 +258,21 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"302": {
+						"description": "Data Found",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/v1/company/{id}": {
@@ -375,6 +384,21 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetAllPost",
+				"responses": {
+					"302": {
+						"description": "Data Found",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/v1/company/post/{id}": {
@@ -402,32 +426,6 @@
 					}
 				]
 			},
-			"delete": {
-				"operationId": "DeletePost",
-				"responses": {
-					"204": {
-						"description": "Delete Successfully",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/v1/company/post{id}": {
 			"put": {
 				"operationId": "Updatepost",
 				"responses": {
@@ -461,6 +459,30 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "DeletePost",
+				"responses": {
+					"204": {
+						"description": "Delete Successfully",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},
