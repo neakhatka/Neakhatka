@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 const postingSchema: Schema = new Schema(
   {
-    companyId: { type: String, required: true },
+    companyId: { type: String, required: false },
     title: { type: String, required: true },
     description: { type: String, required: true, default: "" },
     requirements: { type: [String], required: true, default: [] },
@@ -21,9 +21,9 @@ const postingSchema: Schema = new Schema(
       default: "full-time",
     },
     available_position: { type: Number, required: true, default: 0 },
-    language: { type: String, required: true, default: "" },
+    language: { type: [String], required: true, default: "" },
     deadline: { type: Date, required: true },
-    salaries: { type: Number, required: true, default: 0 },
+    salaries: { type: [Number], required: true, default: 0 },
     createdAt: { type: Date },
   },
   {

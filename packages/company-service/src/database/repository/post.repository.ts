@@ -15,6 +15,21 @@ class PostJob {
     }
   }
 
+  async GetAll(): Promise<any> {
+    try {
+      const allpost = await Post.find();
+      if (!allpost) {
+        return { message: "can not get user" };
+      }
+      return allpost;
+    } catch (error: any) {
+      return {
+        message: "An error occurred while fetching posting",
+        error: error.message,
+      };
+    }
+  }
+
   async FindById({ id }: { id: string }) {
     try {
       const existed = await Post.findById(id);
@@ -32,11 +47,9 @@ class PostJob {
         // console.log("Unable to Update this post");
         return "Post Card Not Exsite";
       }
-      const updatepost = await Post.findByIdAndUpdate(
-        id,
-        { $set: { update } },
-        { new: true }
-      );
+      const updatepost = await Post.findByIdAndUpdate(id, update, {
+        new: true,
+      });
       return updatepost;
     } catch (error) {
       console.log(error);
