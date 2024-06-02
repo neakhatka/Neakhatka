@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### Table of Contents
 
-## Getting Started
+1. [About Frontend](#about-the-service)
+    - [Built With](#built-with)
+2. [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Run Project](#run-roject)
+    - [Run Storybook](#run-storybook)
+3. [Contact](#contact)
 
-First, run the development server:
+<!-- ABOUT THE PROJECT -->
+### About Frontend
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Welcome to the Neakhatka Frontend! This repository contains the frontend code for the Neakhatka application, designed to help students and job seekers find internship opportunities.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Built With
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This section we lists all library and framework that make this project
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+* [![Static Badge](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=fff&color=000000)](https://nextjs.org/)
+* [![Static Badge](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=fff&color=38B2AC)](https://tailwindcss.com/)
+* [![Static Badge](https://img.shields.io/badge/Storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=fff&color=FF4785)](https://storybook.js.org/)
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Getting Started
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+### Prerequisites
+Before you begin, ensure you have met the following requirements:
+- You have installed [Node.js](https://nodejs.org/)
+- You have installed [npm](https://www.npmjs.com/get-npm)  or [yarn](https://yarnpkg.com/)
+- You have terminal or command prompt access
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Installation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Run Project:
+
+1. **Clone the Repository**
+    ```sh
+    git clone https://github.com/neakhatka/neakhatka.git
+    ```
+2. **Navigate to the Service Directory**
+    ```sh
+    cd app
+    ```
+3. **Install Dependencies**
+    ```sh
+    npm install
+    ```
+    or
+    ```sh
+    yarn
+4. **Open termal and run**
+    ```sh
+    npm run dev
+    ```
+    or
+    ```sh
+    yarn dev
+
+5. **Follow the link below**
+    ```sh
+    http://localhost:3000
+    ```
+
+#### Run Storybook:
+
+1. **Clone the Repository**
+    ```sh
+    git clone https://github.com/neakhatka/neakhatka.git
+    ```
+2. **Navigate to the Service Directory**
+    ```sh
+    cd app
+    ```
+3. **Install Dependencies**
+    ```sh
+    npm install
+    ```
+    or
+    ```sh
+    yarn
+4. **Open termal and run**
+    ```sh
+    npm run storybook
+    ```
+    or
+    ```sh
+    yarn storybook
+
+5. **Follow the link below**
+    ```sh
+    http://localhost:6006/
+    ```
+
+## Contact
+
+If you have any questions, issues, or suggestions, please feel free to reach out to us. Here are some ways you can contact the maintainers of this project:
+
+### Email
+- *Support Email:* [sanvisal2302@gmail.com](mailto:sanvisal2302@gmail.com) - [svatmanith76@gmail.com](svatmanith76@gmail.com) - [rathna.chh@gmail.com](rathna.chh@gmail.com)
+- *Maintainer Email:* [neakhatka@gmail.com](mailto:neakhatka@gmail.com)
+
+### Social Media
+
+- Follow us on Facebook: [Neakhatka](https://web.facebook.com/profile.php?id=61550779933720&_rdc=1&_rdr)
+- Follow us on X: [Neakhatka](https://x.com/neakhatka?mx=2)
