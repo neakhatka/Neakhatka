@@ -4,7 +4,8 @@ import helmet from "helmet";
 // import cors from "cors";
 // import getConfig from "./utils/config";
 import { RegisterRoutes } from "./routes/v1/routes";
-
+// import swaggerUi from "swagger-ui-express";
+// import * as swaggerDocument from "../public/UserSign/swagger.json"
 const app = express();
 
 app.set("trust proxy", 1);
@@ -27,6 +28,7 @@ app.use(helmet());
 // );
 app.use(express.static("public"));
 app.use(express.json());
+// app.use("/api-doc",swaggerUi.serve,swaggerUi.setup(swaggerDocument))
 
 RegisterRoutes(app);
 

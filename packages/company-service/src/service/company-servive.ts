@@ -1,12 +1,12 @@
 // import { ICompanyDocument } from "../database/model/company.repository.model";
+import APIError from "../controller/error/api-error";
+import DuplicateError from "../controller/error/duplicate-error";
 import {
   // DeleteCompanyRequest,
   companycreateschema,
   companyupdateschema,
 } from "../database/repository/@types/company.repo.type";
 import CompanyRepo from "../database/repository/company.repository";
-import APIError from "../error/api-error";
-import DuplitcateError from "../error/duplicate-error";
 
 class CompanyService {
   private companyrepo: CompanyRepo;
@@ -19,17 +19,16 @@ class CompanyService {
       const company = await this.companyrepo.Create(companydetail);
       return company;
     } catch (error) {
-      if (error instanceof DuplitcateError) {
+      if (error instanceof DuplicateError) {
         throw new Error("Unable to create user");
       }
     }
   }
-  async GetAll():Promise<any>{
-    try{
+  async GetAll(): Promise<any> {
+    try {
       return await this.companyrepo.GetAll();
-    }catch(error){
+    } catch (error) {
       throw new Error("Unable to create user");
-
     }
   }
 

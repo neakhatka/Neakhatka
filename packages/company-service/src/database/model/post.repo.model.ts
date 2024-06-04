@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 const postingSchema: Schema = new Schema(
   {
-    companyId: { type: String, required: false },
+    companyId: {  type: mongoose.Schema.Types.ObjectId, ref: 'companymodels', required: false },
     title: { type: String, required: true },
     description: { type: String, required: true, default: "" },
     requirements: { type: [String], required: true, default: [] },

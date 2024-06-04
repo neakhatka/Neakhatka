@@ -1,6 +1,7 @@
+import mongoose from "mongoose";
 
 export interface IpostDocument {
-  companyId?: string;
+  companyId?: mongoose.Schema.Types.ObjectId;
   title?: string;
   description?: string;
   requirements?: string[];
