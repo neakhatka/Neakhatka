@@ -1,5 +1,3 @@
-import APIError from "../../error/api-error";
-import DuplicateError from "../../error/duplicate-error";
 import { CompanyModel } from "../model/company.repository.model";
 import {
   // DeleteCompanyRequest,
@@ -7,6 +5,8 @@ import {
   companyupdateschema,
 } from "./@types/company.repo.type";
 import { StatusCode } from "../../util/consts/status.code";
+import APIError from "../../controller/error/api-error";
+import DuplicateError from "../../controller/error/duplicate-error";
 
 class CompanyRepo {
   async Create(companydetail: companycreateschema) {

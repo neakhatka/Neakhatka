@@ -258,7 +258,9 @@
 						}
 					}
 				}
-			},
+			}
+		},
+		"/v1/company/get": {
 			"get": {
 				"operationId": "GetAll",
 				"responses": {

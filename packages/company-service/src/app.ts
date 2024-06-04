@@ -3,6 +3,8 @@ import hpp from "hpp";
 import helmet from "helmet";
 import cors from "cors";
 import getConfig from "./util/config";
+// import swaggerUi from "swagger-ui-express";
+// import * as swaggerDocument from "../public/UserSign/swagger.json";
 import { RegisterRoutes } from "./routes/v1/routes";
 
 const app = express();
@@ -20,6 +22,8 @@ app.use(
 );
 app.use(express.static("public"));
 app.use(express.json());
+// for see swaggerr open localhost: http://localhost:4004/api-docs
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 RegisterRoutes(app);
 

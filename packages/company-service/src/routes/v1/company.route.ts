@@ -1,7 +1,7 @@
 const ROUTE_PATHS = {
   COMPANY: {
     CREATE: "/",
-    GETALL:"/",
+    GETALL: "/get",
     GET_BY_ID: "/:id",
     DELETE: "/:id",
     UPDATE: "/:id",
@@ -9,7 +9,7 @@ const ROUTE_PATHS = {
   },
   POSTING: {
     POST: "/posting",
-    GET_ALL_POST:"/posting",
+    GET_ALL_POST: "/posting",
     GET_BY_ID: "/post/:id",
     DELETE: "/post/:id",
     UPDATE: "/post/:id",
