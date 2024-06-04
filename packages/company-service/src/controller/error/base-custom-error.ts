@@ -9,6 +9,15 @@ export default abstract class BaseCustomError extends Error {
 
     Object.setPrototypeOf(this, BaseCustomError.prototype);
   }
+  
   abstract getStatusCode(): number;
   abstract serializeErrorOutput(): SerializedErrorOutput;
 }
+
+
+
+// export class ApiError extends BaseCustomError{
+//   constructor(message: string, statusCode: number = StatusCode.INTERNAL_SERVER_ERROR){
+//     super(message, statusCode)
+// }
+// }

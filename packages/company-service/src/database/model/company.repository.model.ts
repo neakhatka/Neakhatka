@@ -2,23 +2,6 @@ import { Schema, model,
   //  Document,
     // Model
    } from "mongoose";
-
-// export interface ICompanyDocument extends Document {
-//   companyName?: string;
-//   logo?: string;
-//   contactPhone?: number;
-//   websiteLink?: string;
-//   location?: string;
-//   contactEmail?: string | undefined;
-//   contactPerson: string;
-//   numberOfEmployees: number;
-//   address: string;
-//   companyDescription: string;
-//   userId?: string;
-// }
-
-// interface ICompanyModel extends Model<ICompanyDocument> {}
-
 const companySchema = new Schema(
   {
     companyName: { type: String, required: true },
@@ -45,10 +28,6 @@ const companySchema = new Schema(
   }
 );
 
-// const CompanyModel = model<ICompanyDocument, ICompanyModel>(
-//   "Company",
-//   companySchema
-// );
 const CompanyModel = model("CompanyMOdel",companySchema)
 
 export { CompanyModel };

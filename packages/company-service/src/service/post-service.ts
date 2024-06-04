@@ -1,10 +1,9 @@
+import APIError from "../controller/error/api-error";
 import {
   postcreateschema,
   postupdateschema,
 } from "../database/repository/@types/post.repo.type";
 import PostJob from "../database/repository/post.repository";
-import APIError from "../error/api-error";
-
 class PostService {
   private postrepo: PostJob;
   constructor() {
