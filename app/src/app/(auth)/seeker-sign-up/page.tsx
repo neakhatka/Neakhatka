@@ -1,4 +1,3 @@
-// Signup.tsx
 "use client";
 import * as Yup from "yup";
 import React, { useState } from "react";
@@ -11,9 +10,7 @@ import "../../globals.css";
 import { Icon } from "@/components";
 import { SeekerSignUpSchema } from "../../../validation/seekerSignUp";
 import axios from "axios";
-
-
-
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Signup = () => {
   const [signupError, setSignupError] = useState("");
@@ -24,11 +21,15 @@ const Signup = () => {
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+ 
+  const router = useRouter();
 
-  async function handleSubmit(e: any) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const validationResult = await SeekerSignUpSchema.validate(
+      await SeekerSignUpSchema.validate(
         { username, email, password, role },
         { abortEarly: false }
       );
@@ -38,11 +39,8 @@ const Signup = () => {
         password,
         role,
       });
-      console.log("Signup successful!"); // Log successful signup (if applicable)
-      alert("Submitted!"); // Alert user of successful submission
 
-      // Redirect to YouTube after successful signup
-      window.location.href = "https://neakhatka.com/"; // Change URL to desired YouTube URL
+      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
       if (error instanceof Yup.ValidationError) {
         error.inner.forEach((e) => {
@@ -60,32 +58,19 @@ const Signup = () => {
               break;
           }
         });
-        if (error instanceof axios) {
-          console.log("error :", error);
-        }
       } else {
         setSignupError("Error signing up. Please try again.");
       }
     }
-  }
-
-  const handleUsernameFocus = () => {
-    setUsernameError("");
   };
 
-  const handleEmailFocus = () => {
-    setEmailError("");
-  };
-
-  const handlePasswordFocus = () => {
-    setPasswordError("");
-  };
+  const handleUsernameFocus = () => setUsernameError("");
+  const handleEmailFocus = () => setEmailError("");
+  const handlePasswordFocus = () => setPasswordError("");
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Use flexbox to make it full height */}
       <div className="left hidden lg:block w-full h-full p-10 bg-[#18181B] flex-col justify-between rounded-r-2xl">
-        {/* <div>⚛</div> */}
         <div className="flex justify-center items-center h-screen">
           <Image
             src="/auth/signup.svg"
@@ -107,7 +92,6 @@ const Signup = () => {
           </Link>
         </div>
         <div className="flex flex-col justify-center items-center h-full">
-          {/* Use flexbox to make it full height */}
           <Link href="/">
             <Image
               src="/logo.svg"
@@ -172,8 +156,9 @@ const Signup = () => {
             <Button
               type="submit"
               className="mt-4 w-[350px] bg-[#343A40] hover:bg-[#4a535c]"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? <div className="spinner"></div> : "Sign Up"}
             </Button>
             {signupError && (
               <div className="text-red-500 text-xs mt-1">{signupError}</div>

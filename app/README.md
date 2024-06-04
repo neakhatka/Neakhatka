@@ -23,10 +23,6 @@ This section we lists all library and framework that make this project
 * [![Static Badge](https://img.shields.io/badge/Storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=fff&color=FF4785)](https://storybook.js.org/)
 
 
-
-### Getting Started
-
-
 ### Prerequisites
 Before you begin, ensure you have met the following requirements:
 - You have installed [Node.js](https://nodejs.org/)
