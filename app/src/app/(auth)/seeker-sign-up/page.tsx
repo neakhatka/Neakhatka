@@ -10,29 +10,40 @@ import "../../globals.css";
 import { Icon } from "@/components";
 import { SeekerSignUpSchema } from "../../../validation/seekerSignUp";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const Signup = () => {
+const SeekerSignUp = () => {
   const [signupError, setSignupError] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const role = "user";
+  const role = "seeker";
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
- 
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!username || !email || !password) {
+      // Display errors if any field is empty
+      if (!username) setUsernameError("Username is required");
+      if (!email) setEmailError("Email is required");
+      if (!password) setPasswordError("Password is required");
+      return;
+    }
+
     setLoading(true);
+    setSignupError("");
+
     try {
       await SeekerSignUpSchema.validate(
         { username, email, password, role },
         { abortEarly: false }
       );
+
       await axios.post("http://localhost:4000/v1/auth/signup", {
         username,
         email,
@@ -40,8 +51,12 @@ const Signup = () => {
         role,
       });
 
+      console.log("data : ", username, email, password, role);
+
       router.push(`/signup-success?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
+      setLoading(false);
+
       if (error instanceof Yup.ValidationError) {
         error.inner.forEach((e) => {
           switch (e.path) {
@@ -64,6 +79,7 @@ const Signup = () => {
     }
   };
 
+  // **Clear Errors on Focus**
   const handleUsernameFocus = () => setUsernameError("");
   const handleEmailFocus = () => setEmailError("");
   const handlePasswordFocus = () => setPasswordError("");
@@ -190,4 +206,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SeekerSignUp;
