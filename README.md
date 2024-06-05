@@ -15,40 +15,16 @@
   <a href="https://neakhatka.com/">
     <img src="https://neakhatka.com/logo.svg" alt="Logo" width="80" height="80">
   </a>
-
   <h3 align="center">Neakhatka</h3>
 </div>
-
-
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
-
 
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Neakhatka is dedicated to connecting students and recent graduates with valuable internship experiences across Cambodia. Our user-friendly website offers a comprehensive database of internship opportunities in various industries, helping you kickstart your career and gain practical experience. Start your journey towards a successful career today with <a href="https://www.canva.com/design/DAGE7Fg9Oqg/anzWbiic07MlDBmKUWN5wA/edit?utm_content=DAGE7Fg9Oqg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank">Neakhatka</a>!
+Neakhatka is dedicated to connecting students and recent graduates with valuable internship experiences across Cambodia. Our user-friendly website offers a comprehensive database of internship opportunities in various industries, helping you kickstart your career and gain practical experience. Start your journey towards a successful career today with <a href="https://www.canva.com/design/DAGE7Fg9Oqg/anzWbiic07MlDBmKUWN5wA/edit?utm_content=DAGE7Fg9Oqg&amp;utm_campaign=designshare&amp;utm_medium=link2&amp;utm_source=sharebutton" target="_blank">Neakhatka</a>!
+
+
 
 
 ## Our vision
@@ -70,7 +46,7 @@ Built a simplify platform that help both companies and seekers that matching req
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+This section we lists all library and framework that make this project
 
 * [![Next][Next.js]][Next-url]
 * [![Static Badge](https://img.shields.io/badge/Docker%20Desktop-1D63ED?style=for-the-badge&logo=docker&logoColor=fff)](https://www.docker.com/products/docker-desktop/)
@@ -87,20 +63,46 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <p>The project follows a microservices architecture within a monorepo setup. Below is an overview of the directory structure and the purpose of each component:</p>
 
 ```
-neakhatka/
+NEAKHATKA
+├── .github
+│   └── workflows
+│       ├── main.yml
+│       └── semantic-release.yml
 ├── app
-├── packages/
-│   ├── api-gateway/
-│   ├── auth-service/
-│   ├── company-service/
-│   ├── notification/
-│   ├── profile-service/
-│   ├── volumes/
+│   ├── .next
+│   ├── .storybook
+│   ├── .vscode
+│   ├── node_modules
+│   ├── public
+│   └── src
+│       ├── .eslintrc.json
+│       ├── .gitignore
+│       ├── cdk.context.json
+│       ├── components.json
+│       ├── next-env.d.ts
+│       ├── next.config.mjs
+│       ├── package-lock.json
+│       ├── package.json
+│       ├── postcss.config.js
+│       ├── README.md
+│       ├── sst-env.d.ts
+│       ├── sst.config.ts
+│       ├── tailwind.config.ts
+│       ├── tsconfig.json
+│       └── yarn.lock
+├── node_modules
+├── packages
+│   ├── api-gateway
+│   ├── auth-service
+│   ├── company-service
+│   ├── notification
+│   ├── profile-service
+│   └── volumes
 ├── .gitignore
 ├── docker-compose.yaml
-├── package-lock.json
 ├── package.json
 ├── README.md
+└── yarn.lock
 
 ```
 
@@ -114,7 +116,49 @@ neakhatka/
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To run the project, ensure you have Docker and Yarn installed on your system. Follow these steps:
+To run the project, ensure you have the following installed on your system:
+
+* [![Static Badge](https://img.shields.io/badge/Docker%20Desktop-1D63ED?style=for-the-badge&logo=docker&logoColor=fff)](https://www.docker.com/products/docker-desktop/)
+* [![Static Badge](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=fff)](https://nodejs.org/)
+* [![Static Badge](https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=fff)](https://yarnpkg.com/)
+
+
+Then, follow these steps:
+
+<h3>Frondent</h3>
+
+Open your terminal and run the following command to clone the project repository:
+
+```sh
+git clone https://github.com/neakhatka/neakhatka.git
+
+```
+2. Navigate to the Project Directory:
+
+```sh
+cd neakhatka/app
+```
+3. Install Dependencies:
+
+Navigate to the root directory of the project and run:
+
+  ```sh
+  yarn install
+  ```
+4. Start the Project:
+
+Use the following command to start all application:
+
+  ```sh
+  yarn dev
+  ```
+5. Click link in your terminal:
+
+Use the following command to start all application:
+
+<a href="http://localhost:3000/">localhost:3000</a>
+
+<h3>Backend</h3>
 
 1. Clone the Repository:
 
@@ -148,16 +192,6 @@ Use the following command to start all services defined in the docker-compose.ya
   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- CONTACT -->

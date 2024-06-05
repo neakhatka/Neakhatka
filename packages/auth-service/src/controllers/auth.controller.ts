@@ -22,7 +22,6 @@ import { logger } from "../utils/logger";
 import APIError from "../errors/api-error";
 import validateInput from "../middlewares/validate-input";
 
-
 interface SignUpRequestBody {
   username: string;
   email: string;
@@ -79,9 +78,8 @@ export class AuthController extends Controller {
         // data: newUser,
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw error;
-    
     }
   }
 
@@ -102,9 +100,7 @@ export class AuthController extends Controller {
       const user = await userService.VerifyEmailToken({ token });
 
       // Step 2.
-      const jwtToken = await generateSignature({
-        userId: user._id,
-      });
+      const jwtToken = await generateSignature({userId: user._id});
 
       // Step 3.
       const userDetail = await userService.FindUserByEmail({
@@ -143,20 +139,16 @@ export class AuthController extends Controller {
 
   // login
   @SuccessResponse(StatusCode.OK, "OK")
-  @Get(ROUTE_PATH.AUTH.LOGIN)
+  @Post(ROUTE_PATH.AUTH.LOGIN)
   @Middlewares(validateInput(UserSignInSchema))
   public async loginWithEmail(
-    @Query() email: string,
-    @Query() password: string
-  ): Promise<{ token: string }> {
+    @Body() requestBody: { email: string; password: string }
+  ): Promise<{ message: string; token: string }> {
     try {
       // const { email, password } = requestBody;
       const userService = new UserService();
-      const jwtToken = await userService.Login({
-        email,
-        password,
-      });
-      return { token: jwtToken };
+      const jwtToken = await userService.Login(requestBody);
+      return { message: "Success login", token: jwtToken };
     } catch (error) {
       console.log(error);
       throw error;
@@ -204,7 +196,7 @@ export class AuthController extends Controller {
         await newUser.save();
       }
       const jwtToken = await generateSignature({
-        userId: newUser._id,
+        userId: newUser._id as string
       });
 
       console.log(jwtToken);

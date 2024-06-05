@@ -26,8 +26,9 @@ services:
     env_file: ./packages/api-gateway/configs/.env
     environment:
       AUTH_SERVICE_URL: http://auth-container:4001
-      USER_SERVICE_URL: http://localhost:4003
-      NOTIFICATION_SERVICE_URL: http://localhost:4002
+      USER_SERVICE_URL: http://profile-container:4003
+      COMPANY_SERVICE_URL: http://company-container:4004
+      NOTIFICATION_SERVICE_URL: http://notification-container:4002
     volumes:
       - ./packages/api-gateway/src:/app/src
   auth-service:
@@ -43,7 +44,7 @@ services:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - ./packages/auth-service/src:/app/src
+       - ./packages/auth-service/src:/app/src
 
   notification:
     container_name: notification-container

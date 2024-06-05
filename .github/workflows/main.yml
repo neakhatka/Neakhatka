@@ -21,9 +21,11 @@ jobs:
 
     - name: Install dependencies
       run: yarn install
+      working-directory: ./app
 
     - name: Run tests
       run: yarn test || echo "No tests available, skipping..."
+      working-directory: ./app
 
   deploy:
     runs-on: ubuntu-latest
@@ -40,6 +42,7 @@ jobs:
 
     - name: Install dependencies
       run: yarn install
+      working-directory: ./app
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -48,8 +51,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Install SST CLI
-      run: yarn global add sst
-
     - name: Deploy to AWS with SST
       run: npx sst deploy --stage prod
+      working-directory: ./app

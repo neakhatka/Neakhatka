@@ -11,24 +11,27 @@ export const generatePassword = async (password: string) => {
   }
 };
 
-export const ValidatePassword = async(
-  {
-   enterpassword,
-   savedPassword
-  }:{
-  enterpassword:string,
-  savedPassword:string})=>{
-    return (await generatePassword(enterpassword)) === savedPassword;
-  }
+export const ValidatePassword = async ({
+  enterpassword,
+  savedPassword,
+}: {
+  enterpassword: string;
+  savedPassword: string;
+}) => {
+  // return (await generatePassword(enterpassword)) === savedPassword;
+  const vaidatePassword = await bcrypt.compare(enterpassword, savedPassword);
 
-export const generateSignature = async(payload: object):Promise<string>=>{
-  try{
-    return await jwt.sign(payload,privatekey,{
+  return vaidatePassword;
+};
+
+export const generateSignature = async (payload: object): Promise<string> => {
+  try {
+    return await jwt.sign({payload: payload}, privatekey, {
       expiresIn: parseInt(getConfig().jwtExpiresIn!),
-      algorithm:"RS256"
-    })
-  }catch(error){
-    console.log(error)
-    return "error on signature"
+      algorithm: "RS256",
+    });
+  } catch (error) {
+    console.log(error);
+    return "error on signature";
   }
-}
+};

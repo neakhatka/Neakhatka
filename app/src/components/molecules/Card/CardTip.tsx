@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import { Icon, Typography } from "@/components";
+import { motion } from "framer-motion";
 
 export default function CardTip() {
   return (
@@ -19,6 +20,11 @@ export default function CardTip() {
         follow up strategically to land your dream job.
       </Typography>
       <main className="container xl:w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-5 my-10">
+      <motion.div
+          initial={{ scale: 0.925 }}
+          whileHover={{ scale: 1}}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
         <Card className="py-4 rounded-none">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
             <Icon label="User" size="xl" />
@@ -28,6 +34,12 @@ export default function CardTip() {
             </p>
           </CardHeader>
         </Card>
+        </motion.div>
+        <motion.div
+          initial={{ scale: 0.925 }}
+          whileHover={{ scale: 1 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
         <Card className="py-4 rounded-none">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
             <Icon label="Search" size="xl" colorBackground="blue" />
@@ -37,6 +49,12 @@ export default function CardTip() {
             </p>
           </CardHeader>
         </Card>
+        </motion.div>
+        <motion.div
+          initial={{ scale: 0.925 }}
+          whileHover={{ scale: 1 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
         <Card className="py-4 rounded-none">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
             <Icon label="File" size="xl" colorBackground="green" />
@@ -46,6 +64,12 @@ export default function CardTip() {
             </p>
           </CardHeader>
         </Card>
+        </motion.div>
+        <motion.div
+          initial={{ scale: 0.925 }}
+          whileHover={{ scale: 1 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
         <Card className="py-4 rounded-none">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
             <Icon label="Work" size="xl" colorBackground="yellow" />
@@ -55,6 +79,7 @@ export default function CardTip() {
             </p>
           </CardHeader>
         </Card>
+        </motion.div>
       </main>
     </>
   );

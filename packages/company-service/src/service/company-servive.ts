@@ -24,6 +24,14 @@ class CompanyService {
       }
     }
   }
+  async GetAll():Promise<any>{
+    try{
+      return await this.companyrepo.GetAll();
+    }catch(error){
+      throw new Error("Unable to create user");
+
+    }
+  }
 
   async FindById({ id }: { id: string }) {
     try {

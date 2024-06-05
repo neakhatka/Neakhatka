@@ -6,6 +6,7 @@ import { Icon } from "@/components";
 import { Typography } from "../../atoms/Typography";
 import { DetailCard } from "@/Types/DetailCard";
 import { useCount } from "../../../contexts/CountContext";
+import { motion } from "framer-motion";
 // import { toast } from "sonner";
 
 interface CardData {
@@ -73,10 +74,17 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div
+    <motion.div
       className={`h-auto rounded-xl shadow-lg p-5 font-Poppins ${className}`}
       onClick={(e) => {
         e.preventDefault();
+      }}
+      whileHover={{ scale: 1.025 }}
+      whileTap={{ scale: 0.975 }}
+      transition={{
+        type: "tween",
+        duration: 0.3,
+        ease: "easeInOut",
       }}
     >
       <Link href={`/detail/${id}`}>
@@ -158,7 +166,7 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
       </Link>
-    </div>
+      </motion.div>
   );
 };
 
