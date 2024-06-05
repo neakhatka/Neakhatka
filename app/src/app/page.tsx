@@ -1,14 +1,8 @@
 "use client";
 import {
-  Typography,
-  Icon,
-  Card,
-  Search,
   Banner,
   CardReview,
   Footer,
-  Filter,
-  Button,
   Nav,
 } from "@/components";
 import "./globals.css";

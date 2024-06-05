@@ -1,5 +1,4 @@
-// Nav.tsx
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   Navbar,
@@ -15,27 +14,24 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/legacy/image";
 import { useCount } from "../../../contexts/CountContext";
-import { action } from '@storybook/addon-actions';
+interface MenuItem {
+  text: string;
+  link: string;
+}
 
 interface MenuItem {
   text: string;
   link: string;
 }
 
-export const Nav = ({
-  isMenuOpen = false,
-  activeLink = "",
-  count = 0,
-}: {
-  isMenuOpen?: boolean;
-  activeLink?: string;
-  count?: number;
-}) => {
-  const [menuOpen, setMenuOpen] = useState(isMenuOpen);
-  const [currentLink, setCurrentLink] = useState(activeLink);
+function Nav() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState<string>("");
+  const { count } = useCount();
 
   useEffect(() => {
-    setCurrentLink(window.location.pathname);
+    // Set the active link based on the current path
+    setActiveLink(window.location.pathname);
   }, []);
 
   const menuItems: MenuItem[] = [
@@ -47,19 +43,13 @@ export const Nav = ({
     { text: "Login", link: "/login" },
   ];
 
-  const isActive = (link: string) => currentLink === link;
-
-  const handleMenuToggle = () => {
-    setMenuOpen(!menuOpen);
-    action('Menu Toggled')(!menuOpen);
-  };
+  const isActive = (link: string) => activeLink === link;
 
   return (
     <Navbar
       className="py-1"
       shouldHideOnScroll
-      isMenuOpen={menuOpen}
-      onMenuOpenChange={handleMenuToggle}
+      onMenuOpenChange={setIsMenuOpen}
     >
       <NavbarContent>
         <NavbarBrand>
@@ -107,13 +97,12 @@ export const Nav = ({
           </Link>
         </NavbarItem>
         <NavbarMenuToggle
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
-          onClick={handleMenuToggle}
         />
       </NavbarContent>
 
-      <NavbarMenu style={{ background: menuOpen ? "#fff" : "#fff" }}>
+      <NavbarMenu style={{ background: isMenuOpen ? "#fff" : "#fff" }}>
         {menuItems.map((item, index) => (
           <NavbarMenuItem className="mt-5" key={`${item}-${index}`}>
             <Link
@@ -136,4 +125,6 @@ export const Nav = ({
       </NavbarMenu>
     </Navbar>
   );
-};
+}
+
+export { Nav };
