@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/legacy/image";
 import { Typography } from "@/components/atoms";
-import { SeekerData } from "./Data/UserData"; // Assuming SeekerData is correctly imported from UserData
+import { EmployerData } from "./Data/UserData"; // Assuming SeekerData is correctly imported from UserData
+import { motion } from "framer-motion";
 
 const EmployerReview: React.FC = () => {
   const [expanded, setExpanded] = useState<number | null>(1);
@@ -9,7 +10,7 @@ const EmployerReview: React.FC = () => {
 
   useEffect(() => {
     setSelectedDescription(
-      SeekerData.find((item) => item.id === 1)?.description
+      EmployerData.find((item) => item.id === 1)?.description
     );
   }, []);
 
@@ -26,14 +27,18 @@ const EmployerReview: React.FC = () => {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="mx-auto">
-          {SeekerData.map((items, index) => (
-            <div
+          {EmployerData.map((items, index) => (
+            <motion.div
               key={items.id}
               className={`w-[270px] h-[80px] lg:w-[340px] lg:h-[100px] shadow-xl flex items-center px-3 rounded-[6px] my-16 ${
                 expanded === items.id ? "bg-gray-100" : ""
               } ${index === 0 || index === 2 ? "ml-20" : ""}`}
               onClick={() => handleToggle(items.id, items.description)}
               style={{ cursor: "pointer" }}
+              initial={{ scale: 1 }}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="flex items-center">
                 <Image
@@ -55,14 +60,20 @@ const EmployerReview: React.FC = () => {
                   </Typography>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
         <div className="flex justify-center items-center">
           <div className="w-[450px] h-[500px] flex justify-center items-center">
-            <div className="text-[14px] lg:text-[16px] -mt-40 w-[350px] lg:w-[500px] lg:mt-0">
+            <motion.div
+              key={selectedDescription}
+              className="text-[14px] lg:text-[16px] -mt-40 w-[350px] lg:w-[500px] lg:mt-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
               <q>{selectedDescription}</q>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

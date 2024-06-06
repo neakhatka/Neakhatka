@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/legacy/image";
 import { Typography } from "@/components/atoms";
 import { SeekerData } from "./Data/UserData";
+import { motion } from "framer-motion";
 
 const SeekerReview: React.FC = () => {
   const [expanded, setExpanded] = useState<number | null>(1);
@@ -27,13 +28,17 @@ const SeekerReview: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:flex lg:flex-row-reverse -mt-10 md:0 ml-10 md:ml-48 pb-0 lg:pb-20">
         <div className="mx-auto">
           {SeekerData.map((items, index) => (
-            <div
+            <motion.div
               key={items.id}
               className={`w-[270px] h-[80px] lg:w-[340px] lg:h-[100px] shadow-xl flex items-center px-3 rounded-[6px] my-16 ${
                 expanded === items.id ? "bg-gray-100" : ""
               } ${index === 0 || index === 2 ? "mr-30" : "ml-10"}`}
               onClick={() => handleToggle(items.id, items.description)}
               style={{ cursor: "pointer" }}
+              initial={{ scale: 1 }}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="flex items-center">
                 <Image
@@ -55,14 +60,20 @@ const SeekerReview: React.FC = () => {
                   </Typography>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
         <div className="flex justify-center items-center">
           <div className="w-[450px] h-[500px] flex justify-center items-center">
-            <div className="text-[14px] lg:text-[16px] ml-0 lg:ml-10 -mt-40 w-[350px] lg:w-[500px] lg:mt-0">
+            <motion.div
+              key={selectedDescription}
+              className="text-[14px] lg:text-[16px] ml-0 lg:ml-10 -mt-40 w-[350px] lg:w-[500px] lg:mt-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
               <q>{selectedDescription}</q>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

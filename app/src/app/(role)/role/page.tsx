@@ -65,7 +65,7 @@ const Role = () => {
                 </div>
               </div>
               <div className="mx-4">
-                <Link href="/emplyer-sign-up">
+                <Link href="/employer-sign-up">
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
@@ -88,7 +88,7 @@ const Role = () => {
                   </motion.div>
                 </Link>
                 <div className="flex justify-center items-center mt-5">
-                  <Link href="/emplyer-sign-up">
+                  <Link href="/employer-sign-up">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.3 }}

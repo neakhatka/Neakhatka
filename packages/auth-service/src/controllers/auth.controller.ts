@@ -31,10 +31,8 @@ interface SignUpRequestBody {
 
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
-  // TODO:
-  // 1. Save User
-  // 2. Generate Verification Token & Save to its DB
-  // 2. Publish User Detail to Notification Service
+  [x: string]: any;
+
   @SuccessResponse(StatusCode.Created, "Created")
   @Post(ROUTE_PATH.AUTH.SIGN_UP)
   @Middlewares(validateInput(UsersignUpSchema))
@@ -82,16 +80,11 @@ export class AuthController extends Controller {
     }
   }
 
-  // TODO:
-  // 1. Verify Token
-  // 2. Generate JWT
-  // 3. Publish User Detail to User Service
   @SuccessResponse(StatusCode.OK, "OK")
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
   ): Promise<{ message: string; token: string }> {
-    // Using Response type for more flexible error handling.
     try {
       const userService = new UserService();
 
@@ -134,7 +127,6 @@ export class AuthController extends Controller {
     }
   }
 
-  // login
   @SuccessResponse(StatusCode.OK, "OK")
   @Post(ROUTE_PATH.AUTH.LOGIN)
   @Middlewares(validateInput(UserSignInSchema))
@@ -142,7 +134,6 @@ export class AuthController extends Controller {
     @Body() requestBody: { email: string; password: string }
   ): Promise<{ message: string; token: string }> {
     try {
-      // const { email, password } = requestBody;
       const userService = new UserService();
       const user = await userService.Login(requestBody);
       // const response = await axios.get(
@@ -208,8 +199,7 @@ export class AuthController extends Controller {
         message: "Good Job",
       };
     } catch (error) {
-      // console.error("Error during Google authentication:", error);
-      this.setStatus(500); // Set the error status
+      this.setStatus(500);
       throw new Error("Error during Google authentication");
     }
   }

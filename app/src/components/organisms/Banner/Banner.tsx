@@ -8,7 +8,7 @@ import {
   Search,
 } from "@/components";
 import Image from "next/legacy/image";
-const Banner = () => {
+const Banner: React.FC = () =>{
   return (
     <>
       <div className="relative w-full pt-[100%] lg:pt-[40%]">

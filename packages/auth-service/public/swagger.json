@@ -149,10 +149,14 @@
 									"properties": {
 										"token": {
 											"type": "string"
+										},
+										"message": {
+											"type": "string"
 										}
 									},
 									"required": [
-										"token"
+										"token",
+										"message"
 									],
 									"type": "object"
 								}

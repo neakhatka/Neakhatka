@@ -1,5 +1,5 @@
 import { Poppins } from "next/font/google";
-import Nav from "@/components/organisms/Navbar/Nav";
+import {Nav} from "@/components/organisms/Navbar/Nav";
 import { Footer } from "@/components";
 import "../globals.css";
 import { Metadata } from "next";

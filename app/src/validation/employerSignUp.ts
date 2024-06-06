@@ -2,7 +2,7 @@
 import * as Yup from "yup";
 
 export const EmployerSignupSchema = Yup.object().shape({
-  companyname: Yup.string()
+  username: Yup.string()
     .min(2, "Company name must be at least 2 characters")
     .required("Company name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
