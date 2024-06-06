@@ -2,15 +2,15 @@
 import * as Yup from "yup";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FaFacebook } from "react-icons/fa";
+import {  Input } from "@/components/ui/input";
+import {  Button } from "@/components/ui/button";
+import {  FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
-import { Icon } from "@/components";
-import { SeekerSignUpSchema } from "../../../validation/seekerSignUp";
+import {  Icon } from "@/components";
+import {  SeekerSignUpSchema } from "../../../validation/seekerSignUp";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 
 const SeekerSignUp = () => {
   const [signupError, setSignupError] = useState("");
@@ -51,7 +51,11 @@ const SeekerSignUp = () => {
         role,
       });
 
-      console.log("data : ", username, email, password, role);
+      // Clear errors upon successful signup
+      setUsernameError("");
+      setEmailError("");
+      setPasswordError("");
+      setLoading(false);
 
       router.push(`/signup-success?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
