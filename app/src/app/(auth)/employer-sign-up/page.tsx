@@ -1,7 +1,5 @@
-// Signup.tsx
 "use client";
 import * as Yup from "yup";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -10,35 +8,61 @@ import { FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
 import { Icon } from "@/components";
-import { EmployerSignupSchema } from "../../../validation/employerSignUp";
+import { EmployerSignupSchema } from "@/validation/employerSignUp";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-const Signup = () => {
+const EmployerSignUp = () => {
   const [signupError, setSignupError] = useState("");
-  const [companyname, setCompanyname] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [companynameError, setCompanynameError] = useState("");
+  const role = "employer";
+  const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!username || !email || !password) {
+      if (!username) setUsernameError("Company name is required");
+      if (!email) setEmailError("Email is required");
+      if (!password) setPasswordError("Password is required");
+      return;
+    }
+
+    setLoading(true);
+    setSignupError("");
 
     try {
       await EmployerSignupSchema.validate(
-        { companyname, email, password },
+        { username, email, password, role },
         { abortEarly: false }
       );
 
-      // Your signup logic goes here
-      console.log("Signing up with:", { companyname, email, password });
-      window.location.href = "/SignupSuccess";
-    } catch (error) {
+      await axios.post("http://localhost:4000/v1/auth/signup", {
+        username,
+        email,
+        password,
+        role,
+      });
+
+      console.log("data : ", username, email, password, role);
+
+      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
+    } catch (error: any | unknown) {
+      console.log("error**", error);
+      setLoading(false);
+
       if (error instanceof Yup.ValidationError) {
+        console.log("error form", error);
         error.inner.forEach((e) => {
           switch (e.path) {
-            case "companyname":
-              setCompanynameError(e.message);
+            case "username":
+              setUsernameError(e.message);
               break;
             case "email":
               setEmailError(e.message);
@@ -51,34 +75,15 @@ const Signup = () => {
           }
         });
       } else {
+        console.error("Signup error:", error); // Debugging
         setSignupError("Error signing up. Please try again.");
       }
     }
   };
 
-  const handleCompanynameFocus = () => {
-    setCompanynameError("");
-  };
-
-  const handleEmailFocus = () => {
-    setEmailError("");
-  };
-
-  const handlePasswordFocus = () => {
-    setPasswordError("");
-  };
-
-  const handleCompanyName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCompanyname(e.target.value);
-  };
-
-  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const handleUsernameFocus = () => setUsernameError("");
+  const handleEmailFocus = () => setEmailError("");
+  const handlePasswordFocus = () => setPasswordError("");
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -104,7 +109,6 @@ const Signup = () => {
           </Link>
         </div>
         <div className="flex flex-col justify-center items-center h-full">
-          {/* Use flexbox to make it full height */}
           <Link href="/">
             <Image
               src="/logo.svg"
@@ -120,24 +124,20 @@ const Signup = () => {
               Enter your email below to sign up with Matching Internship
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="mt-5">
+          <form onSubmit={handleSubmit} className="mt-5" method="POST">
             <div className="relative">
               <Input
-                id="companyname"
-                name="companyname"
+                id="username"
+                name="username"
                 type="text"
-                placeholder="Company name"
-                className={`w-[350px] ${
-                  companynameError ? "border-red-500" : ""
-                }`}
-                onChange={handleCompanyName}
-                value={companyname}
-                onFocus={handleCompanynameFocus}
+                placeholder="company name"
+                className={`w-[350px] ${usernameError ? "border-red-500" : ""}`}
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+                onFocus={handleUsernameFocus}
               />
-              {companynameError && (
-                <div className="text-red-500 text-xs mt-1">
-                  {companynameError}
-                </div>
+              {usernameError && (
+                <div className="text-red-500 text-xs mt-1">{usernameError}</div>
               )}
             </div>
             <div className="relative mt-4">
@@ -147,7 +147,7 @@ const Signup = () => {
                 type="email"
                 placeholder="example@gmail.com"
                 className={`w-[350px] ${emailError ? "border-red-500" : ""}`}
-                onChange={handleEmail}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 onFocus={handleEmailFocus}
               />
@@ -162,7 +162,7 @@ const Signup = () => {
                 type="password"
                 placeholder="password123"
                 className={`w-[350px] ${passwordError ? "border-red-500" : ""}`}
-                onChange={handlePasswordChange}
+                onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 onFocus={handlePasswordFocus}
               />
@@ -173,8 +173,9 @@ const Signup = () => {
             <Button
               type="submit"
               className="mt-4 w-[350px] bg-[#343A40] hover:bg-[#4a535c]"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? <div className="spinner"></div> : "Sign Up"}
             </Button>
             {signupError && (
               <div className="text-red-500 text-xs mt-1">{signupError}</div>
@@ -206,4 +207,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default EmployerSignUp;

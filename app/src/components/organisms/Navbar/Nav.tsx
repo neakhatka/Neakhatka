@@ -19,13 +19,12 @@ interface MenuItem {
   link: string;
 }
 
-
 interface MenuItem {
   text: string;
   link: string;
 }
 
-export default function Nav() {
+function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState<string>("");
   const { count } = useCount();
@@ -53,7 +52,7 @@ export default function Nav() {
       onMenuOpenChange={setIsMenuOpen}
     >
       <NavbarContent>
-        <NavbarBrand >
+        <NavbarBrand>
           <Link href="/">
             <Image src="/logo.svg" alt="logo" width={45} height={45} />
           </Link>
@@ -127,3 +126,5 @@ export default function Nav() {
     </Navbar>
   );
 }
+
+export { Nav };
