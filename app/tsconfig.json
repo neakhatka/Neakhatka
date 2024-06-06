@@ -21,12 +21,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".storybook/**/*"
-  ],
   "exclude": ["node_modules"]
 }
