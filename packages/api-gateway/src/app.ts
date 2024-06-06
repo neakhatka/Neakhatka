@@ -16,6 +16,7 @@ import getConfig from "./utils/createCofig";
 import { RegisterRoutes } from "./routes/routs";
 import { verifyUser } from "./middleware/auth-middleware";
 import unless from "./middleware/unless-route";
+import cookieParser from "cookie-parser";
 // import { verifyUser } from "./middleware/auth-middleware";
 // import unless from "./middleware/unless-route";
 
@@ -30,11 +31,12 @@ console.log("This is");
 
 app.set("trust proxy", 1);
 app.use(compression());
+app.use(cookieParser());
 app.use(
   cookieSession({
     name: "session",
     keys: [`${config.cookieSecretKeyOne}`, `${config.cookieSecretKeyTwo}`],
-    maxAge: 24 * 7 * 3600000,
+    maxAge: 24 * 60 * 60 * 1000,
     secure: config.env !== "development", // update with value from config
     ...(config.env !== "development" && {
       sameSite: "none",
@@ -77,8 +79,6 @@ RegisterRoutes(app);
 // JWT Middleware
 // ===================
 
-console.log("On top");
-
 app.use(unless("/v1/auth", verifyUser));
 
 // ===================
@@ -88,7 +88,6 @@ applyProxy(app);
 
 // ====================
 // Global Error Handler
-app.use(errorHandler);
 // ====================
 app.use("*", (req: Request, res: Response, _next: NextFunction) => {
   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
@@ -97,5 +96,7 @@ app.use("*", (req: Request, res: Response, _next: NextFunction) => {
     .status(StatusCode.NotFound)
     .json({ message: "The endpoint called does not exist." });
 });
+
+app.use(errorHandler);
 
 export default app;

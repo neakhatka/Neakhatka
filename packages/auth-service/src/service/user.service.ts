@@ -16,6 +16,7 @@ import APIError from "../errors/api-error";
 import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
 import axios from "axios";
+// import { IAuthDocument } from "../database/model/user.repository";
 
 class UserService {
   private userRepo: UserRepository;
@@ -119,7 +120,6 @@ class UserService {
         StatusCode.BadRequest
       );
     }
-
     // Find the user associated with this token
     const user = await this.userRepo.FindUserById({
       id: isTokenExist.userId.toString(),
@@ -127,16 +127,21 @@ class UserService {
     if (!user) {
       throw new APIError("User does not exist.", StatusCode.NotFound);
     }
-    // Mark the user's email as verified
+    // Mark the user's email as verifie
     user.isVerified = true;
     await user.save();
-
+    const jwttoken = await generateSignature({ id: user.id, role: user.role });
     // Remove the verification token
     // await this.accountVerificationRepo.DeleteVerificationToken({ token });
     console.log("User", user);
-
     await this.SentRequestBaseOnRole(user);
-    return user;
+    return {
+      message: "User verify email successfully",
+      token: jwttoken,
+      status: "success",
+      date: user,
+    };
+    // return user;
   }
 
   async SentRequestBaseOnRole(user: any): Promise<void> {
@@ -156,6 +161,7 @@ class UserService {
           }
         );
         console.log(response.data);
+        // const   jwttoken= await generateSignature( response.data.data.id , user.role)
       } else if (user.role === "employer") {
         const response = await axios.post(
           "http://company-service:4004/v1/company",
@@ -184,33 +190,48 @@ class UserService {
 
   // Login method
   async Login(UserDetails: UsersignInSchemType) {
-    const user = await this.userRepo.FindUser({ email: UserDetails.email });
+    try {
+      const user = await this.userRepo.FindUser({ email: UserDetails.email });
 
-    if (!user) {
-      throw new APIError("User does not exist", StatusCode.NotFound);
+      if (!user) {
+        throw new APIError("User does not exist", StatusCode.NotFound);
+      }
+
+      const isPwdCorrect = await ValidatePassword({
+        enterpassword: UserDetails.password,
+        savedPassword: user.password as string,
+      });
+
+      if (!isPwdCorrect) {
+        throw new APIError(
+          "Email or Password is incorrect",
+          StatusCode.BadRequest
+        );
+      }
+      return user;
+    } catch (error) {
+      throw error;
     }
 
-    const isPwdCorrect = await ValidatePassword({
-      enterpassword: UserDetails.password,
-      savedPassword: user.password as string,
-    });
+    //  const requestUser = new UserRepository();
+    //   const { data } = await requestUser.FindUserById(user._id.toString());
 
-    if (!isPwdCorrect) {
-      throw new APIError(
-        "Email or Password is incorrect",
-        StatusCode.BadRequest
-      );
-    }
-
-    const token = await generateSignature({UserID: user._id});
-    return token;
+    // const jwtToken = await generateSignature({ _id: user._id.toString() });
   }
 
+  async Findbyid({ id }: { id: string }) {
+    try {
+      return await this.userRepo.FindUserById({ id });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async FindUserByEmail({ email }: { email: string }) {
     try {
       const user = await this.userRepo.FindUser({ email });
       return user;
     } catch (error) {
+      console.error("Error finding user by email:", error);
       throw error;
     }
   }
