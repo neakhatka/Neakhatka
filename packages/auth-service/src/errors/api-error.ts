@@ -1,7 +1,6 @@
 import { StatusCode } from "../utils/consts";
 import { SerializedErrorOutput } from "./@types/serialized-error-output";
-import BaseCustomError from "./base-custom-error";
-
+import { BaseCustomError } from "./base-custom-error";
 // USE CASE:
 // 1. Unexpected Server Error
 // 2. Fallback Error Handler
