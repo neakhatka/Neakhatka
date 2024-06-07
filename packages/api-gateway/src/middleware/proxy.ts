@@ -5,7 +5,7 @@ import { logger } from "../utils/logger";
 import { ClientRequest, IncomingMessage } from "http";
 import getConfig from "@api-gateway/utils/createCofig";
 import { StatusCode } from "../utils/consts";
-// import { OptionCookie } from "@api-gateway/utils/cookieOption";
+import { OptionCookie } from "@api-gateway/utils/cookieOption";
 
 interface ProxyConfig {
   [context: string]: Options<IncomingMessage, Response>;
@@ -41,8 +41,9 @@ const proxyConfigs: ProxyConfig = {
 
         // Extract JWT token from session
         const token = expressReq.session!.jwt;
+        proxyReq.setHeader("Authorization", `Bearer ${token}`);
         if (token) {
-          proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          // proxyReq.setHeader("Authorization", `Bearer ${token}`);
           logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
         } else {
           logger.warn(`No JWT token found in session for AUTH_SERVICE`);
@@ -81,6 +82,8 @@ const proxyConfigs: ProxyConfig = {
             // Store JWT in session
             if (responseBody.token) {
               (req as Request).session!.jwt = responseBody.token;
+              res.cookie("persistent", responseBody.token, OptionCookie);
+              delete responseBody.token;
               logger.info(`New JWT token stored in session for AUTH_SERVICE`);
             }
 
@@ -138,8 +141,9 @@ const proxyConfigs: ProxyConfig = {
 
         // Extract JWT token from session
         const token = expressReq.session!.jwt;
+        proxyReq.setHeader("Authorization", `Bearer ${token}`);
         if (token) {
-          proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          // proxyReq.setHeader("Authorization", `Bearer ${token}`);
           logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
         } else {
           logger.warn(`No JWT token found in session for AUTH_SERVICE`);
@@ -149,7 +153,7 @@ const proxyConfigs: ProxyConfig = {
         );
         logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
       },
-      proxyRes: (proxyRes, _req, res) => {
+      proxyRes: (proxyRes, req, res) => {
         let originalBody: Buffer[] = [];
         proxyRes.on("data", function (chunk: Buffer) {
           originalBody.push(chunk);
@@ -161,6 +165,7 @@ const proxyConfigs: ProxyConfig = {
             message?: string;
             errors?: Array<object>;
             data?: Array<object>;
+            token?: string;
           };
 
           try {
@@ -172,6 +177,11 @@ const proxyConfigs: ProxyConfig = {
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
+            }
+            if (responseBody.token) {
+              (req as Request).session!.jwt = responseBody.token;
+              res.cookie("persistent", responseBody.token, OptionCookie);
+              delete responseBody.token;
             }
 
             // Modify response to send only the message to the client

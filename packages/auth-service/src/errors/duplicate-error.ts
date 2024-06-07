@@ -1,7 +1,7 @@
 
 import { StatusCode } from "../utils/consts"
 import { SerializedErrorOutput } from "./@types/serialized-error-output"
-import BaseCustomError from "./base-custom-error"
+import { BaseCustomError } from "./base-custom-error"
 
 
 export default class DubplicateError extends BaseCustomError{

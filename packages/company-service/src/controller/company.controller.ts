@@ -62,11 +62,11 @@ export class CompanyController extends Controller {
 
   @Get(ROUTE_PATHS.COMPANY.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")
-  public async GetByid(@Path() id: string): Promise<any> {
+  public async GetByid(@Path() id: string): Promise<{message:string; data: any}> {
     try {
       const companyservice = new CompanyService();
       const result = await companyservice.FindById({ id });
-      return result;
+      return { message: "Company had found ", data: result };
     } catch (error: any) {
       console.log(error);
       // throw error;

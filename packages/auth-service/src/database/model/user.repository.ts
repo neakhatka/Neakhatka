@@ -8,6 +8,7 @@ export interface IAuth {
 }
 
 export interface IAuthDocument extends Document {
+  authId?: string;
   username: string;
   email: string;
   password: string;
