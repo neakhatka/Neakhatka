@@ -28,3 +28,4 @@ app.use(express.json());
 RegisterRoutes(app);
 
 export default app;
+  
