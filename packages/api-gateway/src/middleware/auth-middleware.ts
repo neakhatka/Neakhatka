@@ -22,9 +22,11 @@ async function verifyUser(req: Request, _res: Response, _next: NextFunction) {
       }
       (req as Request).session!.jwt = persistentCookie;
     }
+    // Use the same token verification logic you're currently using
     await verify(sessionCookie || persistentCookie, publicKey, {
       algorithms: ["RS256"],
     });
+     // If the token is valid, proceed to the next middleware
     _next();
   } catch (error) {
     _next(error);

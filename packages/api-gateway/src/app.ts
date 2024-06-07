@@ -74,7 +74,7 @@ app.disable("x-powered-by");
 // Gateway Health Routes
 // ===================
 RegisterRoutes(app);
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 // ===================
 // JWT Middleware
 // ===================
@@ -91,6 +91,7 @@ applyProxy(app);
 // ====================
 app.use("*", (req: Request, res: Response, _next: NextFunction) => {
   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+  console.log(fullUrl);
   logger.error(`${fullUrl} endpoint does not exist`);
   res
     .status(StatusCode.NotFound)

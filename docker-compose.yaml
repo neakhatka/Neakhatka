@@ -74,7 +74,8 @@ services:
     env_file: ./packages/profile-service/configs/.env
     volumes:
       - ./packages/profile-service/src:/app/src
-
+    environment:
+      - API_GATEWAY=http://gateway-container:4000
   company-service:
     container_name: company-container
     build:
