@@ -11,7 +11,6 @@ import {
   Promote,
 } from "@/components";
 import Image from "next/legacy/image";
-import { motion } from "framer-motion";
 const Footer: React.FC = () => {
   return (
     <>
@@ -50,25 +49,25 @@ const Footer: React.FC = () => {
               <p>Our Social Media</p>
             </div>
             <div className="py-5 flex gap-4 font-Poppins text-[14px]">
-              <motion.a
+              <a
                 href="https://www.facebook.com/profile.php?id=61550779933720"
-                whileHover={{ color: "#1877F2" }}
+ 
               >
                 <Icon label="Facebook" />
-              </motion.a>
-              <motion.a
+              </a>
+              <a
                 href="https://t.me/MaNith_Svat"
                 target="_blank"
-                whileHover={{ color: "#0088cc" }}
+
               >
                 <Icon label="Telegram" />
-              </motion.a>
-              <motion.a
+              </a>
+              <a
                 href="https://twitter.com/neakhatka"
-                whileHover={{ color: "#000000" }}
+                
               >
                 <Icon label="X" />
-              </motion.a>
+              </a>
             </div>
           </div>
         </div>
