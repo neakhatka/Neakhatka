@@ -1,11 +1,16 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, {
+ useEffect,
+ useState,
+ useCallback,
+  Suspense,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Confetti, Typography } from "@/components";
 import { motion } from "framer-motion";
 import "tailwindcss/tailwind.css"; // Ensure Tailwind CSS is imported
 
-const SignupSuccess = React.memo(() => {
+const SignupPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -50,6 +55,12 @@ const SignupSuccess = React.memo(() => {
       </div>
     </div>
   );
-});
+};
+
+const SignupSuccess = () => {
+  return <Suspense>
+    <SignupPage/>
+  </Suspense>
+};
 
 export default SignupSuccess;

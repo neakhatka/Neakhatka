@@ -2,24 +2,25 @@
 import { Button, Typography } from "@/components";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React from "react";
+import { Suspense } from "react";
 
-const PleaseVerify = () => {
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+const PleaseVerfyPage = () => {
+const searchParams = useSearchParams();
+const email = searchParams.get("email");
 
-  const handleGoToEmail = () => {
-    if (email) {
-      const emailProvider = email.split("@")[1];
-      const redirectTo = emailProvider.includes("gmail")
-        ? "https://mail.google.com"
-        : `https://mail.${emailProvider}`;
-      window.location.href = redirectTo;
-    }
-  };
+const handleGoToEmail = () => {
+  if (email) {
+    const emailProvider = email.split("@")[1];
+    const redirectTo = emailProvider.includes("gmail")
+      ? "https://mail.google.com"
+      : `https://mail.${emailProvider}`;
+    window.location.href = redirectTo;
+  }
+};
 
-  return (
+return (
     <div className="w-full lg:container h-screen flex justify-center items-start flex-col">
       <div className="container my-10 -mt-32">
         <Link href="/">
@@ -63,7 +64,13 @@ const PleaseVerify = () => {
         </div>
       </div>
     </div>
-  );
+);
+}
+
+const PleaseVerify = () => {
+  return <Suspense>
+    <PleaseVerfyPage/>
+  </Suspense>
 };
 
 export default PleaseVerify;
