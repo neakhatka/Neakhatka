@@ -193,7 +193,7 @@
 				}
 			}
 		},
-		"/v1/users/get": {
+		"/v1/users/all": {
 			"get": {
 				"operationId": "GetAllUserController",
 				"responses": {

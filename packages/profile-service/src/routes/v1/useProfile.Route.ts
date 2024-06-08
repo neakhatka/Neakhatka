@@ -1,7 +1,7 @@
 const ROUTE_PATHS = {
   PROFILE: {
     CREATE:"/",
-    GET_ALL: "/get",
+    GET_ALL: "/all",
     UPDATE: "/:id", // As an example
     GET_BY_ID: "/:id",
     DELETE: "/:id",

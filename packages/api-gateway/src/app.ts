@@ -9,16 +9,11 @@ import compression from "compression";
 import { logger } from "./utils/logger";
 import { StatusCode } from "./utils/consts";
 import { errorHandler } from "./middleware/error-handle";
-// import { RegisterRoutes } from "./routes/routes";
 import getConfig from "./utils/createCofig";
-// import { verifyUser } from "./middleware/auth-middleware";
-// import unless from "./middleware/unless-route";
 import { RegisterRoutes } from "./routes/routs";
 import { verifyUser } from "./middleware/auth-middleware";
 import unless from "./middleware/unless-route";
 import cookieParser from "cookie-parser";
-// import { verifyUser } from "./middleware/auth-middleware";
-// import unless from "./middleware/unless-route";
 
 const app = express();
 
