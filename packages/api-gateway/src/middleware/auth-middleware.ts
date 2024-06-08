@@ -10,6 +10,7 @@ async function verifyUser(req: Request, _res: Response, _next: NextFunction) {
   const persistentCookie = req.cookies?.persistent;
 
   try {
+    console.log(sessionCookie, persistentCookie);
     if (!sessionCookie) {
       if (!persistentCookie) {
         logger.error(
@@ -26,7 +27,7 @@ async function verifyUser(req: Request, _res: Response, _next: NextFunction) {
     await verify(sessionCookie || persistentCookie, publicKey, {
       algorithms: ["RS256"],
     });
-     // If the token is valid, proceed to the next middleware
+    // If the token is valid, proceed to the next middleware
     _next();
   } catch (error) {
     _next(error);

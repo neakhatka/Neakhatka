@@ -13,7 +13,7 @@ import { ROUTE_PATH } from "../routes/v1/routes-refer";
 import UserService from "../service/user.service";
 import { generateSignature } from "../utils/jwt";
 import { UserSignInSchema, UsersignUpSchema } from "../schema/user-schema";
-import AuthModel from "../database/model/user.repository"; // Ensure correct path
+import AuthModel, { IAuth } from "../database/model/user.repository"; // Ensure correct path
 import { publishDirectMessage } from "../queues/auth.producer";
 import { authChannel } from "../server";
 import { IAuthUserMessageDetails } from "../queues/@types/auth.type";
@@ -75,7 +75,6 @@ export class AuthController extends Controller {
         // data: newUser,
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -84,7 +83,7 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{ message: string; token: string }> {
+  ): Promise<{ message: string; token: string; data: IAuth }> {
     try {
       const userService = new UserService();
 
@@ -95,7 +94,9 @@ export class AuthController extends Controller {
       // const jwtToken = await generateSignature({userId: user._id});
 
       // Step 3.
-      const userDetail = await userService.FindUserByEmail({ email: user.date.email});
+      const userDetail = await userService.FindUserByEmail({
+        email: user.date.email,
+      });
       // console.log(user.email)
       if (!userDetail) {
         logger.error(
@@ -119,9 +120,16 @@ export class AuthController extends Controller {
         JSON.stringify(messageDetails),
         "User details sent to user service"
       );
-      const jwttoken = await generateSignature({id:userDetail.id , role:userDetail.role})
+      const jwttoken = await generateSignature({
+        id: userDetail.id,
+        role: userDetail.role,
+      });
 
-      return { message: "User verify email successfully", token: jwttoken };
+      return {
+        message: "User verify email successfully",
+        token: jwttoken,
+        data: userDetail,
+      };
     } catch (error) {
       throw error;
     }
@@ -139,8 +147,11 @@ export class AuthController extends Controller {
       // const response = await axios.get(
       //   `http://localhost:4001/v1/auth/${user.id}`
       // )
-      console.log("User", user)
-      const jwttoken = await generateSignature({id:user._id as string, role:user.role})
+      console.log("User", user);
+      const jwttoken = await generateSignature({
+        id: user._id as string,
+        role: user.role,
+      });
       return { message: "Success login", token: jwttoken };
     } catch (error) {
       console.log(error);
@@ -189,7 +200,8 @@ export class AuthController extends Controller {
         await newUser.save();
       }
       const jwtToken = await generateSignature({
-        id: newUser._id as string,role: newUser.role
+        id: newUser._id as string,
+        role: newUser.role,
       });
 
       console.log(jwtToken);

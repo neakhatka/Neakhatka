@@ -31,6 +31,8 @@ services:
       NOTIFICATION_SERVICE_URL: http://notification-container:4002
     volumes:
       - ./packages/api-gateway/src:/app/src
+    depends_on:
+      - profile-service  # Add this line
   auth-service:
     container_name: auth-container
     build:
