@@ -1,49 +1,66 @@
-// Signup.tsx
 "use client";
 import * as Yup from "yup";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FaFacebook } from "react-icons/fa";
+import {  Input } from "@/components/ui/input";
+import {  Button } from "@/components/ui/button";
+import {  FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
-import { Icon } from "@/components";
-import { SeekerSignUpSchema } from "../../../validation/seekerSignUp";
+import {  Icon } from "@/components";
+import {  SeekerSignUpSchema } from "../../../validation/seekerSignUp";
 import axios from "axios";
+import {  useRouter } from "next/navigation";
 
-
-
-
-const Signup = () => {
+const SeekerSignUp = () => {
   const [signupError, setSignupError] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const role = "user";
+  const role = "seeker";
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: any) {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!username || !email || !password) {
+      // Display errors if any field is empty
+      if (!username) setUsernameError("Username is required");
+      if (!email) setEmailError("Email is required");
+      if (!password) setPasswordError("Password is required");
+      return;
+    }
+
+    setLoading(true);
+    setSignupError("");
+
     try {
-      const validationResult = await SeekerSignUpSchema.validate(
+      await SeekerSignUpSchema.validate(
         { username, email, password, role },
         { abortEarly: false }
       );
+
       await axios.post("http://localhost:4000/v1/auth/signup", {
         username,
         email,
         password,
         role,
       });
-      console.log("Signup successful!"); // Log successful signup (if applicable)
-      alert("Submitted!"); // Alert user of successful submission
 
-      // Redirect to YouTube after successful signup
-      window.location.href = "https://neakhatka.com/"; // Change URL to desired YouTube URL
+      // Clear errors upon successful signup
+      setUsernameError("");
+      setEmailError("");
+      setPasswordError("");
+      setLoading(false);
+
+      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
+      setLoading(false);
+
       if (error instanceof Yup.ValidationError) {
         error.inner.forEach((e) => {
           switch (e.path) {
@@ -60,32 +77,20 @@ const Signup = () => {
               break;
           }
         });
-        if (error instanceof axios) {
-          console.log("error :", error);
-        }
       } else {
         setSignupError("Error signing up. Please try again.");
       }
     }
-  }
-
-  const handleUsernameFocus = () => {
-    setUsernameError("");
   };
 
-  const handleEmailFocus = () => {
-    setEmailError("");
-  };
-
-  const handlePasswordFocus = () => {
-    setPasswordError("");
-  };
+  // **Clear Errors on Focus**
+  const handleUsernameFocus = () => setUsernameError("");
+  const handleEmailFocus = () => setEmailError("");
+  const handlePasswordFocus = () => setPasswordError("");
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Use flexbox to make it full height */}
       <div className="left hidden lg:block w-full h-full p-10 bg-[#18181B] flex-col justify-between rounded-r-2xl">
-        {/* <div>⚛</div> */}
         <div className="flex justify-center items-center h-screen">
           <Image
             src="/auth/signup.svg"
@@ -107,7 +112,6 @@ const Signup = () => {
           </Link>
         </div>
         <div className="flex flex-col justify-center items-center h-full">
-          {/* Use flexbox to make it full height */}
           <Link href="/">
             <Image
               src="/logo.svg"
@@ -172,8 +176,9 @@ const Signup = () => {
             <Button
               type="submit"
               className="mt-4 w-[350px] bg-[#343A40] hover:bg-[#4a535c]"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? <div className="spinner"></div> : "Sign Up"}
             </Button>
             {signupError && (
               <div className="text-red-500 text-xs mt-1">{signupError}</div>
@@ -205,4 +210,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SeekerSignUp;

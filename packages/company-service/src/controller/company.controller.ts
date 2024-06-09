@@ -15,6 +15,8 @@ import {
   Put,
   SuccessResponse,
   Delete,
+  Middlewares,
+  Request,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
 import {
@@ -22,6 +24,7 @@ import {
   postupdateschema,
 } from "../database/repository/@types/post.repo.type";
 import PostService from "../service/post-service";
+import { AuthRequest, authorize } from "../middleware/authMiddleware";
 @Route("v1/company")
 export class CompanyController extends Controller {
   @SuccessResponse(StatusCode.Created, "Created")
@@ -43,11 +46,11 @@ export class CompanyController extends Controller {
   }
   @SuccessResponse(StatusCode.Found, "Data Found")
   @Get(ROUTE_PATHS.COMPANY.GETALL)
-  public async GetAll():Promise<any>{
+  public async GetAll(): Promise<{ message: string; data: any }> {
     try {
       const companyservice = new CompanyService();
       const result = await companyservice.GetAll();
-      return result;
+      return { message: "Success retrieved!", data: result };
     } catch (error: any) {
       throw {
         status: StatusCode.NotFound,
@@ -117,14 +120,20 @@ export class CompanyController extends Controller {
   }
 
   // action for posting
+  @Middlewares(authorize(["employer"]))
   @Post(ROUTE_PATHS.POSTING.POST)
   @SuccessResponse(StatusCode.OK, "Posting Successfully")
-  public async Postng(@Body() requestBody: postcreateschema): Promise<any> {
+  public async Postng(
+    @Body() requestBody: postcreateschema,
+    @Request() req: Express.Request
+  ): Promise<any> {
     try {
+      const { id } = (req as AuthRequest).employer;
       console.log(requestBody);
+      const postData = { companyId: id, ...requestBody };
       const postservice = new PostService();
-      const post = await postservice.Create(requestBody);
-      return post;
+      const post = await postservice.Create(postData);
+      return { message: "Success create class", data: post };
     } catch (error) {
       console.log("post error:", error);
       throw error;
@@ -133,13 +142,13 @@ export class CompanyController extends Controller {
 
   @Get(ROUTE_PATHS.POSTING.GET_ALL_POST)
   @SuccessResponse(StatusCode.Found, "Data Found")
-  public async GetAllPost():Promise<any>{
+  public async GetAllPost(): Promise<any> {
     try {
       const postservice = new PostService();
       const post = await postservice.GetAllPost();
       return post;
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       throw {
         status: StatusCode.NotFound,
         message: "Can not found ",

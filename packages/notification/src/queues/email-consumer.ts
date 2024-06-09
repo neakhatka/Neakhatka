@@ -50,7 +50,7 @@ export async function consumeAuthEmailMessages(
       const locals: IEmailLocals = {
         appLink: `${getConfig().clientUrl}`,
         appIcon: ``,
-        verifyLink: `http://localhost:4001/v1/auth/verify?token=${verifyLink}`,
+        verifyLink: `${getConfig().clientUrl}?token=${verifyLink}`,
         resetLink,
       };
 

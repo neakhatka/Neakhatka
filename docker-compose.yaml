@@ -45,6 +45,8 @@ services:
         condition: service_healthy
     volumes:
        - ./packages/auth-service/src:/app/src
+    environment:
+      - API_GATEWAY=http://gateway-container:4000
 
   notification:
     container_name: notification-container
@@ -84,5 +86,7 @@ services:
     env_file: ./packages/company-service/configs/.env
     volumes:
       - ./packages/company-service/src:/app/src
+    environment:
+      - API_GATEWAY=http://gateway-container:4000
     
     

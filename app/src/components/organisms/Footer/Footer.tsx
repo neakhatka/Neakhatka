@@ -11,7 +11,7 @@ import {
   Promote,
 } from "@/components";
 import Image from "next/legacy/image";
-const Footer: React.FC = () => {
+const Footer : React.FC = () => {
   return (
     <>
       <footer className="bg-[#212529] py-10">

@@ -5,18 +5,19 @@ import swaggerUi from "swagger-ui-express";
 import * as swaggerDocument from "../public/swagger.json";
 
 // import cors from "cors";
-// import getConfig from "./utils/config";
+import getConfig from "./utils/config";
+import cors from "cors";
 
 const app = express();
 
 // Configure CORS
-// app.use(
-//   cors({
-//     origin: getConfig().apiGateway,
-//     credentials: true,
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   })
-// );
+app.use(
+  cors({
+    origin: getConfig().apiGateway,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
 // Body parsing middleware
 app.use(express.json({ limit: "10mb" }));

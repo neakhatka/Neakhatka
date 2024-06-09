@@ -73,7 +73,7 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
-  return (
+ return (
     <motion.div
       className={`h-auto rounded-xl shadow-lg p-5 font-Poppins ${className}`}
       onClick={(e) => {

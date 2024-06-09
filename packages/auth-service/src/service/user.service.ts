@@ -141,7 +141,7 @@ class UserService {
 
   async SentRequestBaseOnRole(user: any): Promise<void> {
     try {
-      if (user.role === "user") {
+      if (user.role === "seeker") {
         const response = await axios.post(
           "http://profile-service:4003/v1/users",
           {

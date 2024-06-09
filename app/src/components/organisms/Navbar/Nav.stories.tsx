@@ -22,7 +22,7 @@ export default {
   }
 } as ComponentMeta<typeof Nav>;
 
-const Template: ComponentStory<typeof Nav> = (args) => <Nav {...args} />;
+const Template: ComponentStory<typeof Nav> = (args) => <Nav />;
 
 export const Default = Template.bind({});
 Default.args = {
