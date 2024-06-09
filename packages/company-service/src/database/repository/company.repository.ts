@@ -54,6 +54,17 @@ class CompanyRepo {
     }
   }
 
+  async FindByAuthID({userId }: { userId: string}): Promise<any> {
+    try {
+      const existed = await CompanyModel.findOne({
+        userId: userId,
+      });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to Find User in Database ");
+    }
+  }
+
   async FindById({ id }: { id: string }) {
     try {
       const existed = await CompanyModel.findById(id);
