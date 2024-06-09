@@ -6,8 +6,8 @@ export interface IAuth {
   role: string;
   isVerified?: boolean;
 }
-
 export interface IAuthDocument extends Document {
+  authId?: string;
   username: string;
   email: string;
   password: string;
@@ -37,7 +37,7 @@ const authSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "seeker", "guest", "employer"],
+      enum: ["seeker","employer"],
       default: "seeker",
     },
     isVerified: {

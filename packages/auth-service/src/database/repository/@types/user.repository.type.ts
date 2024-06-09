@@ -12,3 +12,11 @@ export interface UserUpdateRepository {
   role?: string;
   googleId?: string;
 }
+
+export interface IUser {
+
+  authId?: string;
+  username?: string;
+  email?: string;
+  picture: string | null;
+}
