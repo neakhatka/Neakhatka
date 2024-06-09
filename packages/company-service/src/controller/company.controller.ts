@@ -62,7 +62,9 @@ export class CompanyController extends Controller {
 
   @Get(ROUTE_PATHS.COMPANY.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")
-  public async GetByid(@Path() id: string): Promise<{message:string; data: any}> {
+  public async GetByid(
+    @Path() id: string
+  ): Promise<{ message: string; data: any }> {
     try {
       const companyservice = new CompanyService();
       const result = await companyservice.FindById({ id });
@@ -126,11 +128,15 @@ export class CompanyController extends Controller {
   public async Postng(
     @Body() requestBody: postcreateschema,
     @Request() req: Express.Request
-  ): Promise<any> {
+  ): Promise<{ message: string; data: any }> {
     try {
-      const { id } = (req as AuthRequest).employer;
+      const userId = (req as AuthRequest).employer.id;
+      const companyservice = new CompanyService()
+      const company = await companyservice.FindById({ id: userId });
+      const companyId = company?.id;
+
       console.log(requestBody);
-      const postData = { companyId: id, ...requestBody };
+      const postData = {companyId, ...requestBody };
       const postservice = new PostService();
       const post = await postservice.Create(postData);
       return { message: "Success create class", data: post };
@@ -142,11 +148,11 @@ export class CompanyController extends Controller {
 
   @Get(ROUTE_PATHS.POSTING.GET_ALL_POST)
   @SuccessResponse(StatusCode.Found, "Data Found")
-  public async GetAllPost(): Promise<any> {
+  public async GetAllPost(): Promise<{message:string ; data:any}> {
     try {
       const postservice = new PostService();
       const post = await postservice.GetAllPost();
-      return post;
+      return {message: "Success get all post", data: post}
     } catch (error: any) {
       console.log(error);
       throw {
