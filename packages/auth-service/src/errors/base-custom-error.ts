@@ -1,15 +1,30 @@
-import { SerializedErrorOutput } from "./@types/serialized-error-output";
+import { StatusCode } from "../utils/consts";
 
-export default abstract class BaseCustomError extends Error {
-    protected statusCode: number;
-
-    protected constructor(message: string, statusCode: number) {
-        super(message);
-        this.statusCode = statusCode;
-        Object.setPrototypeOf(this, BaseCustomError.prototype);
+export class BaseCustomError extends Error {
+    statusCode: number;
+  
+    constructor(message: string, statusCode: number) {
+      super(message);
+      this.statusCode = statusCode;
+  
+      // Ensure the error prototype is set correctly
+      Object.setPrototypeOf(this, BaseCustomError.prototype);
     }
+     // Method to get the status code
+  getStatusCode() {
+    return this.statusCode;
+  }
 
-    abstract getStatusCode(): number;
+  
+    // This method will be used to send the error response
+    // Override it in subclasses if necessary
+    serializeErrors() {
+      return [{ message: this.message }];
+    }
+}
 
-    abstract serializeErrorOutput(): SerializedErrorOutput;
+export class ApiError extends BaseCustomError{
+      constructor(message: string, statusCode: number = StatusCode.InternalServerError){
+        super(message, statusCode)
+    }
 }

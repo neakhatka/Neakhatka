@@ -14,7 +14,7 @@ const VerifiedPage = () => {
 
   const verifyEmailToken = async (token: string) => {
     try {
-      const response = await axios.get(`http://localhost:4000/v1/auth/verify?token=${token}`, {
+      const response = await axios.get(`http://localhost:5000/v1/auth/verify?token=${token}`, {
         withCredentials: true,  
       });
       return response.data;
@@ -34,10 +34,11 @@ const VerifiedPage = () => {
       const response = await verifyEmailToken(token);
       console.log("Verification response:", response);
       if (response === "success") {
+        // Check the status property of the response object
         setVerificationStatus("success");
         setTimeout(() => {
-          router.push("/"); // Redirect after 2 seconds
-        }, 1000);
+          router.push("/"); 
+        }, 100);
       } else {
         setVerificationStatus("error");
       }

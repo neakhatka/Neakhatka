@@ -13,7 +13,10 @@ import { UserService } from "../../service/userService/userProfileService";
 // import { IUserDocument } from "../../database/@types/user.interface";
 import ROUTE_PATHS from "../../routes/v1/useProfile.Route";
 import { StatusCode } from "../../utils/consts/status.code";
-import { createuser, updateuser } from "../../database/repository/@types/user.repository.type";
+import {
+  createuser,
+  updateuser,
+} from "../../database/repository/@types/user.repository.type";
 import { IUserDocument } from "../../database/@types/user.interface";
 
 @Route("/v1/users")
@@ -35,26 +38,40 @@ export class UserController extends Controller {
 
   @Get(ROUTE_PATHS.PROFILE.GET_ALL)
   //   @Get("/all-profile")
-  public async GetAllUserController(): Promise<IUserDocument[]> {
-    const userService = new UserService();
-    return await userService.GetAllProfileservice();
+  public async GetAllUserController(): Promise<{
+    message: string;
+    data: IUserDocument[];
+  }> {
+    try {
+      const userService = new UserService();
+      const result = await userService.GetAllProfileservice();
+      return { message: "Success retrieved!", data: result };
+    } catch (err: any) {
+      console.log(err);
+      throw {
+        status: StatusCode.NotFound,
+        message: "Can not found with that id",
+        detail: err.message,
+      };
+    }
   }
 
   @Get(ROUTE_PATHS.PROFILE.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")
   // @Response("404", "Card not found")
-  public async GetCardById(@Path() id: string): Promise<any> {
+  public async GetCardById(
+    @Path() id: string
+  ): Promise<{ message: string; data: any }> {
     try {
       const userservice = new UserService();
       const User = await userservice.GetByIdService({ id });
-      if (User) {
-        return User;
+      if (!User) {
+        return { message: "Profile Not Found", data: null };
       } else {
-        return { message: "Profile Not Found" };
+        return { message: "Successfully retrieved profile", data: User };
       }
     } catch (error) {
       throw error;
-      // console.log(error);
     }
   }
 
@@ -64,7 +81,7 @@ export class UserController extends Controller {
   public async updateUserController(
     @Path() id: string,
     @Body() updateData: Partial<updateuser>
-  ): Promise<any> {
+  ): Promise<{ message: string; data: any }> {
     try {
       const userservice = new UserService();
       const updateuser = await userservice.updateProfileService({
@@ -73,25 +90,25 @@ export class UserController extends Controller {
       });
       if (!updateuser) {
         this.setStatus(404); // Set HTTP status code to 404
-        return { message: "Profile Not Found" };
+        return { message: "Profile Not Found", data: null };
       }
-      return updateuser;
+      return { message: "Successfully updated profile", data: updateuser };
     } catch (error: any) {
       this.setStatus(500); // Set HTTP status code to 500 for server errors
-      return { message: error.message || "Internal Server Error" };
+      return { message: error.message || "Internal Server Error", data: null };
     }
   }
   // delete USER by id
   @SuccessResponse(StatusCode.NoContent, "Successfully Delete  profile")
   @Delete(ROUTE_PATHS.PROFILE.DELETE)
-  public async DeleteUserContrioller(@Path() id: string): Promise<any> {
+  public async DeleteUserContrioller(@Path() id: string): Promise<{ message: string; data: any }> {
     try {
       const userservice = new UserService();
       const deleteuser = await userservice.DeleteProfileService({ id });
       if (deleteuser) {
-        return deleteuser;
+        return { message: "Successfully deleted profile", data: null };
       } else {
-        return { message: "Profile Not Found" };
+        return { message: "Profile Not Found", data: null };
       }
     } catch (error) {
       throw error;

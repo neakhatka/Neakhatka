@@ -29,7 +29,6 @@ interface SignUpRequestBody {
   role: string;
 }
 
-
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
   @SuccessResponse(StatusCode.Created, "Created")
@@ -48,7 +47,7 @@ export class AuthController extends Controller {
         password,
         role,
       });
-
+      // Step 2.
       const verificationToken = await userService.SaveVerificationToken({
         userId: newUser._id as string,
       });
@@ -73,7 +72,6 @@ export class AuthController extends Controller {
         data: newUser,
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -82,7 +80,7 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{ status: string; message: string; token?: string }> {
+  ): Promise<{ status: string; message: string; token: string; data: any }> {
     try {
       const userService = new UserService();
 
@@ -90,13 +88,13 @@ export class AuthController extends Controller {
       const user = await userService.VerifyEmailToken({ token });
       console.log("Verified user:", user);
 
-      // Step 2: Generate JWT token
-      const jwtToken = await generateSignature({ userId: user._id });
+      // Step 2.
+      // const jwtToken = await generateSignature({userId: user._id});
 
       const userDetail = await userService.FindUserByEmail({
-        email: user.email,
+        email: user.date.email,
       });
-
+      // console.log(user.email)
       if (!userDetail) {
         logger.error(
           `AuthController VerifyEmail() method error: user not found`
@@ -106,7 +104,6 @@ export class AuthController extends Controller {
           StatusCode.InternalServerError
         );
       }
-
       const messageDetails: IAuthUserMessageDetails = {
         username: userDetail?.username,
         email: userDetail?.email,
@@ -120,15 +117,19 @@ export class AuthController extends Controller {
         JSON.stringify(messageDetails),
         "User details sent to user service"
       );
+      const jwttoken = await generateSignature({
+        id: userDetail.id,
+        role: userDetail.role,
+      });
 
-      // Step 3: Optionally, update user details or perform other actions
       return {
         status: "success",
         message: "User verify email successfully",
-        token: jwtToken,
+        token: jwttoken,
+        data: userDetail,
       };
-    } catch (error: any) {
-      return { status: "error", message: error.message };
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -140,8 +141,16 @@ export class AuthController extends Controller {
   ): Promise<{ message: string; token: string }> {
     try {
       const userService = new UserService();
-      const jwtToken = await userService.Login(requestBody);
-      return { message: "Success login", token: jwtToken };
+      const user = await userService.Login(requestBody);
+      // const response = await axios.get(
+      //   `http://localhost:4001/v1/auth/${user.id}`
+      // )
+      console.log("User", user);
+      const jwttoken = await generateSignature({
+        id: user._id as string,
+        role: user.role,
+      });
+      return { message: "Success login", token: jwttoken };
     } catch (error) {
       console.log(error);
       throw error;
@@ -189,7 +198,8 @@ export class AuthController extends Controller {
         await newUser.save();
       }
       const jwtToken = await generateSignature({
-        userId: newUser._id as string,
+        id: newUser._id as string,
+        role: newUser.role,
       });
 
       console.log(jwtToken);

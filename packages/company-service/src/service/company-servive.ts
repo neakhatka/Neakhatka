@@ -40,6 +40,15 @@ class CompanyService {
       throw new APIError("Unable to get user with this ID");
     }
   }
+  async FindByAuthId({userId }: { userId: string }): Promise<any> {
+    try {
+      return await this.companyrepo.FindByAuthID({userId})
+    } catch (error) {
+      console.log(error);
+      // return null;
+      throw new APIError("Unable to get user with this ID");
+    }
+  }
 
   async Delete({ id }: { id: string }) {
     try {

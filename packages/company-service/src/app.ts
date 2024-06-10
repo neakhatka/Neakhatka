@@ -20,6 +20,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
+
 app.use(express.static("public"));
 app.use(express.json());
 // for see swaggerr open localhost: http://localhost:4004/api-docs
@@ -28,3 +29,4 @@ app.use(express.json());
 RegisterRoutes(app);
 
 export default app;
+  

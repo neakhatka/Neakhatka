@@ -18,7 +18,7 @@ const models: TsoaRoute.Models = {
             "profilePicture": {"dataType":"string"},
             "FullName": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactPhone": {"dataType":"string"},
+            "contactPhone": {"dataType":"double"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
             "dateOfBirth": {"dataType":"datetime"},
@@ -37,7 +37,7 @@ const models: TsoaRoute.Models = {
             "profilePicture": {"dataType":"string"},
             "FullName": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactPhone": {"dataType":"string"},
+            "contactPhone": {"dataType":"double"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
             "dateOfBirth": {"dataType":"datetime","required":true},
@@ -52,7 +52,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_updateuser_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"profilePicture":{"dataType":"string"},"FullName":{"dataType":"string"},"email":{"dataType":"string"},"contactPhone":{"dataType":"string"},"gender":{"dataType":"string"},"location":{"dataType":"string"},"dateOfBirth":{"dataType":"datetime"},"nationality":{"dataType":"string"},"address":{"dataType":"string"},"educationBackground":{"dataType":"string"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"profilePicture":{"dataType":"string"},"FullName":{"dataType":"string"},"email":{"dataType":"string"},"contactPhone":{"dataType":"double"},"gender":{"dataType":"string"},"location":{"dataType":"string"},"dateOfBirth":{"dataType":"datetime"},"nationality":{"dataType":"string"},"address":{"dataType":"string"},"educationBackground":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -95,7 +95,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/users',
+        app.get('/v1/users/all',
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.GetAllUserController)),
 

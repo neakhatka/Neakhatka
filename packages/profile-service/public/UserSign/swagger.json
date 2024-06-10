@@ -22,7 +22,8 @@
 						"type": "string"
 					},
 					"contactPhone": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"gender": {
 						"type": "string"
@@ -70,7 +71,8 @@
 						"type": "string"
 					},
 					"contactPhone": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"gender": {
 						"type": "string"
@@ -123,7 +125,8 @@
 						"type": "string"
 					},
 					"contactPhone": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"gender": {
 						"type": "string"
@@ -188,7 +191,9 @@
 						}
 					}
 				}
-			},
+			}
+		},
+		"/v1/users/all": {
 			"get": {
 				"operationId": "GetAllUserController",
 				"responses": {
@@ -197,10 +202,22 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IUserDocument"
+									"properties": {
+										"data": {
+											"items": {
+												"$ref": "#/components/schemas/IUserDocument"
+											},
+											"type": "array"
+										},
+										"message": {
+											"type": "string"
+										}
 									},
-									"type": "array"
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
 								}
 							}
 						}

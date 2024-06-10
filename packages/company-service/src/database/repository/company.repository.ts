@@ -28,16 +28,18 @@ class CompanyRepo {
       throw new Error("Database error");
     }
   }
-  async GetAll(): Promise<any>{
-    try{
-      const allcompany= await CompanyModel.find();
-      if(!allcompany){
-        return {message: "can not user"}
+  async GetAll(): Promise<any> {
+    try {
+      const allcompany = await CompanyModel.find();
+      if (!allcompany) {
+        return { message: "can not user" };
       }
-      return allcompany
-    }catch(error:any){
-      return { message: "An error occurred while fetching companies", error: error.message };
-
+      return allcompany;
+    } catch (error: any) {
+      return {
+        message: "An error occurred while fetching companies",
+        error: error.message,
+      };
     }
   }
 
@@ -45,6 +47,17 @@ class CompanyRepo {
     try {
       const existed = await CompanyModel.findOne({
         contactEmail: contactEmail,
+      });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to Find User in Database ");
+    }
+  }
+
+  async FindByAuthID({userId }: { userId: string}): Promise<any> {
+    try {
+      const existed = await CompanyModel.findOne({
+        userId: userId,
       });
       return existed;
     } catch (error) {
@@ -67,7 +80,6 @@ class CompanyRepo {
       const existed = await this.FindById({ id });
       if (!existed) {
         throw new APIError("User does not exist", StatusCode.NotFound);
-        // console.log("Unable to update this Profile");
       }
       const companyupdate = (await CompanyModel.findByIdAndUpdate(
         id,
