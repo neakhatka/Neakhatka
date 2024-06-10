@@ -83,7 +83,7 @@ class CompanyRepo {
       }
       const companyupdate = (await CompanyProfile.findByIdAndUpdate(
         id,
-        { $set: { update } },
+        { $set:  update },
         {
           new: true,
         }

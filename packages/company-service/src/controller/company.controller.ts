@@ -85,19 +85,19 @@ export class CompanyController extends Controller {
   public async Update(
     @Path() id: string,
     @Body() update: companyupdateschema
-  ): Promise<any> {
+  ): Promise<{message:string ;data:any }> {
     try {
       const companyservice = new CompanyService();
       const result = await companyservice.update({ id, update });
       if (!result) {
         this.setStatus(404);
-        return { message: "Profile not found" };
+        return { message: "Profile not found" , data:null};
       }
-      return result;
+      return {message: "Profile updated" , data:result}
     } catch (error: any) {
       // throw error;
       this.setStatus(500); // Set HTTP status code to 500 for server errors
-      return { message: error.message || "Internal Server Error" };
+      return { message: error.message || "Internal Server Error" , data:null };
     }
   }
 
@@ -180,20 +180,20 @@ export class CompanyController extends Controller {
   public async Updatepost(
     @Path() id: string,
     @Body() update: postupdateschema
-  ): Promise<any> {
+  ): Promise<{message: string; data: any }> {
     try {
       console.log("Update Data:", update);
       const postservice = new PostService();
       const updatepost = await postservice.Updatepost({ id, update });
       if (!updatepost) {
         this.setStatus(404); // Set HTTP status code to 404
-        return { message: "Post card Not Found" };
+        return { message: "Post card Not Found", data: null };
       }
-      return { message: "Update successfully" };
+      return { message: "Update successfully", data: updatepost };
     } catch (error: any) {
       console.log(error);
       this.setStatus(500); // Set HTTP status code to 500 for server errors
-      return { message: error.message || "Internal Server Error" };
+      return { message: error.message || "Internal Server Error", data: null };
     }
   }
   @Delete(ROUTE_PATHS.POSTING.DELETE)

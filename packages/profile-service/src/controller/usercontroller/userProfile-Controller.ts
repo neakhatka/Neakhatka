@@ -80,7 +80,7 @@ export class UserController extends Controller {
   @SuccessResponse(StatusCode.OK, "Successfully Update profile")
   public async updateUserController(
     @Path() id: string,
-    @Body() updateData: Partial<updateuser>
+    @Body() updateData: updateuser
   ): Promise<{ message: string; data: any }> {
     try {
       const userservice = new UserService();

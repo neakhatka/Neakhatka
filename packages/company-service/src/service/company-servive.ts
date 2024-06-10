@@ -59,7 +59,7 @@ class CompanyService {
     }
   }
 
-  async update({ id, update }: { id: string; update: companyupdateschema }) {
+  async update({ id, update }: { id: string; update: companyupdateschema }):Promise<any> {
     try {
       return await this.companyrepo.Update({ id, update });
     } catch (error) {
