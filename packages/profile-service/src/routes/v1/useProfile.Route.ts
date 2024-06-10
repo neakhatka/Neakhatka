@@ -5,7 +5,7 @@ const ROUTE_PATHS = {
     UPDATE: "/:id", // As an example
     GET_BY_ID: "/:id",
     DELETE: "/:id",
-    // Add other auth-related routes here
+    // ADD_TO_FAVORITES: "/:userId/favorites/add",
   },
   // Define other route groups as needed
 };

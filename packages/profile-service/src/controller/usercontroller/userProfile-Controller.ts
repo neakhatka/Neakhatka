@@ -114,4 +114,18 @@ export class UserController extends Controller {
       throw error;
     }
   }
+  // Add a card to favorites
+  // @Post(ROUTE_PATHS.PROFILE.ADD_TO_FAVORITES)
+  // public async AddToFavorite(
+  //   @Path() userId: string,
+  //   @Body() requestBody: { cardId: string }
+  // ): Promise<{ message: string; data: any }> {
+  //   try {
+  //     const userService = new UserService();
+  //     const result = await userService.addToFavorites(userId, requestBody.cardId);
+  //     return { message: "Card added to favorites", data: result };
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

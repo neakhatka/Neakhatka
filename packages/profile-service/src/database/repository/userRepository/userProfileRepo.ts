@@ -102,6 +102,15 @@ class UserRepository {
       }
     }
   }
+  // async addToFavorites(userId: string, cardId: string): Promise<IUserDocument | null> {
+  //   const user = await UserProfile.findById(userId);
+  //   if (!user) throw new Error("User not found");
+
+  //   user.favoriteCards.push(cardId  as any  );
+  //   await user.save();
+  //   return user;
+  // }
 }
+
 
 export default UserRepository;

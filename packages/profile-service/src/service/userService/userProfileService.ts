@@ -3,6 +3,7 @@ import { IUserDocument } from "../../database/@types/user.interface";
 import DuplitcateError from "../../error/duplitcate-error";
 import APIError from "../../error/api-error";
 import { createuser, updateuser } from "../../database/repository/@types/user.repository.type";
+// import { UserProfile } from "../../database/models/userprofile/userprofilel-model";
 export class UserService {
   private userRepo: UserRepository;
   constructor() {
@@ -64,4 +65,13 @@ export class UserService {
       throw new APIError("Unable to delete User profile");
     }
   }
+   // Add a card to favorites
+  //  async addToFavorites(userId: string, cardId: string): Promise<IUserDocument | null> {
+  //   try {
+  //     return await this.userRepo.addToFavorites(userId, cardId);
+  //   } catch (error) {
+  //     throw new APIError("Unable to add card to favorites");
+  //   }
+  // }
 }
+
