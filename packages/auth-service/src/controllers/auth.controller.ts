@@ -80,7 +80,7 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{ status: string; message: string; token: string; data: any }> {
+  ): Promise<{status: string;  message: string; token: string; role:string }> {
     try {
       const userService = new UserService();
 
@@ -121,12 +121,12 @@ export class AuthController extends Controller {
         id: userDetail.id,
         role: userDetail.role,
       });
-
+      console.log("Jwttoken:",jwttoken)
       return {
-        status: "success",
+        status:"success",
         message: "User verify email successfully",
         token: jwttoken,
-        data: userDetail,
+        role: userDetail.role,
       };
     } catch (error) {
       throw error;

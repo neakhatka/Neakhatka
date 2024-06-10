@@ -1,4 +1,4 @@
-import { UserProfile } from "../../models/userprofile/userprofilel-model";
+import { seeker_profile } from "../../models/userprofile/userprofilel-model";
 // import { EmailPassword, EmailPasswordModel } from "../model/EmailPasswordModel";
 import { IUserDocument } from "../../@types/user.interface";
 import DuplitcateError from "../../../error/duplitcate-error";
@@ -16,8 +16,7 @@ class UserRepository {
       if (existingUser) {
         throw new DuplitcateError("Email alredy in use");
       }
-
-      const user = new UserProfile(UserDetail);
+      const user = new seeker_profile(UserDetail);
       const userresult = await user.save();
       return userresult;
     } catch (error) {
@@ -31,7 +30,7 @@ class UserRepository {
   // get all user profile
   async GetAllUserRepo(): Promise<IUserDocument[]> {
     try {
-      return await UserProfile.find();
+      return await seeker_profile.find();
     } catch (error) {
       throw new APIError("Enable to find user");
     }
@@ -39,7 +38,7 @@ class UserRepository {
   // get profile by id
   async findById({ id }: { id: string }) {
     try {
-      const existedUser = await UserProfile.findById(id);
+      const existedUser = await seeker_profile.findById(id);
       return existedUser;
     } catch (error) {
       console.log(error);
@@ -62,7 +61,7 @@ class UserRepository {
         return "User not Exsite";
       }
 
-      const newuserupdate = await UserProfile.findByIdAndUpdate(
+      const newuserupdate = await seeker_profile.findByIdAndUpdate(
         id,
         {
           $set: {
@@ -88,14 +87,14 @@ class UserRepository {
       if (!existedID) {
         throw new APIError("Unable to find iin database", StatusCode.NoContent);
       }
-      return await UserProfile.findByIdAndDelete(id);
+      return await seeker_profile.findByIdAndDelete(id);
     } catch (error) {
       throw error;
     }
   }
   async FindUserByEmail({ email }: { email: string }) {
     try {
-      const existinguser = await UserProfile.findOne({ email: email });
+      const existinguser = await seeker_profile.findOne({ email: email });
       return existinguser;
     } catch (error) {
       // console.log(error);

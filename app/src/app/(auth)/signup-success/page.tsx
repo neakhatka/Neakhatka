@@ -24,7 +24,7 @@ const SignupPage = () => {
       const timer = setTimeout(() => {
         router.push(`/send-email?email=${encodeURIComponent(email)}`);
         setShowConfetti(false);
-      }, 4000); // Display confetti for 4 seconds
+      }, 5000); // Display confetti for 5 seconds
 
       // Clear the timer when the component is unmounted
       return () => clearTimeout(timer);

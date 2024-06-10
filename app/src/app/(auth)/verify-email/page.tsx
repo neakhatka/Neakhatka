@@ -2,7 +2,7 @@
 import { Button, Typography } from "@/components";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -10,13 +10,21 @@ const VerifiedPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  const [verificationStatus, setVerificationStatus] = useState<string>("verifying");
+  const [verificationStatus, setVerificationStatus] =
+    useState<string>("verifying");
+  const hasRun = useRef(false); // Track if the effect has already run
 
   const verifyEmailToken = async (token: string) => {
     try {
-      const response = await axios.get(`http://localhost:5000/v1/auth/verify?token=${token}`, {
-        withCredentials: true,  
-      });
+      const response = await axios.get(
+        `http://localhost:5000/v1/auth/verify?token=${token}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("response : ", response);
+
       return response.data;
     } catch (error) {
       console.error("Error verifying email:", error);
@@ -33,13 +41,16 @@ const VerifiedPage = () => {
       setVerificationStatus("verifying");
       const response = await verifyEmailToken(token);
       console.log("Verification response:", response);
-      if (response === "success") {
+      if (response.status === "success") {
+        console.log("hello from success");
+
         // Check the status property of the response object
         setVerificationStatus("success");
         setTimeout(() => {
-          router.push("/"); 
+          router.push("/");
         }, 100);
       } else {
+        console.log("hello from error");
         setVerificationStatus("error");
       }
     } else {
@@ -48,7 +59,10 @@ const VerifiedPage = () => {
   };
 
   useEffect(() => {
-    handleVerifyEmail();
+    if (!hasRun.current) {
+      hasRun.current = true;
+      handleVerifyEmail();
+    }
   }, []);
 
   const renderContent = () => {

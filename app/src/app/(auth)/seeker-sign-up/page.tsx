@@ -56,7 +56,7 @@ const SeekerSignUp = () => {
       setEmailError("");
       setPasswordError("");
 
-      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
+      router.push(`/send-email?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
       if (error instanceof Yup.ValidationError) {
         error.inner.forEach((e) => {
