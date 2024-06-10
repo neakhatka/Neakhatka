@@ -52,20 +52,18 @@ class UserRepository {
     updateData,
   }: {
     id: string;
-    updateData: Partial<updateuser>;
+    updateData: updateuser;
   }) {
     try {
       const isExist = await this.findById({ id });
       if (!isExist) {
-        return "User not Exsite";
+        throw new APIError("post  does not exist", StatusCode.NotFound);
       }
 
       const newuserupdate = await seeker_profile.findByIdAndUpdate(
         id,
         {
-          $set: {
-            updateData,
-          },
+          $set:updateData,
         },
         { new: true }
       );

@@ -45,11 +45,15 @@ class PostJob {
       const existed = await this.FindById({ id });
       if (!existed) {
         // console.log("Unable to Update this post");
-        return "Post Card Not Exsite";
+        throw new APIError("post  does not exist", StatusCode.NotFound);
       }
-      const updatepost = await Post.findByIdAndUpdate(id, update, {
-        new: true,
-      });
+      const updatepost = await Post.findByIdAndUpdate(
+        id,
+        { $set: update },
+        {
+          new: true,
+        }
+      );
       return updatepost;
     } catch (error) {
       console.log(error);
