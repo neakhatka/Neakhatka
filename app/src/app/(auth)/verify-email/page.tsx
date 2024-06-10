@@ -42,11 +42,15 @@ const VerifiedPage = () => {
       const response = await verifyEmailToken(token);
       console.log("Verification response:", response);
       if (response.status === "success") {
-
-        // Check the status property of the response object
         setVerificationStatus("success");
         setTimeout(() => {
-          router.push("/");
+          if (response.role === "seeker") {
+            router.push("/");
+          } else if (response.role === "employer") {
+            router.push("/dashboard");
+          } else {
+            setVerificationStatus("error");
+          }
         }, 100);
       } else {
         setVerificationStatus("error");

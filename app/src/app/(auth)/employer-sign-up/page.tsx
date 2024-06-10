@@ -8,7 +8,7 @@ import { FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
 import { Icon } from "@/components";
-import { EmployerSignupSchema } from "@/validation/employerSignUp";
+import { EmployerSignupSchema } from "../../../validation/employerSignUp";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -28,7 +28,8 @@ const EmployerSignUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !email || !password) {
-      if (!username) setUsernameError("Company name is required");
+      // Display errors if any field is empty
+      if (!username) setUsernameError("Username is required");
       if (!email) setEmailError("Email is required");
       if (!password) setPasswordError("Password is required");
       return;
@@ -43,20 +44,21 @@ const EmployerSignUp = () => {
         { abortEarly: false }
       );
 
-      await axios.post("http://localhost:4000/v1/auth/signup", {
+      await axios.post("http://localhost:5000/v1/auth/signup", {
         username,
         email,
         password,
         role,
       });
 
-      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
-    } catch (error: any | unknown) {
-      console.log("error**", error);
-      setLoading(false);
+      // Clear errors upon successful signup
+      setUsernameError("");
+      setEmailError("");
+      setPasswordError("");
 
+      router.push(`/send-email?email=${encodeURIComponent(email)}`);
+    } catch (error: any | unknown) {
       if (error instanceof Yup.ValidationError) {
-        console.log("error form", error);
         error.inner.forEach((e) => {
           switch (e.path) {
             case "username":
@@ -73,12 +75,12 @@ const EmployerSignUp = () => {
           }
         });
       } else {
-        console.error("Signup error:", error); // Debugging
         setSignupError("Error signing up. Please try again.");
       }
     }
   };
 
+  // **Clear Errors on Focus**
   const handleUsernameFocus = () => setUsernameError("");
   const handleEmailFocus = () => setEmailError("");
   const handlePasswordFocus = () => setPasswordError("");
