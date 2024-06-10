@@ -14,11 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/legacy/image";
 import { useCount } from "../../../contexts/CountContext";
-interface MenuItem {
-  text: string;
-  link: string;
-}
-
+import axios from "axios"; // Import Axios
+import { UserNav } from "../UserNav/UserNav";
 interface MenuItem {
   text: string;
   link: string;
@@ -27,11 +24,26 @@ interface MenuItem {
 function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState<string>("");
+  const [user, setUser] = useState<any>(null); // State to store user data
   const { count } = useCount();
 
   useEffect(() => {
-    // Set the active link based on the current path
     setActiveLink(window.location.pathname);
+
+    // Fetch user data on component mount
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/v1/users/all", {
+          withCredentials: true, // Include cookies if needed
+        });
+        setUser(response.data);
+        console.log("response : ", response);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const menuItems: MenuItem[] = [
@@ -81,21 +93,29 @@ function Nav() {
       </NavbarContent>
 
       <NavbarContent className="ml-16" justify="end">
-        <NavbarItem className="hidden sm:flex">
-          <Link
-            href="/login"
-            className={`${
-              isActive("/login") ? "text-green-500" : "text-gray-800"
-            }`}
-          >
-            Login
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/role">
-            <Button className="bg-[#4B9960] hidden sm:flex">Sign Up</Button>
-          </Link>
-        </NavbarItem>
+        {user ? (
+          <NavbarItem>
+            <UserNav />
+          </NavbarItem>
+        ) : (
+          <>
+            <NavbarItem className="hidden sm:flex">
+              <Link
+                href="/login"
+                className={`${
+                  isActive("/login") ? "text-green-500" : "text-gray-800"
+                }`}
+              >
+                Login
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link href="/role">
+                <Button className="bg-[#4B9960] hidden sm:flex">Sign Up</Button>
+              </Link>
+            </NavbarItem>
+          </>
+        )}
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"

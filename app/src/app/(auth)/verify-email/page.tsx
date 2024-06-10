@@ -42,7 +42,6 @@ const VerifiedPage = () => {
       const response = await verifyEmailToken(token);
       console.log("Verification response:", response);
       if (response.status === "success") {
-        console.log("hello from success");
 
         // Check the status property of the response object
         setVerificationStatus("success");
@@ -50,7 +49,6 @@ const VerifiedPage = () => {
           router.push("/");
         }, 100);
       } else {
-        console.log("hello from error");
         setVerificationStatus("error");
       }
     } else {
