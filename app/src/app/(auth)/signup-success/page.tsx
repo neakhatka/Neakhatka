@@ -22,7 +22,7 @@ const SignupPage = () => {
     if (email) {
       // Set a timer to hide confetti after 1 seconds and redirect to verify page
       const timer = setTimeout(() => {
-        router.push(`/please-verify?email=${encodeURIComponent(email)}`);
+        router.push(`/send-email?email=${encodeURIComponent(email)}`);
         setShowConfetti(false);
       }, 1000); // Display confetti for 1 seconds
 

@@ -64,7 +64,9 @@ const proxyConfigs: ProxyConfig = {
             message?: string;
             token?: string;
             errors?: Array<object>;
+            verify_token?: string;
             url?: string;
+            status?: string;
           };
 
           try {
@@ -87,6 +89,18 @@ const proxyConfigs: ProxyConfig = {
             if (responseBody.url) {
               res.redirect(responseBody.url);
             }
+
+            if (responseBody.verify_token) {
+              return res.json(responseBody);
+            }
+
+            if (responseBody.status) {
+              return res.json(responseBody.status);
+            }
+
+            // if (responseBody.message) {
+            //   return res.json(responseBody.message);
+            // }
 
             // Modify response to send only the message to the client
             res.json({ message: responseBody.message });

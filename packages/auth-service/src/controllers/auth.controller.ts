@@ -29,10 +29,9 @@ interface SignUpRequestBody {
   role: string;
 }
 
+
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
-  [x: string]: any;
-
   @SuccessResponse(StatusCode.Created, "Created")
   @Post(ROUTE_PATH.AUTH.SIGN_UP)
   @Middlewares(validateInput(UsersignUpSchema))
@@ -42,7 +41,6 @@ export class AuthController extends Controller {
     try {
       const { username, email, password, role } = requestBody;
 
-      // Step 1.
       const userService = new UserService();
       const newUser = await userService.Create({
         username,
@@ -51,7 +49,6 @@ export class AuthController extends Controller {
         role,
       });
 
-      // Step 2.
       const verificationToken = await userService.SaveVerificationToken({
         userId: newUser._id as string,
       });
@@ -62,7 +59,6 @@ export class AuthController extends Controller {
         template: "verifyEmail",
       };
 
-      // Publish To Notification Service
       await publishDirectMessage(
         authChannel,
         "neakhatka-email-notification",
@@ -73,7 +69,8 @@ export class AuthController extends Controller {
 
       return {
         message: "Sign up successfully. Please verify your email.",
-        // data: newUser,
+        verify_token: verificationToken.emailVerificationToken,
+        data: newUser,
       };
     } catch (error) {
       console.log(error);
@@ -85,17 +82,17 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{ message: string; token: string }> {
+  ): Promise<{ status: string; message: string; token?: string }> {
     try {
       const userService = new UserService();
 
-      // Step 1.
+      // Step 1: Verify email toke
       const user = await userService.VerifyEmailToken({ token });
+      console.log("Verified user:", user);
 
-      // Step 2.
+      // Step 2: Generate JWT token
       const jwtToken = await generateSignature({ userId: user._id });
 
-      // Step 3.
       const userDetail = await userService.FindUserByEmail({
         email: user.email,
       });
@@ -124,9 +121,14 @@ export class AuthController extends Controller {
         "User details sent to user service"
       );
 
-      return { message: "User verify email successfully", token: jwtToken };
-    } catch (error) {
-      throw error;
+      // Step 3: Optionally, update user details or perform other actions
+      return {
+        status: "success",
+        message: "User verify email successfully",
+        token: jwtToken,
+      };
+    } catch (error: any) {
+      return { status: "error", message: error.message };
     }
   }
 

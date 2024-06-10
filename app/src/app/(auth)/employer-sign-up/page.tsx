@@ -50,8 +50,6 @@ const EmployerSignUp = () => {
         role,
       });
 
-      console.log("data : ", username, email, password, role);
-
       router.push(`/signup-success?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
       console.log("error**", error);

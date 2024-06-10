@@ -12,9 +12,11 @@ class UserRepository {
       const existingUser = await this.FindUserByEmail({
         email: UserDetail.email,
       });
+
       if (existingUser) {
         throw new DuplitcateError("Email alredy in use");
       }
+
       const user = new UserProfile(UserDetail);
       const userresult = await user.save();
       return userresult;
@@ -82,9 +84,9 @@ class UserRepository {
   // delete profile
   async deleteUser({ id }: { id: string }) {
     try {
-      const existedID = await this.findById({id});
-      if(!existedID){
-        throw new APIError("Unable to find iin database",StatusCode.NoContent)
+      const existedID = await this.findById({ id });
+      if (!existedID) {
+        throw new APIError("Unable to find iin database", StatusCode.NoContent);
       }
       return await UserProfile.findByIdAndDelete(id);
     } catch (error) {

@@ -55,11 +55,9 @@ const SeekerSignUp = () => {
       setUsernameError("");
       setEmailError("");
       setPasswordError("");
-      setLoading(false);
 
       router.push(`/signup-success?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
-      setLoading(false);
 
       if (error instanceof Yup.ValidationError) {
         error.inner.forEach((e) => {

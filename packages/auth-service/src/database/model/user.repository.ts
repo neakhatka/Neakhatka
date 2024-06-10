@@ -38,7 +38,6 @@ const authSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ["admin", "seeker", "guest", "employer"],
-      default: "seeker",
     },
     isVerified: {
       type: Boolean,
