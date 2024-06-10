@@ -42,6 +42,6 @@ const userschema: Schema = new Schema(
   }
 );
 
-const UserProfile = model("UserModel", userschema);
+const seeker_profile = model("seeker_profile", userschema);
 
-export { UserProfile };
+export { seeker_profile };

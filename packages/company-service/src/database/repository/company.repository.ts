@@ -1,4 +1,4 @@
-import { CompanyModel } from "../model/company.repository.model";
+import { CompanyProfile } from "../model/company.repository.model";
 import {
   // DeleteCompanyRequest,
   companycreateschema,
@@ -17,7 +17,7 @@ class CompanyRepo {
       if (existedemail) {
         throw new DuplicateError("This email has been used!");
       }
-      const company = new CompanyModel(companydetail);
+      const company = new CompanyProfile(companydetail);
       const result = await company.save();
       return result;
     } catch (error) {
@@ -30,7 +30,7 @@ class CompanyRepo {
   }
   async GetAll(): Promise<any> {
     try {
-      const allcompany = await CompanyModel.find();
+      const allcompany = await CompanyProfile.find();
       if (!allcompany) {
         return { message: "can not user" };
       }
@@ -45,8 +45,19 @@ class CompanyRepo {
 
   async Find_Email({ contactEmail }: { contactEmail: string }): Promise<any> {
     try {
-      const existed = await CompanyModel.findOne({
+      const existed = await CompanyProfile.findOne({
         contactEmail: contactEmail,
+      });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to Find User in Database ");
+    }
+  }
+
+  async FindByAuthID({userId }: { userId: string}): Promise<any> {
+    try {
+      const existed = await CompanyProfile.findOne({
+        userId: userId,
       });
       return existed;
     } catch (error) {
@@ -56,7 +67,7 @@ class CompanyRepo {
 
   async FindById({ id }: { id: string }) {
     try {
-      const existed = await CompanyModel.findById(id);
+      const existed = await CompanyProfile.findById(id);
       return existed;
     } catch (error) {
       // console.log(error);
@@ -70,7 +81,7 @@ class CompanyRepo {
       if (!existed) {
         throw new APIError("User does not exist", StatusCode.NotFound);
       }
-      const companyupdate = (await CompanyModel.findByIdAndUpdate(
+      const companyupdate = (await CompanyProfile.findByIdAndUpdate(
         id,
         { $set: { update } },
         {
@@ -92,7 +103,7 @@ class CompanyRepo {
       if (!existed) {
         throw new APIError("Unable to find in database", StatusCode.NoContent);
       }
-      return await CompanyModel.findByIdAndDelete(id);
+      return await CompanyProfile.findByIdAndDelete(id);
     } catch (error) {
       throw error;
     }
