@@ -132,12 +132,12 @@ export class CompanyController extends Controller {
     try {
       const userId = (req as AuthRequest).employer.id;
       const companyservice = new CompanyService();
-      const company = await companyservice.FindByAuthId({userId});
+      const company = await companyservice.FindByAuthId({ userId });
       const companyId = company?.id;
       const postData = { companyId, ...requestBody };
       const postservice = new PostService();
       const post = await postservice.Create(postData);
-      console.log("post Data",post)
+      console.log("post Data", post);
       return { message: "Success post job", data: post };
     } catch (error) {
       console.log("post error:", error);
@@ -164,11 +164,13 @@ export class CompanyController extends Controller {
 
   @Get(ROUTE_PATHS.POSTING.GET_BY_ID)
   @SuccessResponse(StatusCode.Found, "Post Card Found")
-  public async GetPostCard(@Path() id: string): Promise<any> {
+  public async GetPostCard(
+    @Path() id: string
+  ): Promise<{ message: string; data: any }> {
     try {
       const postservice = new PostService();
       const getcard = await postservice.FindById({ id });
-      return getcard;
+      return { message: "Found!", data: getcard };
     } catch (error) {
       throw error;
     }
@@ -196,14 +198,16 @@ export class CompanyController extends Controller {
   }
   @Delete(ROUTE_PATHS.POSTING.DELETE)
   @SuccessResponse(StatusCode.NoContent, "Delete Successfully")
-  public async DeletePost(@Path() id: string): Promise<any> {
+  public async DeletePost(
+    @Path() id: string
+  ): Promise<{ message: string; data: any }> {
     try {
       const postservice = new PostService();
       const deletepost = await postservice.DeletePost({ id });
       if (!deletepost) {
-        return { message: "Post Card not found" };
+        return { message: "Post Card not found", data: null };
       }
-      return deletepost;
+      return { message: "Delete successfully", data: deletepost };
     } catch (error: any) {
       throw new error();
     }

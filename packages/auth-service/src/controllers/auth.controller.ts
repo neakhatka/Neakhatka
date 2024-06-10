@@ -13,7 +13,7 @@ import { ROUTE_PATH } from "../routes/v1/routes-refer";
 import UserService from "../service/user.service";
 import { generateSignature } from "../utils/jwt";
 import { UserSignInSchema, UsersignUpSchema } from "../schema/user-schema";
-import AuthModel, { IAuth } from "../database/model/user.repository"; // Ensure correct path
+import AuthModel from "../database/model/user.repository"; // Ensure correct path
 import { publishDirectMessage } from "../queues/auth.producer";
 import { authChannel } from "../server";
 import { IAuthUserMessageDetails } from "../queues/@types/auth.type";
@@ -83,7 +83,7 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{ message: string; token: string; data: IAuth }> {
+  ): Promise<{status: string;  message: string; token: string; role:string }> {
     try {
       const userService = new UserService();
 
@@ -124,11 +124,12 @@ export class AuthController extends Controller {
         id: userDetail.id,
         role: userDetail.role,
       });
-
+      console.log("Jwttoken:",jwttoken)
       return {
+        status:"success",
         message: "User verify email successfully",
         token: jwttoken,
-        data: userDetail,
+        role: userDetail.role,
       };
     } catch (error) {
       throw error;

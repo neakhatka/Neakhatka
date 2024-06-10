@@ -25,6 +25,6 @@ const userschema: Schema = new Schema({
   timestamps: true,
 });
 
-const UserProfile = model("UserModel", userschema);
+const seeker_profile = model("seeker_profile", userschema);
 
-export { UserProfile };
+export { seeker_profile };
