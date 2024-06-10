@@ -28,6 +28,6 @@ const companySchema = new Schema(
   }
 );
 
-const CompanyModel = model("CompanyMOdel",companySchema)
+const CompanyProfile = model("CompanyProfile",companySchema)
 
-export { CompanyModel };
+export { CompanyProfile };
