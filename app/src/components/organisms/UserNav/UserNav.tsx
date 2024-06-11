@@ -17,7 +17,7 @@ const UserNav = () => {
           <DropdownMenuTrigger>
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              {/* <AvatarFallback>CN</AvatarFallback> */}
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mr-20">

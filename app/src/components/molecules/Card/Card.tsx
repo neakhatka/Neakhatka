@@ -1,13 +1,11 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { Icon } from "@/components";
 import { Typography } from "../../atoms/Typography";
-import { DetailCard } from "@/Types/DetailCard";
-import { useCount } from "../../../contexts/CountContext";
 import { motion } from "framer-motion";
-// import { toast } from "sonner";
+import { IUserProfile } from "@/Types/UserProfile";
 
 interface CardData {
   id: string;
@@ -19,21 +17,21 @@ interface CardData {
   Emploment: string;
   location: string;
   DeadLine: string;
-  onClick?: (event: any) => void;
 }
 
 interface CardProps {
   className?: string;
   data: CardData; // Use the new interface
   iconType?: "star" | "close" | "StarFill";
+  userProfile: IUserProfile;
   onDelete?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Card: React.FC<CardProps> = ({
   className = "",
   data,
   iconType = "star",
+  userProfile,
   onDelete,
 }) => {
   const {
@@ -49,7 +47,6 @@ const Card: React.FC<CardProps> = ({
   } = data;
 
   const [isFavorited, setIsFavorited] = useState(false);
-  const { increment, descrement } = useCount();
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -62,18 +59,46 @@ const Card: React.FC<CardProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    setIsFavorited((prev) => !prev);
+    // Check if cookies are set
+    if (userProfile) {
+      // Toggle the isFavorited state
+      setIsFavorited((prev) => !prev);
 
-    if (iconType === "star") {
+      // Check if Favorite
       if (isFavorited) {
-        descrement();
+        // Decrement Favorites
+        const totalFavorites = localStorage.getItem(
+          "numberOfFavorites"
+        ) as string;
+        const result = parseInt(totalFavorites) - 1;
+
+        // Set New Total Count of Favorite
+        localStorage.setItem("numberOfFavorites", result.toString());
+
+        // Notify Event Storage So That Listener could know total favorite is changing
+        window.dispatchEvent(new Event("storage"));
       } else {
-        increment();
+        // Increment Favorites
+        const totalFavorites = localStorage.getItem("numberOfFavorites")
+          ? (localStorage.getItem("numberOfFavorites") as string)
+          : "0";
+        const result = parseInt(totalFavorites) + 1;
+
+        // Set New Total Count of Favorite
+        localStorage.setItem("numberOfFavorites", result.toString());
+
+        // Notify Event Storage So That Listener could know total favorite is changing
+        window.dispatchEvent(new Event("storage"));
       }
+    } else {
+      // Display a message to the user indicating that they need to enable cookies
+      alert("Please enable cookies to use this feature.");
+      // You can also use a notification library like 'toast' to display a message to the user
+      // Example: toast.error("Please enable cookies to use this feature.");
     }
   };
 
- return (
+  return (
     <motion.div
       className={`h-auto rounded-xl shadow-lg p-5 font-Poppins ${className}`}
       onClick={(e) => {
@@ -166,7 +191,7 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
       </Link>
-      </motion.div>
+    </motion.div>
   );
 };
 

@@ -13,38 +13,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/legacy/image";
-import { useCount } from "../../../contexts/CountContext";
-import axios from "axios"; // Import Axios
 import { UserNav } from "../UserNav/UserNav";
+import { IUserProfile } from "@/Types/UserProfile";
+import { usePathname } from "next/navigation";
+
 interface MenuItem {
   text: string;
   link: string;
 }
 
-function Nav() {
+function Nav({ userProfile }: { userProfile: IUserProfile }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState<string>("");
-  const [user, setUser] = useState<any>(null); // State to store user data
-  const { count } = useCount();
-
-  useEffect(() => {
-    setActiveLink(window.location.pathname);
-
-    // Fetch user data on component mount
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/v1/users/all", {
-          withCredentials: true, // Include cookies if needed
-        });
-        setUser(response.data);
-        console.log("response : ", response);
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const [count, setCount] = useState<number>(0);
+  const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
     { text: "Home", link: "/" },
@@ -55,14 +36,25 @@ function Nav() {
     { text: "Login", link: "/login" },
   ];
 
-  const isActive = (link: string) => activeLink === link;
+  const isActive = (link: string) => pathname === link;
+
+  // Get the Total Number in Real Time From Browser Local Storage (Client Side Rendering)
+  useEffect(() => {
+    const listenStorageChange = () => {
+      if (localStorage.getItem("numberOfFavorites")) {
+        setCount(parseInt(localStorage.getItem("numberOfFavorites") as string));
+      }
+    };
+    // Subscribe to Event `storage`
+    window.addEventListener("storage", listenStorageChange);
+
+    // Cleanup Event Listener
+    return () => window.removeEventListener("storage", listenStorageChange);
+  }, []);
 
   return (
-    <Navbar
-      className="py-1"
-      shouldHideOnScroll
-      onMenuOpenChange={setIsMenuOpen}
-    >
+    <Navbar className="py-1" shouldHideOnScroll onMenuOpenChange={setIsMenuOpen}>
+      {/* ==============LOGO WEBSITE=================== */}
       <NavbarContent>
         <NavbarBrand>
           <Link href="/">
@@ -71,6 +63,7 @@ function Nav() {
         </NavbarBrand>
       </NavbarContent>
 
+      {/* ============== MENU =================== */}
       <NavbarContent className="hidden sm:flex gap-4 ml-16" justify="center">
         {menuItems.slice(0, 4).map((item) => (
           <NavbarItem key={item.link}>
@@ -85,6 +78,9 @@ function Nav() {
               {item.text === "Favorite" && count > 0 && (
                 <Badge variant="destructive" className="-mt-3">
                   {count > 9 ? "9+" : count}
+
+                  {/* will use this when backend complate */}
+                  {/* {count > 9 ? "9+" : userProfile.favoriteCards} */}
                 </Badge>
               )}
             </Link>
@@ -92,8 +88,9 @@ function Nav() {
         ))}
       </NavbarContent>
 
+      {/* ============== SIGNUP/IN & Profile =================== */}
       <NavbarContent className="ml-16" justify="end">
-        {user ? (
+        {userProfile ? (
           <NavbarItem>
             <UserNav />
           </NavbarItem>
@@ -122,6 +119,7 @@ function Nav() {
         />
       </NavbarContent>
 
+      {/* ============== RESPONSIVE MENU =================== */}
       <NavbarMenu style={{ background: isMenuOpen ? "#fff" : "#fff" }}>
         {menuItems.map((item, index) => (
           <NavbarMenuItem className="mt-5" key={`${item}-${index}`}>
