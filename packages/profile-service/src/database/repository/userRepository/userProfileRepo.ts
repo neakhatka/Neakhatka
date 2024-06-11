@@ -5,6 +5,7 @@ import DuplitcateError from "../../../error/duplitcate-error";
 import APIError from "../../../error/api-error";
 import { createuser, updateuser } from "../@types/user.repository.type";
 import { StatusCode } from "../../../utils/consts/status.code";
+
 class UserRepository {
   // create user
   async createuser(UserDetail: createuser) {
@@ -103,7 +104,7 @@ class UserRepository {
     }
   }
   // async addToFavorites(userId: string, cardId: string): Promise<IUserDocument | null> {
-  //   const user = await UserProfile.findById(userId);
+  //   const user = await  seeker_profile .findById(userId);
   //   if (!user) throw new Error("User not found");
 
   //   user.favoriteCards.push(cardId  as any  );

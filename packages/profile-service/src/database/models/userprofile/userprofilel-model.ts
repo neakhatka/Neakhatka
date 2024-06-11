@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, model } from "mongoose";
+import { IUserDocument } from "../../@types/user.interface";
 
 export interface IUser extends Document {
   profilePicture: string;
@@ -42,6 +43,6 @@ const userschema: Schema = new Schema(
   }
 );
 
-const seeker_profile = model("seeker_profile", userschema);
+const seeker_profile = model<IUserDocument>("seeker_profile", userschema);
 
 export { seeker_profile };

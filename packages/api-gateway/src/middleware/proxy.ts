@@ -65,7 +65,7 @@ const proxyConfigs: ProxyConfig = {
             message?: string;
             token?: string;
             errors?: Array<object>;
-            data?: Array<object>;
+            role?: string;
             url?: string;
             status?:string
           };
@@ -80,7 +80,7 @@ const proxyConfigs: ProxyConfig = {
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
             }
-
+            
             // Store JWT in session
             if (responseBody.token) {
               console.log("Hi token!", responseBody.token);
@@ -98,9 +98,9 @@ const proxyConfigs: ProxyConfig = {
             res.json({
               status: responseBody.status,
               message: responseBody.message,
-              role: responseBody.data,
+              role: responseBody.role,
             });
-            console.log("Auth Data:", responseBody.data);
+            console.log("Auth Data:", responseBody.role);
           } catch (error) {
             return res.status(500).json({ message: "Error parsing response" });
           }
