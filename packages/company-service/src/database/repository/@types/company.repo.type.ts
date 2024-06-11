@@ -1,23 +1,18 @@
-// import { ICompanyDocument } from "../../model/company.repository.model";
+
 
 export interface companycreateschema {
-  companyName: string;
-  contactEmail: string;
+  companyname: string;
+  contactemail: string;
 }
-// export interface DeleteCompanyRequest {
-//   id: string;
-// }
-
-// export interface companyupdateschema extends Partial<ICompanyDocument> {
   export interface companyupdateschema {
-  companyName?: string;
+  companyname?: string;
   logo?: string;
-  contactPhone?: number;
+  contactphone?: number;
   websiteLink?: string;
   location?: string;
-  contactEmail?: string;
-  contactPerson?: string;
-  numberOfEmployees?: number;
+  contactemail?: string;
+  contactperson?: string;
+  numberOfemployees?: number;
   address?: string;
-  companyDescription?: string;
+  companydescription?: string;
 }

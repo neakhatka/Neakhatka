@@ -4,7 +4,8 @@ import express from "express";
 import axios from "axios";
 import { Request, Response } from "express";
 import { generateSignature } from "../../utils/jwt";
-import AuthModel from "../../database/model/user.repository"; // Make sure this import matches your exported model
+// Make sure this import matches your exported model
+import authentication from "../../database/model/user.repository";
 
 const authRouter = express.Router();
 
@@ -43,15 +44,16 @@ authRouter.get("/user/google/callback", async (req: Request, res: Response) => {
     );
 
     // Check if user already exists in the database based on email
-    let user = await AuthModel.findOne({ email: profile.email });
+    let user = await authentication.findOne({ email: profile.email });
 
     if (!user) {
       // Create a new user if not found
-      user = new AuthModel({
+      user = new authentication({
         username: profile.given_name, // Assuming the profile has given_name and family_name
         email: profile.email,
         isVerified: true, // Assuming Google OAuth is verified
         googleId: profile.id,
+        role: profile.role,
       });
 
       // Save the new user to the database
@@ -60,7 +62,10 @@ authRouter.get("/user/google/callback", async (req: Request, res: Response) => {
     }
 
     // Generate JWT token for the user and send it back
-    const token = generateSignature({ UserID: user._id }); // Assuming _id is the MongoDB ObjectId of the user
+    const token = generateSignature({
+      id: user._id!.toString(),
+      role: user.role,
+    }); // Assuming _id is the MongoDB ObjectId of the user
     res.json({ token }); // Send JWT token back to the client
   } catch (error) {
     console.error("Error during Google authentication:", error);
