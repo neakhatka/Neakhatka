@@ -20,7 +20,7 @@ class ConnectToMongoDB {
       await mongoose.connect(this.monogourl);
       logger.info("Successfully connected to MongoDB");
     } catch (err) {
-      logger.error("Initial MongoDB connection error", { err });
+      logger.error(`Initial MongoDB connection error ${err}`);
     }
   }
 }

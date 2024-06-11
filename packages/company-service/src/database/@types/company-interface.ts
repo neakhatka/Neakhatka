@@ -1,13 +1,13 @@
 export interface ICompanyDocument {
-  companyName?: string;
+  companyname?: string;
   logo?: string;
-  contactPhone?: number;
+  contactphone?: number;
   websiteLink?: string;
   location?: string;
-  contactEmail?: string | undefined;
-  contactPerson: string;
-  numberOfEmployees: number;
+  contactemail?: string | undefined;
+  contactperson: string;
+  numberOfemployees: number;
   address: string;
-  companyDescription: string;
+  companydescription: string;
   userId?: string;
 }

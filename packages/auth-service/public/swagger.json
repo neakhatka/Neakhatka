@@ -107,16 +107,24 @@
 							"application/json": {
 								"schema": {
 									"properties": {
+										"role": {
+											"type": "string"
+										},
 										"token": {
 											"type": "string"
 										},
 										"message": {
 											"type": "string"
+										},
+										"status": {
+											"type": "string"
 										}
 									},
 									"required": [
+										"role",
 										"token",
-										"message"
+										"message",
+										"status"
 									],
 									"type": "object"
 								}

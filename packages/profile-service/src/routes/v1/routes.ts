@@ -15,16 +15,16 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "authid": {"dataType":"string","required":true},
-            "profilePicture": {"dataType":"string"},
-            "FullName": {"dataType":"string","required":true},
+            "profile": {"dataType":"string"},
+            "fullname": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactPhone": {"dataType":"double"},
+            "contactphone": {"dataType":"double"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
-            "dateOfBirth": {"dataType":"datetime"},
+            "DOB": {"dataType":"datetime"},
             "nationality": {"dataType":"string"},
             "address": {"dataType":"string"},
-            "educationBackground": {"dataType":"string"},
+            "educationbackground": {"dataType":"string"},
         },
         "additionalProperties": true,
     },
@@ -34,25 +34,37 @@ const models: TsoaRoute.Models = {
         "properties": {
             "_id": {"dataType":"string"},
             "authid": {"dataType":"string","required":true},
-            "profilePicture": {"dataType":"string"},
-            "FullName": {"dataType":"string","required":true},
+            "profile": {"dataType":"string"},
+            "fullname": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactPhone": {"dataType":"double"},
+            "contactphone": {"dataType":"double"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
-            "dateOfBirth": {"dataType":"datetime","required":true},
+            "DOB": {"dataType":"datetime","required":true},
             "nationality": {"dataType":"string"},
             "address": {"dataType":"string"},
-            "educationBackground": {"dataType":"string"},
-            "favoriteCards": {"dataType":"array","array":{"dataType":"string"}},
+            "educationbackground": {"dataType":"string"},
+            "favorite": {"dataType":"array","array":{"dataType":"string"}},
             "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Partial_updateuser_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"profilePicture":{"dataType":"string"},"FullName":{"dataType":"string"},"email":{"dataType":"string"},"contactPhone":{"dataType":"double"},"gender":{"dataType":"string"},"location":{"dataType":"string"},"dateOfBirth":{"dataType":"datetime"},"nationality":{"dataType":"string"},"address":{"dataType":"string"},"educationBackground":{"dataType":"string"}},"validators":{}},
+    "updateuser": {
+        "dataType": "refObject",
+        "properties": {
+            "profile": {"dataType":"string"},
+            "fullname": {"dataType":"string"},
+            "email": {"dataType":"string"},
+            "contactphone": {"dataType":"double"},
+            "gender": {"dataType":"string"},
+            "location": {"dataType":"string"},
+            "DOB": {"dataType":"datetime"},
+            "nationality": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "educationbackground": {"dataType":"string"},
+        },
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -95,7 +107,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/users/all',
+        app.get('/v1/users',
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.GetAllUserController)),
 
@@ -161,7 +173,7 @@ export function RegisterRoutes(app: Router) {
             async function UserController_updateUserController(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                    updateData: {"in":"body","name":"updateData","required":true,"ref":"Partial_updateuser_"},
+                    updateData: {"in":"body","name":"updateData","required":true,"ref":"updateuser"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

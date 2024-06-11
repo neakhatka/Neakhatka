@@ -2,16 +2,16 @@
 export interface IUserDocument {
     _id?: string ,
     authid:string,
-    profilePicture?: string;
-    FullName: string;
+    profile?: string;
+    fullname: string;
     email: string;
-    contactPhone?:number;
+    contactphone?:number;
     gender?: string;
     location?: string;
-    dateOfBirth: Date;
+    DOB: Date;
     nationality?: string;
     address?: string;
-    educationBackground?: string;
-    favoriteCards?: string[],
+    educationbackground?: string;
+    favorite?: string[],
     createdAt?: Date;
 }

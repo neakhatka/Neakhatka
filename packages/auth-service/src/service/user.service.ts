@@ -151,7 +151,7 @@ class UserService {
           "http://profile-service:4003/v1/users",
           {
             authid: user._id.toString(),
-            FullName: user.username,
+            fullname: user.username,
             email: user.email,
           },
           {
@@ -164,11 +164,11 @@ class UserService {
         // const   jwttoken= await generateSignature( response.data.data.id , user.role)
       } else if (user.role === "employer") {
         const response = await axios.post(
-          "http://company-service:4004/v1/company",
+          "http://company-service:4004/v1/companies",
           {
             userId: user._id.toString(),
-            companyName: user.username,
-            contactEmail: user.email,
+            companyname: user.username,
+            contactemail: user.email,
           },
           {
             headers: {
