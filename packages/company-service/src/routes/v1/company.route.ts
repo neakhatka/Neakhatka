@@ -8,11 +8,12 @@ const ROUTE_PATHS = {
     // POST: "/postng",
   },
   POSTING: {
-    POST: "/posting",
-    GET_ALL_POST: "/posting",
+    POST: "/postjob",
+    GET_ALL_POST: "/postjob",
     GET_BY_ID: "/post/:id",
     DELETE: "/post/:id",
     UPDATE: "/post/:id",
+    GET_FT_COMPANYID:"/posts",
     // POST: "/postng",
   },
 };
