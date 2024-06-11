@@ -83,7 +83,7 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{status: string;  message: string; token: string; role:string }> {
+  ): Promise<{ status: string; message: string; token: string; role: string }> {
     try {
       const userService = new UserService();
 
@@ -124,9 +124,9 @@ export class AuthController extends Controller {
         id: userDetail.id,
         role: userDetail.role,
       });
-      console.log("Jwttoken:",jwttoken)
+      // console.log("Jwttoken:",jwttoken)
       return {
-        status:"success",
+        status: "success",
         message: "User verify email successfully",
         token: jwttoken,
         role: userDetail.role,
@@ -145,9 +145,10 @@ export class AuthController extends Controller {
     try {
       const userService = new UserService();
       const user = await userService.Login(requestBody);
-      // const response = await axios.get(
-      //   `http://localhost:4001/v1/auth/${user.id}`
-      // )
+      if (!user) {
+        throw new Error("Invalid credentials");
+      }
+
       console.log("User", user);
       const jwttoken = await generateSignature({
         id: user._id as string,
@@ -156,7 +157,9 @@ export class AuthController extends Controller {
       return { message: "Success login", token: jwttoken };
     } catch (error) {
       console.log(error);
-      throw error;
+      throw new Error(
+        "Login failed. Please check your credentials and try again."
+      );
     }
   }
 

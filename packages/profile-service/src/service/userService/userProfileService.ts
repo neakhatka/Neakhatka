@@ -2,8 +2,10 @@ import UserRepository from "../../database/repository/userRepository/userProfile
 import { IUserDocument } from "../../database/@types/user.interface";
 import DuplitcateError from "../../error/duplitcate-error";
 import APIError from "../../error/api-error";
-import { createuser, updateuser } from "../../database/repository/@types/user.repository.type";
-// import { UserProfile } from "../../database/models/userprofile/userprofilel-model";
+import {
+  createuser,
+  updateuser,
+} from "../../database/repository/@types/user.repository.type";
 export class UserService {
   private userRepo: UserRepository;
   constructor() {
@@ -46,8 +48,8 @@ export class UserService {
     updateData,
   }: {
     id: string;
-    updateData: Partial<updateuser>;
-  }) {
+    updateData: updateuser;
+  }): Promise<any> {
     try {
       return await this.userRepo.updateUser({ id, updateData });
     } catch (error) {

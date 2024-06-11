@@ -25,9 +25,10 @@ const CandidatesTable = () => {
           <tbody>
             {candidates.map((candidate, index) => (
               <tr key={index} className="hover:bg-gray-200 transition ease-linear cursor-pointer">
-                <td className="py-4 px-6 text-gray-700">{candidate.username}</td>
                 <td className="py-4 px-6 text-gray-700">{candidate.email}</td>
                 <td className="py-4 px-6 text-gray-700">{candidate.date}</td>
+                <td className="py-4 px-6 text-gray-700">{candidate.username}</td>
+
                 <td className="py-4 px-6 text-blue-500 underline cursor-pointer">
                   {candidate.cv}
                 </td>

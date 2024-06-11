@@ -65,7 +65,7 @@ const proxyConfigs: ProxyConfig = {
             message?: string;
             token?: string;
             errors?: Array<object>;
-            role?: string;
+            role?: string
             url?: string;
             status?:string
           };
