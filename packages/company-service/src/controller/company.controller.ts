@@ -17,6 +17,7 @@ import {
   Delete,
   Middlewares,
   Request,
+  Query,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
 import {
@@ -85,19 +86,19 @@ export class CompanyController extends Controller {
   public async Update(
     @Path() id: string,
     @Body() update: companyupdateschema
-  ): Promise<{message:string ;data:any }> {
+  ): Promise<{ message: string; data: any }> {
     try {
       const companyservice = new CompanyService();
       const result = await companyservice.update({ id, update });
       if (!result) {
         this.setStatus(404);
-        return { message: "Profile not found" , data:null};
+        return { message: "Profile not found", data: null };
       }
-      return {message: "Profile updated" , data:result}
+      return { message: "Profile updated", data: result };
     } catch (error: any) {
       // throw error;
       this.setStatus(500); // Set HTTP status code to 500 for server errors
-      return { message: error.message || "Internal Server Error" , data:null };
+      return { message: error.message || "Internal Server Error", data: null };
     }
   }
 
@@ -180,7 +181,7 @@ export class CompanyController extends Controller {
   public async Updatepost(
     @Path() id: string,
     @Body() update: postupdateschema
-  ): Promise<{message: string; data: any }> {
+  ): Promise<{ message: string; data: any }> {
     try {
       console.log("Update Data:", update);
       const postservice = new PostService();
@@ -210,6 +211,21 @@ export class CompanyController extends Controller {
       return { message: "Delete successfully", data: deletepost };
     } catch (error: any) {
       throw new error();
+    }
+  }
+  // impliment route for get all post job
+  @Get(ROUTE_PATHS.POSTING.GET_FT_COMPANYID)
+  @SuccessResponse(StatusCode.OK, "Successfully retrieved posts")
+  public async getPostsByCompanyId(
+    @Query() companyId: string
+  ): Promise<{ message: string; data: any[] }> {
+    try {
+      const postService = new PostService();
+      const posts = await postService.getPostsByCompanyId(companyId);
+      return { message: "Successfully retrieved posts", data: posts };
+    } catch (error: any) {
+      this.setStatus(500);
+      return { message: error.message || "Internal Server Error", data: [] };
     }
   }
 }
