@@ -15,7 +15,7 @@ const userschema: Schema = new Schema({
   contactPhone: { type: Number, required: false, default: null },
   gender: { type: String, required: false , default: ""},
   location: { type: String, required: false , default: ""},
-  dateOfBirth: { type: String, required: false , default: ""},
+  dateOfBirth: { type: Date, required: false , default:null},
   nationality: { type: String, required: false , default: ""},
   address: { type: String, required: false, default: "" },
   educationBackground: { type: String, required: false , default: ""},

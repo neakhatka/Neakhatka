@@ -83,6 +83,11 @@ export class UserController extends Controller {
     @Body() updateData: updateuser
   ): Promise<{ message: string; data: any }> {
     try {
+      const { dateOfBirth } = updateData;
+      if (dateOfBirth !== null && !(dateOfBirth instanceof Date) || (dateOfBirth instanceof Date && isNaN(dateOfBirth.getTime()))) {
+        this.setStatus(400); // Set HTTP status code to 400 for bad request
+        return { message: "Invalid dateOfBirth", data: null };
+      }
       const userservice = new UserService();
       const updateuser = await userservice.updateProfileService({
         id,

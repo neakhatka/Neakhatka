@@ -1,4 +1,5 @@
 import APIError from "../controller/error/api-error";
+import { Post } from "../database/model/post.repo.model";
 import {
   postcreateschema,
   postupdateschema,
@@ -47,6 +48,16 @@ class PostService {
     } catch (error) {
       console.log(error);
       throw new APIError("Unable to delete User profile");
+    }
+  }
+  //  implementation for get all post job that company posted
+  async getPostsByCompanyId(companyId: string): Promise<any[]> {
+    try {
+      const posts = await Post.find({ companyId });
+      return posts;
+    } catch (error) {
+      console.error("Error retrieving posts by company ID:", error);
+      throw new Error("Unable to retrieve posts");
     }
   }
 }
