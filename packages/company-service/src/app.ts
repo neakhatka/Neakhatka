@@ -11,6 +11,11 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+app.use((_req, _res, next) => {
+  console.log("hellllllllll");
+  next();
+});
+
 app.use(hpp());
 app.use(helmet());
 app.use(
@@ -29,4 +34,3 @@ app.use(express.json());
 RegisterRoutes(app);
 
 export default app;
-  

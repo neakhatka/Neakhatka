@@ -12,7 +12,7 @@ class CompanyRepo {
   async Create(companydetail: companycreateschema) {
     try {
       const existedemail = await this.Find_Email({
-        contactEmail: companydetail.contactEmail,
+        contactEmail: companydetail.contactemail,
       });
       if (existedemail) {
         throw new DuplicateError("This email has been used!");

@@ -20,7 +20,9 @@ class PostService {
   }
   async GetAllPost(): Promise<any> {
     try {
-      return await this.postrepo.GetAll();
+      const posts = await this.postrepo.GetAll();
+
+      return posts;
     } catch (error) {
       throw new Error("Unable to find user");
     }

@@ -1,27 +1,27 @@
 
 export interface createuser {
     authid:string,
-    profilePicture?: string;
-    FullName: string;
+    profile?: string;
+    fullname: string;
     email:string,
-    contactPhone?: number;
+    contactphone?: number;
     gender?: string;
     location?: string;
-    dateOfBirth?: Date;
+    DOB?: Date;
     nationality?: string;
     address?: string;
-    educationBackground?: string;
+    educationbackground?: string;
 }
 
 export interface updateuser{
-    profilePicture?: string;
-    FullName?: string;
+    profile?: string;
+    fullname?: string;
     email?: string;
-    contactPhone?: number;
+    contactphone?: number;
     gender?: string;
     location?: string;
-    dateOfBirth?: Date;
+    DOB?: Date;
     nationality?: string;
     address?: string;
-    educationBackground?: string;
+    educationbackground?: string;
 }
