@@ -62,7 +62,7 @@ const authSchema = new mongoose.Schema(
 );
 
 const  authentication = mongoose.model<IAuthDocument, IAuthModel>(
-  " authentication",
+  "authentication",
   authSchema
 );
 

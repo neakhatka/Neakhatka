@@ -28,7 +28,13 @@ interface SignUpRequestBody {
   password: string;
   role: string;
 }
-
+interface VerifyEmailResponse {
+  status: string;
+  message: string;
+  token: string;
+  role: string;
+  id: string;
+}
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
   [x: string]: any;
@@ -83,12 +89,13 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<{ status: string; message: string; token: string; role: string }> {
+  ): Promise<VerifyEmailResponse> {
     try {
       const userService = new UserService();
 
       // Step 1.
       const user = await userService.VerifyEmailToken({ token });
+      console.log("user:",user);
 
       // Step 2.
       // const jwtToken = await generateSignature({userId: user._id});
@@ -130,6 +137,7 @@ export class AuthController extends Controller {
         message: "User verify email successfully",
         token: jwttoken,
         role: userDetail.role,
+        id: user.id.toString(),
       };
     } catch (error) {
       throw error;

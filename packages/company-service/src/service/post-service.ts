@@ -1,4 +1,4 @@
-import APIError from "../controller/error/api-error";
+import APIError from "../database/error/api-error";
 import { Post } from "../database/model/post.repo.model";
 import {
   postcreateschema,
@@ -24,7 +24,7 @@ class PostService {
 
       return posts;
     } catch (error) {
-      throw new Error("Unable to find user");
+      throw new Error("Unable to retrieve posts");
     }
   }
   async FindById({ id }: { id: string }) {
@@ -32,24 +32,32 @@ class PostService {
       return await this.postrepo.FindById({ id });
     } catch (error) {
       console.log(error);
-      throw new APIError("Unable to get post card with this ID");
+      throw new APIError("Unable to get post job with this ID");
+    }
+  }
+  async FindByCidAndJobId(companyid:string, jobid:string){
+    try{
+      return await this.postrepo.FindByCidAndJobId(companyid, jobid); //
+
+    }catch(error){
+      throw new APIError("Unable to get post job with this ID");
     }
   }
 
-  async Updatepost({ id, update }: { id: string; update: postupdateschema }) {
+  async UpdatePost({ id, update }: { id: string; update: postupdateschema }) {
     try {
       return await this.postrepo.Update({ id, update });
     } catch (error) {
       console.log(error);
-      throw new APIError("Unable to update User profile!");
+      throw new APIError("Unable to update job!");
     }
   }
-  async DeletePost({ id }: { id: string }) {
+  async DeletePost(companyid:string, jobid:string) {
     try {
-      return await this.postrepo.Delete({ id });
+      return await this.postrepo.Delete(companyid , jobid);
     } catch (error) {
       console.log(error);
-      throw new APIError("Unable to delete User profile");
+      throw new APIError("Unable to delete Job");
     }
   }
   //  implementation for get all post job that company posted

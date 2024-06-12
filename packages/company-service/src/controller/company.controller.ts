@@ -16,7 +16,7 @@ import {
   SuccessResponse,
   Delete,
   Middlewares,
-  Request,
+  // Request,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
 import {
@@ -24,7 +24,7 @@ import {
   postupdateschema,
 } from "../database/repository/@types/post.repo.type";
 import PostService from "../service/post-service";
-import { AuthRequest, authorize } from "../middleware/authMiddleware";
+import { authorize } from "../middleware/authMiddleware";
 
 @Route("v1/companies")
 export class CompanyController extends Controller {
@@ -132,31 +132,35 @@ export class CompanyController extends Controller {
   // ============= JOBS RESOURCE =======================
   // ===================================================
 
-  @Get(ROUTE_PATHS.POSTING.GET_ALL_POST)
-  @SuccessResponse(StatusCode.Found, "Data Found")
-  public async GetAllPosts(): Promise<{ message: string; data: any }> {
-    try {
-      const postservice = new PostService();
-      const post = await postservice.GetAllPost();
-      return { message: "Success get all post", data: post };
-    } catch (error: any) {
-      console.log(error);
-      throw {
-        status: StatusCode.NotFound,
-        message: "Can not found ",
-        detail: error.message,
-      };
-    }
-  }
+  // @Get(ROUTE_PATHS.POSTING.GET_ALL_POST)
+  // @SuccessResponse(StatusCode.Found, "Data Found")
+  // public async GetAllPosts(): Promise<{ message: string; data: any }> {
+  //   try {
+  //     console.log("GetAllPosts method called");
+  //     const postservice = new PostService();
+  //     const post = await postservice.GetAllPost();
+  //     console.log("Posts retrieved:", post);
+  //     return { message: "Success get all post", data: post };
+  //   } catch (error: any) {
+  //     console.error("Error in GetAllPosts:", error);
+  //     throw {
+  //       status: StatusCode.NotFound,
+  //       message: "Can not found ",
+  //       detail: error.message,
+  //     };
+  //   }
+  // }
 
   @Get(ROUTE_PATHS.POSTING.GET_BY_ID)
   @SuccessResponse(StatusCode.Found, "Post Card Found")
   public async GetPost(
-    @Path() id: string
+    @Path() companyid: string,
+    @Path() id: string,
   ): Promise<{ message: string; data: any }> {
     try {
       const postservice = new PostService();
-      const getcard = await postservice.FindById({ id });
+      const getcard = await postservice.FindByCidAndJobId(companyid,id);
+      console.log("getcard", getcard);
       return { message: "Found!", data: getcard };
     } catch (error) {
       throw error;
@@ -168,15 +172,17 @@ export class CompanyController extends Controller {
   @SuccessResponse(StatusCode.OK, "Posting Successfully")
   public async CreatePost(
     @Body() requestBody: postcreateschema,
-    @Request() req: Express.Request
+    @Path() companyid: string,
+    // @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      const userId = (req as AuthRequest).employer.id;
-      console.log("Auth ID:",userId)
+      // const userId = (req as AuthRequest).employer.id;
+      // console.log("Auth ID:",userId)
       const companyservice = new CompanyService();
-      const company = await companyservice.FindByAuthId({ userId });
+      const company = await companyservice.FindById({ id:companyid });
       const companyId = company?.id;
-      console.log("company ID:",companyId);
+      console.log("company ID:",companyid);
+
       const postData = { companyId, ...requestBody };
       const postservice = new PostService();
       const post = await postservice.Create(postData);
@@ -197,10 +203,10 @@ export class CompanyController extends Controller {
     try {
       console.log("Update Data:", update);
       const postservice = new PostService();
-      const updatepost = await postservice.Updatepost({ id, update });
+      const updatepost = await postservice.UpdatePost({ id, update });
       if (!updatepost) {
         this.setStatus(404); // Set HTTP status code to 404
-        return { message: "Post card Not Found", data: null };
+        return { message: "Job  Not Found", data: null };
       }
       return { message: "Update successfully", data: updatepost };
     } catch (error: any) {
@@ -213,11 +219,12 @@ export class CompanyController extends Controller {
   @Delete(ROUTE_PATHS.POSTING.DELETE)
   @SuccessResponse(StatusCode.NoContent, "Delete Successfully")
   public async DeletePost(
+    @Path() companyid: string,
     @Path() id: string
   ): Promise<{ message: string; data: any }> {
     try {
       const postservice = new PostService();
-      const deletepost = await postservice.DeletePost({ id });
+      const deletepost = await postservice.DeletePost(companyid,id );
       if (!deletepost) {
         return { message: "Post Card not found", data: null };
       }
