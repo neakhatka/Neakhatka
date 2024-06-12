@@ -1,6 +1,6 @@
 // import { ICompanyDocument } from "../database/model/company.repository.model";
-import APIError from "../controller/error/api-error";
-import DuplicateError from "../controller/error/duplicate-error";
+import APIError from "../database/error/api-error";
+import DuplicateError from "../database/error/duplicate-error";
 import {
   // DeleteCompanyRequest,
   companycreateschema,
@@ -40,9 +40,9 @@ class CompanyService {
       throw new APIError("Unable to get user with this ID");
     }
   }
-  async FindByAuthId({userId }: { userId: string }): Promise<any> {
+  async FindByAuthId({ userId }: { userId: string }): Promise<any> {
     try {
-      return await this.companyrepo.FindByAuthID({userId})
+      return await this.companyrepo.FindByAuthID({ userId });
     } catch (error) {
       console.log(error);
       // return null;
@@ -59,7 +59,13 @@ class CompanyService {
     }
   }
 
-  async update({ id, update }: { id: string; update: companyupdateschema }):Promise<any> {
+  async update({
+    id,
+    update,
+  }: {
+    id: string;
+    update: companyupdateschema;
+  }): Promise<any> {
     try {
       return await this.companyrepo.Update({ id, update });
     } catch (error) {

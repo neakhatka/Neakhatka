@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
-import APIError from "../controller/error/api-error";
+import APIError from "../database/error/api-error";
 
 function Createconfig(configPath: string) {
   dotenv.config({ path: configPath });

@@ -74,7 +74,13 @@ RegisterRoutes(app);
 // JWT Middleware
 // ===================
 
-app.use(unless("/v1/auth", verifyUser));
+// Conditions array
+const conditions = [
+  { path: "/v1/auth" },                 // Exclude all routes starting with /v1/auth
+  { path: "/v1/jobs", method: "GET" }, // Exclude GET requests starting with /v1/events
+];
+app.use(unless(conditions, verifyUser));
+// app.use(unless("/v1/uder", verifyUser));
 
 // ===================
 // Proxy Routes
