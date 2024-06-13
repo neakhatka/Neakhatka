@@ -1,4 +1,4 @@
-import APIError from "../../controller/error/api-error";
+import APIError from "../error/api-error";
 import { StatusCode } from "../../util/consts/status.code";
 import { Post } from "../model/post.repo.model";
 import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
@@ -64,14 +64,23 @@ class PostJob {
       }
     }
   }
+  async FindByCidAndJobId(companyid: string, jobId: string) {
+    try{
+      const existed = await Post.findOne({companyId: companyid, _id: jobId});
+      return existed;
 
-  async Delete({ id }: { id: string }) {
+    }catch(error){
+      throw new APIError("Unable to find in database");
+    }
+  }
+
+  async Delete(companyid: string, jobId: string) {
     try {
-      const existed = await this.FindById({ id });
+      const existed = await this.FindById({ id:jobId });
       if (!existed) {
-        throw new APIError("Unable to find iin database", StatusCode.NoContent);
+        throw new APIError("Unable to find in database", StatusCode.NoContent);
       }
-      return await Post.findByIdAndDelete(id);
+      return await Post.findByIdAndDelete({companyId: companyid, _id: jobId});
     } catch (error) {
       // console.log(error);
       if (error instanceof APIError) {

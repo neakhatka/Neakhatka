@@ -5,8 +5,8 @@ import {
   companyupdateschema,
 } from "./@types/company.repo.type";
 import { StatusCode } from "../../util/consts/status.code";
-import APIError from "../../controller/error/api-error";
-import DuplicateError from "../../controller/error/duplicate-error";
+import APIError from "../error/api-error";
+import DuplicateError from "../error/duplicate-error";
 
 class CompanyRepo {
   async Create(companydetail: companycreateschema) {
@@ -54,7 +54,7 @@ class CompanyRepo {
     }
   }
 
-  async FindByAuthID({userId }: { userId: string}): Promise<any> {
+  async FindByAuthID({ userId }: { userId: string }): Promise<any> {
     try {
       const existed = await CompanyProfile.findOne({
         userId: userId,
@@ -83,7 +83,7 @@ class CompanyRepo {
       }
       const companyupdate = (await CompanyProfile.findByIdAndUpdate(
         id,
-        { $set:  update },
+        { $set: update },
         {
           new: true,
         }

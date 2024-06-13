@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { logger } from "./logger";
-import APIError from "../controller/error/api-error";
+import APIError from "../database/error/api-error";
 export const decodedToken = async (token: string) => {
   try {
     const data = (await jwt.decode(token)) as JwtPayload;

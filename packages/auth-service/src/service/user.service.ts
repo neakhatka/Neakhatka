@@ -134,17 +134,18 @@ class UserService {
     // Remove the verification token
     await this.accountVerificationRepo.DeleteVerificationToken({ token });
     console.log("User", user);
-    await this.SentRequestBaseOnRole(user);
+
+    const {id} = await this.SentRequestBaseOnRole(user);
     return {
       message: "User verify email successfully",
       token: jwttoken,
       status: "success",
       date: user,
+      id: id,
     };
     // return user;
   }
-
-  async SentRequestBaseOnRole(user: any): Promise<void> {
+  async SentRequestBaseOnRole(user: any): Promise<{ id: string }> {
     try {
       if (user.role === "seeker") {
         const response = await axios.post(
@@ -160,9 +161,10 @@ class UserService {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         // const   jwttoken= await generateSignature( response.data.data.id , user.role)
-      } else if (user.role === "employer") {
+        return { id: response.data._id };
+      } else {//(user.role === "employer") 
         const response = await axios.post(
           "http://company-service:4004/v1/companies",
           {
@@ -177,6 +179,7 @@ class UserService {
           }
         );
         console.log(response.data);
+        return { id: response.data._id };
       }
     } catch (error) {
       console.log(error);

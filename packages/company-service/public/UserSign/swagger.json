@@ -233,6 +233,35 @@
 		}
 	},
 	"paths": {
+		"/v1/jobs": {
+			"get": {
+				"operationId": "GetAllPosts",
+				"responses": {
+					"302": {
+						"description": "Data Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/v1/companies": {
 			"get": {
 				"operationId": "GetAll",
@@ -395,73 +424,7 @@
 				]
 			}
 		},
-		"/v1/companies/jobs": {
-			"get": {
-				"operationId": "GetAllPosts",
-				"responses": {
-					"302": {
-						"description": "Data Found",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": []
-			},
-			"post": {
-				"operationId": "CreatePost",
-				"responses": {
-					"200": {
-						"description": "Posting Successfully",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/postcreateschema"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/v1/companies/jobs/{id}": {
+		"/v1/companies/{companyid}/jobs/{id}": {
 			"get": {
 				"operationId": "GetPost",
 				"responses": {
@@ -490,6 +453,14 @@
 				"parameters": [
 					{
 						"in": "path",
+						"name": "companyid",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
 						"name": "id",
 						"required": true,
 						"schema": {
@@ -497,9 +468,7 @@
 						}
 					}
 				]
-			}
-		},
-		"/v1/companies/{companyid}/jobs/{id}": {
+			},
 			"put": {
 				"operationId": "UpdatePost",
 				"responses": {
@@ -574,6 +543,14 @@
 				"parameters": [
 					{
 						"in": "path",
+						"name": "companyid",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
 						"name": "id",
 						"required": true,
 						"schema": {
@@ -610,6 +587,52 @@
 			}
 		},
 		"/v1/companies/{companyid}/jobs": {
+			"post": {
+				"operationId": "CreatePost",
+				"responses": {
+					"200": {
+						"description": "Posting Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "companyid",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/postcreateschema"
+							}
+						}
+					}
+				}
+			},
 			"get": {
 				"operationId": "GetPostByCID",
 				"responses": {
