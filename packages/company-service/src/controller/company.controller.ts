@@ -172,11 +172,11 @@ export class CompanyController extends Controller {
   ): Promise<{ message: string; data: any }> {
     try {
       const userId = (req as AuthRequest).employer.id;
-      console.log("Auth ID:",userId)
+      console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
       const companyId = company?.id;
-      console.log("company ID:",companyId);
+      console.log("company ID:", companyId);
       const postData = { companyId, ...requestBody };
       const postservice = new PostService();
       const post = await postservice.Create(postData);
@@ -227,6 +227,20 @@ export class CompanyController extends Controller {
     }
   }
 
+  @Get("{postId}")
+  @SuccessResponse(StatusCode.OK, "Successfully retrieved post")
+  public async GetPostById(@Path() postId: string): Promise<any> {
+    try {
+      const postservice = new PostService();
+      const post = await postservice.getPostsByCompanyId(postId);
+      if (!post) {
+        throw new Error("Post not found");
+      }
+      return post;
+    } catch (error) {
+      throw error;
+    }
+  }
   @Get(ROUTE_PATHS.POSTING.GET_JOBS_BY_CID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved posts")
   public async GetPostByCID(

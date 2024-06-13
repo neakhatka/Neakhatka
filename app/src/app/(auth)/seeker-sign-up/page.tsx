@@ -2,15 +2,15 @@
 import * as Yup from "yup";
 import React, { useState } from "react";
 import Link from "next/link";
-import {  Input } from "@/components/ui/input";
-import {  Button } from "@/components/ui/button";
-import {  FaFacebook } from "react-icons/fa";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
-import {  Icon } from "@/components";
-import {  SeekerSignUpSchema } from "../../../validation/seekerSignUp";
+import { Icon } from "@/components";
+import { SeekerSignUpSchema } from "../../../validation/seekerSignUp";
 import axios from "axios";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const SeekerSignUp = () => {
   const [signupError, setSignupError] = useState("");
@@ -44,7 +44,7 @@ const SeekerSignUp = () => {
         { abortEarly: false }
       );
 
-      await axios.post("http://localhost:4000/v1/auth/signup", {
+      await axios.post("http://localhost:5000/v1/auth/signup", {
         username,
         email,
         password,
@@ -55,12 +55,9 @@ const SeekerSignUp = () => {
       setUsernameError("");
       setEmailError("");
       setPasswordError("");
-      setLoading(false);
 
-      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
+      router.push(`/send-email?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
-      setLoading(false);
-
       if (error instanceof Yup.ValidationError) {
         error.inner.forEach((e) => {
           switch (e.path) {

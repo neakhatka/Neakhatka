@@ -113,7 +113,7 @@
 				"type": "object",
 				"additionalProperties": true
 			},
-			"updateuser": {
+			"Partial_updateuser_": {
 				"properties": {
 					"profile": {
 						"type": "string"
@@ -149,7 +149,7 @@
 					}
 				},
 				"type": "object",
-				"additionalProperties": true
+				"description": "Make all properties in T optional"
 			}
 		},
 		"securitySchemes": {}
@@ -200,22 +200,10 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"data": {
-											"items": {
-												"$ref": "#/components/schemas/IUserDocument"
-											},
-											"type": "array"
-										},
-										"message": {
-											"type": "string"
-										}
+									"items": {
+										"$ref": "#/components/schemas/IUserDocument"
 									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
+									"type": "array"
 								}
 							}
 						}
@@ -233,19 +221,7 @@
 						"description": "Successfully retrieved profile",
 						"content": {
 							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -269,19 +245,7 @@
 						"description": "Successfully Update profile",
 						"content": {
 							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -302,7 +266,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/updateuser"
+								"$ref": "#/components/schemas/Partial_updateuser_"
 							}
 						}
 					}
@@ -313,6 +277,32 @@
 				"responses": {
 					"204": {
 						"description": "Successfully Delete  profile",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/users/{postId}/favorites": {
+			"post": {
+				"operationId": "AddToFavorite",
+				"responses": {
+					"200": {
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -336,7 +326,7 @@
 				"parameters": [
 					{
 						"in": "path",
-						"name": "id",
+						"name": "postId",
 						"required": true,
 						"schema": {
 							"type": "string"

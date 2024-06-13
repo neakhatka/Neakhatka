@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import { Suspense } from "react";
 
-const PleaseVerfyPage = () => {
+const SendEmailPage = () => {
 const searchParams = useSearchParams();
 const email = searchParams.get("email");
 
@@ -67,10 +67,10 @@ return (
 );
 }
 
-const PleaseVerify = () => {
+const SendEmail = () => {
   return <Suspense>
-    <PleaseVerfyPage/>
+    <SendEmailPage/>
   </Suspense>
 };
 
-export default PleaseVerify;
+export default SendEmail;

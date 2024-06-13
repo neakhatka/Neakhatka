@@ -13,7 +13,8 @@ import getConfig from "./utils/createCofig";
 import { RegisterRoutes } from "./routes/routs";
 import { verifyUser } from "./middleware/auth-middleware";
 import unless from "./middleware/unless-route";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -22,7 +23,7 @@ const config = getConfig();
 // ===================
 // Security Middleware
 // ===================
-console.log("This is");
+// console.log("This is");
 
 app.set("trust proxy", 1);
 app.use(compression());

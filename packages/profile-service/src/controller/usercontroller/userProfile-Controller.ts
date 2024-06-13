@@ -9,6 +9,7 @@ import {
   Put,
   Request,
   Delete,
+  Middlewares,
 } from "tsoa";
 import { UserService } from "../../service/userService/userProfileService";
 // import { IUserDocument } from "../../database/@types/user.interface";
@@ -19,6 +20,10 @@ import {
   updateuser,
 } from "../../database/repository/@types/user.repository.type";
 import { IUserDocument } from "../../database/@types/user.interface";
+import APIError from "../../error/api-error";
+import axios from "axios";
+import mongoose from "mongoose";
+import { authorize } from "../../middleware/authmiddleware";
 // import APIError from "../../error/api-error";
 // import mongoose from "mongoose";
 // import axios from "axios";
@@ -104,63 +109,64 @@ export class UserController extends Controller {
       throw error;
     }
   }
+  @Post(ROUTE_PATHS.PROFILE.ADD_TO_FAVORITES)
+  @Middlewares(authorize(["seeker"])) // Assuming only logged-in users can add to favorites
+  public async AddToFavorite(
+    @Path() postId: string,
+    @Request() req: any
+  ): Promise<{ message: string; data: any }> {
+    try {
+      const userId = req.userId;
+      const userservice = new UserService();
+
+      // Fetch user data
+      const user = await userservice.GetByIdService(userId);
+      if (!user) {
+        throw new APIError("User not found", StatusCode.NotFound);
+      }
+
+      // Validate postId
+      if (!mongoose.Types.ObjectId.isValid(postId)) {
+        throw new APIError("Invalid post ID format", StatusCode.BadRequest);
+      }
+
+      // Fetch post data from CompanyService
+      const postResponse = await axios.get(
+        `http://company-service:4004/v1/posts/${postId}`
+      );
+      const post = postResponse.data;
+
+      if (!user.favorite) {
+        user.favorite = [];
+      }
+
+      const existingFavoriteIndex = user.favorite.findIndex((item) =>
+        new mongoose.Types.ObjectId(item).equals(post._id)
+      );
+
+      if (existingFavoriteIndex !== -1) {
+        // Remove post from favorites
+        user.favorite.splice(existingFavoriteIndex, 1);
+        await user.save();
+        return {
+          message: "Post removed from favorites successfully",
+          data: user,
+        };
+      }
+
+      // Add post to favorites
+      user.favorite.push(post._id);
+      await user.save();
+      return { message: "Post added to favorites successfully", data: user };
+    } catch (error: any) {
+      console.error("Error adding/removing favorite:", error);
+      if (error instanceof APIError) {
+        throw error;
+      }
+      throw new APIError(
+        "Error adding/removing favorite",
+        StatusCode.BadRequest
+      );
+    }
+  }
 }
-  // Add a card to favorites
-//   @Post(ROUTE_PATHS.PROFILE.ADD_TO_FAVORITES)
-//   public async AddToFavorite(
-//     @Path() postId: string,
-//     @Request() requestBody: any
-//   ): Promise<any> {
-//     try {
-//       const userservice = new UserService();
-
-//       console.log("Post /:id");
-//       const user = await userservice.GetByIdService(requestBody.id);
-
-//       // Validate objectId
-//       if (!mongoose.Types.ObjectId.isValid(postId)) {
-//         throw new Error("Invalid event ID format");
-//       }
-//       if (!user) {
-//         throw new Error("User not found");
-//       }
-//       const post = await axios.get(
-//         `http://event:4004/v1/company/posting?id=${postId}`
-//       ); // fetch event data from event service
-//       if (!user.favoriteCards) {
-//         user.favoriteCards = [];
-//       }
-//       // Check for existing favorite using findIndex
-//       const existingFavoriteIndex = user.favoriteCards.findIndex((item) =>
-//         new mongoose.Types.ObjectId(item).equals(post.data[0]._id)
-//       );
-
-//       if (existingFavoriteIndex !== -1) {
-//         // Remove event from favorites
-//         user?.favoriteCards.splice(existingFavoriteIndex!, 1);
-//         await user?.save();
-
-//         return {
-//           message: "Post removed from favorites successfully",
-//           data: user,
-//         };
-//       }
-
-//       // Add event to favorites
-//       user?.favoriteCards.push(post.data[0]._id);
-//       await user?.save();
-
-//       return {
-//         message: "Post added to favorites successfully",
-//         data: user,
-//       };
-//     } catch (error) {
-//       console.error("Error adding/removing favorite:", error);
-//       // You can customize the error response here based on error type
-//       throw new APIError(
-//         "Error adding/removing favorite",
-//         StatusCode.BadRequest
-//       );
-//     }
-//   }
-// }

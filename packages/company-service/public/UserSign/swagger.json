@@ -583,6 +583,32 @@
 				]
 			}
 		},
+		"/v1/companies/{postId}": {
+			"get": {
+				"operationId": "GetPostById",
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved post",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "postId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/v1/companies/{companyid}/jobs": {
 			"get": {
 				"operationId": "GetPostByCID",

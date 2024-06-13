@@ -10,7 +10,7 @@ import { DetailCard } from "@/Types/DetailCard";
 const seekerProfile = () => {
   return (
     <>
-      <div className="container xl:max-w-[1200px] bg-[#F8F9FA] rounded-xl mt-5 md:mt-10 p-5 md:px-24 md:py-10 ">
+      <div className="container xl:max-w-[1200px] bg-[#F8F9FA] rounded-xl mt-5 md:mt-10 p-5 md:px-24 md:py-10 mb-10">
         {/* top */}
         <div className="w-full flex md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">

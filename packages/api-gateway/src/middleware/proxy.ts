@@ -65,9 +65,10 @@ const proxyConfigs: ProxyConfig = {
             message?: string;
             token?: string;
             errors?: Array<object>;
-            role?: string
+            role?: string;
             url?: string;
-            status?:string
+            status?: string;
+            verify_token?: string;
           };
 
           try {
@@ -80,7 +81,7 @@ const proxyConfigs: ProxyConfig = {
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
             }
-            
+
             // Store JWT in session
             if (responseBody.token) {
               console.log("Hi token!", responseBody.token);
@@ -93,6 +94,18 @@ const proxyConfigs: ProxyConfig = {
             if (responseBody.url) {
               res.redirect(responseBody.url);
             }
+
+            if (responseBody.verify_token) {
+              return res.json(responseBody);
+            }
+
+            // if (responseBody.status) {
+            //   return res.json(responseBody.status);
+            // }
+
+            // if (responseBody.message) {
+            //   return res.json(responseBody.message);
+            // }
 
             // Modify response to send only the message to the client
             res.json({
@@ -150,6 +163,7 @@ const proxyConfigs: ProxyConfig = {
         // Extract JWT token from session
         const token = expressReq.session!.jwt;
         proxyReq.setHeader("Authorization", `Bearer ${token}`);
+        console.log("Token", token);
         if (token) {
           // proxyReq.setHeader("Authorization", `Bearer ${token}`);
           logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
@@ -168,6 +182,23 @@ const proxyConfigs: ProxyConfig = {
         });
         proxyRes.on("end", function () {
           const bodyString = Buffer.concat(originalBody).toString("utf8");
+          logger.info(`Response status code: ${proxyRes.statusCode}`);
+          logger.info(`Response headers: ${JSON.stringify(proxyRes.headers)}`);
+          logger.info(`Response body: ${bodyString}`);
+
+          if (proxyRes.statusCode === 304) {
+            return res.status(304).end();
+          }
+
+          if (
+            proxyRes.headers["content-type"] &&
+            proxyRes.headers["content-type"].includes("html")
+          ) {
+            logger.error("Received HTML response instead of JSON");
+            return res
+              .status(500)
+              .json({ message: "Received HTML response instead of JSON" });
+          }
 
           let responseBody: {
             message?: string;
@@ -177,11 +208,11 @@ const proxyConfigs: ProxyConfig = {
           };
 
           try {
-            logger.info(`Gateway recieved bodystrign ${bodyString}`);
+            logger.info(`Gateway received bodyString ${bodyString}`);
 
             responseBody = JSON.parse(bodyString);
 
-            logger.info(`Gateway received responsebody ${responseBody}`);
+            logger.info(`Gateway received responseBody ${responseBody}`);
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
@@ -191,18 +222,19 @@ const proxyConfigs: ProxyConfig = {
               res.cookie("persistent", responseBody.token, OptionCookie);
               delete responseBody.token;
             }
-
+            res.setHeader("Cache-Control", "no-store");
             // Modify response to send only the message to the client
             res.json({
               message: responseBody.message,
               data: responseBody.data,
             });
-            // console.log("Data", responseBody.data);
           } catch (error) {
+            logger.error("Error parsing response body as JSON", error);
             return res.status(500).json({ message: "Error parsing response" });
           }
         });
       },
+
       error: (err: NetworkError, _req, res) => {
         logger.error(`Proxy Error: ${err}`);
         switch (err.code) {

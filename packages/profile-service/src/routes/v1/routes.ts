@@ -50,21 +50,9 @@ const models: TsoaRoute.Models = {
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "updateuser": {
-        "dataType": "refObject",
-        "properties": {
-            "profile": {"dataType":"string"},
-            "fullname": {"dataType":"string"},
-            "email": {"dataType":"string"},
-            "contactphone": {"dataType":"double"},
-            "gender": {"dataType":"string"},
-            "location": {"dataType":"string"},
-            "DOB": {"dataType":"datetime"},
-            "nationality": {"dataType":"string"},
-            "address": {"dataType":"string"},
-            "educationbackground": {"dataType":"string"},
-        },
-        "additionalProperties": true,
+    "Partial_updateuser_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"profile":{"dataType":"string"},"fullname":{"dataType":"string"},"email":{"dataType":"string"},"contactphone":{"dataType":"double"},"gender":{"dataType":"string"},"location":{"dataType":"string"},"DOB":{"dataType":"datetime"},"nationality":{"dataType":"string"},"address":{"dataType":"string"},"educationbackground":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -173,7 +161,7 @@ export function RegisterRoutes(app: Router) {
             async function UserController_updateUserController(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                    updateData: {"in":"body","name":"updateData","required":true,"ref":"updateuser"},
+                    updateData: {"in":"body","name":"updateData","required":true,"ref":"Partial_updateuser_"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -221,6 +209,37 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: 204,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/v1/users/:postId/favorites',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.AddToFavorite)),
+
+            async function UserController_AddToFavorite(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    postId: {"in":"path","name":"postId","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new UserController();
+
+              await templateService.apiHandler({
+                methodName: 'AddToFavorite',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
               });
             } catch (err) {
                 return next(err);

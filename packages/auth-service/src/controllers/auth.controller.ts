@@ -31,8 +31,6 @@ interface SignUpRequestBody {
 
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
-  [x: string]: any;
-
   @SuccessResponse(StatusCode.Created, "Created")
   @Post(ROUTE_PATH.AUTH.SIGN_UP)
   @Middlewares(validateInput(UsersignUpSchema))
@@ -42,7 +40,6 @@ export class AuthController extends Controller {
     try {
       const { username, email, password, role } = requestBody;
 
-      // Step 1.
       const userService = new UserService();
       const newUser = await userService.Create({
         username,
@@ -61,7 +58,6 @@ export class AuthController extends Controller {
         template: "verifyEmail",
       };
 
-      // Publish To Notification Service
       await publishDirectMessage(
         authChannel,
         "neakhatka-email-notification",
@@ -72,7 +68,8 @@ export class AuthController extends Controller {
 
       return {
         message: "Sign up successfully. Please verify your email.",
-        // data: newUser,
+        verify_token: verificationToken.emailVerificationToken,
+        data: newUser,
       };
     } catch (error) {
       throw error;
@@ -87,13 +84,13 @@ export class AuthController extends Controller {
     try {
       const userService = new UserService();
 
-      // Step 1.
+      // Step 1: Verify email toke
       const user = await userService.VerifyEmailToken({ token });
+      console.log("Verified user:", user);
 
       // Step 2.
       // const jwtToken = await generateSignature({userId: user._id});
 
-      // Step 3.
       const userDetail = await userService.FindUserByEmail({
         email: user.date.email,
       });
