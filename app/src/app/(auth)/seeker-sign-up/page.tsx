@@ -54,7 +54,6 @@ const SeekerSignUp = () => {
     } catch (error: any) {
       if (error instanceof Yup.ValidationError) {
         console.log("error from backend : ", error);
-        
         error.inner.forEach((e) => {
           switch (e.path) {
             case "username":
@@ -74,12 +73,12 @@ const SeekerSignUp = () => {
         console.log("error from axios : ", error);
         if (error.response) {
           setEmailError(error.response?.data?.errors[0]?.message);
+          setLoading(false);
         }
       } else {
         setSignupError("Error signing up. Please try again.");
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 

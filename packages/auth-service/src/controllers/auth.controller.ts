@@ -43,12 +43,6 @@ export class AuthController extends Controller {
       const { username, email, password, role } = requestBody;
 
       const userService = new UserService();
-      // const existedemail = await userService.FindUserByEmail({ email });
-      // if (existedemail) {
-      //   return {
-      //     message: "Email already exists. Please use a different email.",
-      //   };
-      // }
       const newUser = await userService.Create({
         username,
         email,
@@ -150,19 +144,18 @@ export class AuthController extends Controller {
   @Middlewares(validateInput(UserSignInSchema))
   public async loginWithEmail(
     @Body() requestBody: { email: string; password: string }
-  ): Promise<{ message: string; token: string }> {
+  ): Promise<{ message: string; token: string; role: string }> {
     try {
       const userService = new UserService();
-      const user = await userService.Login(requestBody);
-      // const response = await axios.get(
-      //   `http://localhost:4001/v1/auth/${user.id}`
-      // )
+      const { user, role } = await userService.Login(requestBody);
+
       console.log("User", user);
       const jwttoken = await generateSignature({
         id: user._id as string,
-        role: user.role,
+        role: role,
       });
-      return { message: "Success login", token: jwttoken };
+
+      return { message: "Success login", token: jwttoken, role: role };
     } catch (error) {
       console.log(error);
       throw error;

@@ -38,29 +38,38 @@ const Login = () => {
     try {
       await LoginSchema.validate({ email, password }, { abortEarly: false });
 
-      await axios.post("http://localhost:4000/v1/auth/login", {
-        email,
-        password,
-      }, {
-        headers: { "Content-Type": "application/json"},
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/v1/auth/login",
+        { email, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
 
       // Clear errors upon successful login
       setEmailError("");
       setPasswordError("");
 
-      console.log("Logging in with:", { email, password });
-      router.push("/");
+      const { role, token } = response.data;
+      console.log("Logging in with:", { email, password, role });
+
+      if (role === "seeker") {
+        router.push("/");
+      } else if (role === "employer") {
+        router.push("/dashboard");
+      } else {
+        setLoginError("Invalid user role");
+      }
     } catch (error: any) {
       if (error instanceof Yup.ValidationError) {
-        error.inner.forEach((e) => {
+        error.inner.forEach((e: any) => {
           switch (e.path) {
             case "email":
               setEmailError(e.message);
               break;
             case "password":
-              setPasswordError(e.path);
+              setPasswordError(e.message);
               break;
             default:
               break;
@@ -69,6 +78,8 @@ const Login = () => {
       } else {
         setLoginError("Invalid email or password");
       }
+    } finally {
+      setLoading(false);
     }
   };
 

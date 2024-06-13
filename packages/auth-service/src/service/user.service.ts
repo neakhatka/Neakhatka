@@ -189,6 +189,35 @@ class UserService {
   }
 
   // Login method
+  // async Login(UserDetails: UsersignInSchemType) {
+  //   try {
+  //     const user = await this.userRepo.FindUser({ email: UserDetails.email });
+
+  //     if (!user) {
+  //       throw new APIError("User does not exist", StatusCode.NotFound);
+  //     }
+
+  //     const isPwdCorrect = await ValidatePassword({
+  //       enterpassword: UserDetails.password,
+  //       savedPassword: user.password as string,
+  //     });
+
+  //     if (!isPwdCorrect) {
+  //       throw new APIError(
+  //         "Email or Password is incorrect",
+  //         StatusCode.BadRequest
+  //       );
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+
+  //   //  const requestUser = new UserRepository();
+  //   //   const { data } = await requestUser.FindUserById(user._id.toString());
+
+  //   // const jwtToken = await generateSignature({ _id: user._id.toString() });
+  // }
   async Login(UserDetails: UsersignInSchemType) {
     try {
       const user = await this.userRepo.FindUser({ email: UserDetails.email });
@@ -208,15 +237,14 @@ class UserService {
           StatusCode.BadRequest
         );
       }
-      return user;
+
+      // Ensure the user object contains a role property
+      const userRole = user.role;
+
+      return { user, role: userRole };
     } catch (error) {
       throw error;
     }
-
-    //  const requestUser = new UserRepository();
-    //   const { data } = await requestUser.FindUserById(user._id.toString());
-
-    // const jwtToken = await generateSignature({ _id: user._id.toString() });
   }
 
   // logout
