@@ -77,7 +77,13 @@ const proxyConfigs: ProxyConfig = {
 
             responseBody = JSON.parse(bodyString);
 
-            logger.info(`Gateway received responsebody ${responseBody}`);
+            logger.info(
+              `***Gateway received responsebody: ${JSON.stringify(
+                responseBody,
+                null,
+                2
+              )}`
+            );
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
@@ -100,10 +106,10 @@ const proxyConfigs: ProxyConfig = {
               return res.json(responseBody);
             }
 
-            if(responseBody.isLogout) {
-                res.clearCookie("session");
-                res.clearCookie("session.sig");
-                res.clearCookie("persistent");
+            if (responseBody.isLogout) {
+              res.clearCookie("session");
+              res.clearCookie("session.sig");
+              res.clearCookie("persistent");
             }
 
             // if (responseBody.status) {
@@ -115,12 +121,11 @@ const proxyConfigs: ProxyConfig = {
             // }
 
             // Modify response to send only the message to the client
-            res.json({
+            return res.json({
               status: responseBody.status,
               message: responseBody.message,
               role: responseBody.role,
             });
-            console.log("Auth Data:", responseBody.role);
           } catch (error) {
             return res.status(500).json({ message: "Error parsing response" });
           }

@@ -43,6 +43,12 @@ export class AuthController extends Controller {
       const { username, email, password, role } = requestBody;
 
       const userService = new UserService();
+      // const existedemail = await userService.FindUserByEmail({ email });
+      // if (existedemail) {
+      //   return {
+      //     message: "Email already exists. Please use a different email.",
+      //   };
+      // }
       const newUser = await userService.Create({
         username,
         email,
@@ -74,7 +80,11 @@ export class AuthController extends Controller {
         data: newUser,
       };
     } catch (error) {
+      console.error("Error during verify", error);
       throw error;
+      // throw new APIError("Email already exists. Please use a different email.",
+      //   StatusCode.Conflict
+      // );
     }
   }
 
