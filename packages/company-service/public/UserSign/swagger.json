@@ -497,6 +497,14 @@
 				"parameters": [
 					{
 						"in": "path",
+						"name": "companyid",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
 						"name": "id",
 						"required": true,
 						"schema": {
@@ -518,13 +526,18 @@
 			"delete": {
 				"operationId": "DeletePost",
 				"responses": {
-					"204": {
+					"200": {
 						"description": "Delete Successfully",
 						"content": {
 							"application/json": {
 								"schema": {
 									"properties": {
-										"data": {},
+										"data": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
 										"message": {
 											"type": "string"
 										}

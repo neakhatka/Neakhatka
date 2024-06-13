@@ -16,7 +16,7 @@ import {
   SuccessResponse,
   Delete,
   Middlewares,
-  // Request,
+  Request,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
 import {
@@ -24,7 +24,8 @@ import {
   postupdateschema,
 } from "../database/repository/@types/post.repo.type";
 import PostService from "../service/post-service";
-import { authorize } from "../middleware/authMiddleware";
+import { AuthRequest, authorize } from "../middleware/authMiddleware";
+import { logger } from "../util/logger";
 
 @Route("v1/companies")
 export class CompanyController extends Controller {
@@ -55,6 +56,9 @@ export class CompanyController extends Controller {
     try {
       const companyservice = new CompanyService();
       const result = await companyservice.FindById({ id });
+      if (!result) {
+        return { message: "Could not find", data: null };
+      }
       return { message: "Company had found ", data: result };
     } catch (error: any) {
       console.log(error);
@@ -155,11 +159,11 @@ export class CompanyController extends Controller {
   @SuccessResponse(StatusCode.Found, "Post Card Found")
   public async GetPost(
     @Path() companyid: string,
-    @Path() id: string,
+    @Path() id: string
   ): Promise<{ message: string; data: any }> {
     try {
       const postservice = new PostService();
-      const getcard = await postservice.FindByCidAndJobId(companyid,id);
+      const getcard = await postservice.FindByCidAndJobId(companyid, id);
       console.log("getcard", getcard);
       return { message: "Found!", data: getcard };
     } catch (error) {
@@ -173,64 +177,78 @@ export class CompanyController extends Controller {
   public async CreatePost(
     @Body() requestBody: postcreateschema,
     @Path() companyid: string,
-    // @Request() req: Express.Request
+    @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      // const userId = (req as AuthRequest).employer.id;
-      // console.log("Auth ID:",userId)
+      const userId = (req as AuthRequest).employer.id;
+      console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
-      const company = await companyservice.FindById({ id:companyid });
+      const company = await companyservice.FindByAuthId({ userId });
       const companyId = company?.id;
-      console.log("company ID:",companyid);
-
-      const postData = { companyId, ...requestBody };
-      const postservice = new PostService();
-      const post = await postservice.Create(postData);
-      console.log("post Data", post);
-      return { message: "Success post job", data: post };
+      console.log("company ID:", companyid);
+      // Check if the provided companyid matches the authenticated user's companyId
+      if (companyId === companyid) {
+        const postData = { companyId, ...requestBody };
+        const postservice = new PostService();
+        const post = await postservice.Create(postData);
+        console.log("post Data", post);
+        return { message: "Success post job", data: post };
+      } else {
+        return {
+          // status: 403,
+          message: "You are not authorized to post for this company",
+          data: null,
+        };
+      }
     } catch (error) {
       console.log("post error:", error);
       throw error;
     }
   }
-
+  @Middlewares(authorize(["employer"]))
   @Put(ROUTE_PATHS.POSTING.UPDATE)
   @SuccessResponse(StatusCode.OK, "Update Successfully")
   public async UpdatePost(
+    @Path() companyid: string,
     @Path() id: string,
-    @Body() update: postupdateschema
+    @Body() update: postupdateschema,
+    @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      console.log("Update Data:", update);
-      const postservice = new PostService();
-      const updatepost = await postservice.UpdatePost({ id, update });
-      if (!updatepost) {
+      const userId = (req as AuthRequest).employer.id;
+      console.log("Auth ID:", userId);
+      const companyservice = new CompanyService();
+      const company = await companyservice.FindByAuthId({ userId });
+      const companyId = company?.id;
+      if (companyId === companyid) {
+        const postservice = new PostService();
+        const updatepost = await postservice.UpdatePost({ id, update });
+        return { message: "Update successfully", data: updatepost };
+      } else {
         this.setStatus(404); // Set HTTP status code to 404
         return { message: "Job  Not Found", data: null };
       }
-      return { message: "Update successfully", data: updatepost };
     } catch (error: any) {
       console.log(error);
       this.setStatus(500); // Set HTTP status code to 500 for server errors
       return { message: error.message || "Internal Server Error", data: null };
     }
   }
-
+  @Middlewares(authorize(["employer"]))
   @Delete(ROUTE_PATHS.POSTING.DELETE)
-  @SuccessResponse(StatusCode.NoContent, "Delete Successfully")
+  @SuccessResponse(StatusCode.OK, "Delete Successfully")
   public async DeletePost(
     @Path() companyid: string,
     @Path() id: string
-  ): Promise<{ message: string; data: any }> {
+  ): Promise<{ message: string; data: string[] }> {
     try {
       const postservice = new PostService();
-      const deletepost = await postservice.DeletePost(companyid,id );
-      if (!deletepost) {
-        return { message: "Post Card not found", data: null };
-      }
-      return { message: "Delete successfully", data: deletepost };
+      await postservice.DeletePost(companyid, id);
+      console.log("delete success ...");
+      return { message: "Delete successfully", data: [] };
     } catch (error: any) {
-      throw new error();
+      logger.error(`CompanyController DeletePost() method error: ${error}`);
+      throw error;
     }
   }
 
@@ -240,7 +258,6 @@ export class CompanyController extends Controller {
     @Path() companyid: string
   ): Promise<{ message: string; data: any[] }> {
     try {
-      console.log("sdfghjkhghgfdfghjkgffgh");
       const postService = new PostService();
       const posts = await postService.getPostsByCompanyId(companyid);
       return { message: "Successfully retrieved posts", data: posts };

@@ -307,6 +307,7 @@ export function RegisterRoutes(app: Router) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     requestBody: {"in":"body","name":"requestBody","required":true,"ref":"postcreateschema"},
                     companyid: {"in":"path","name":"companyid","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -336,8 +337,10 @@ export function RegisterRoutes(app: Router) {
 
             async function CompanyController_UpdatePost(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    companyid: {"in":"path","name":"companyid","required":true,"dataType":"string"},
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
                     update: {"in":"body","name":"update","required":true,"ref":"postupdateschema"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -385,7 +388,7 @@ export function RegisterRoutes(app: Router) {
                 response,
                 next,
                 validatedArgs,
-                successStatus: 204,
+                successStatus: 200,
               });
             } catch (err) {
                 return next(err);

@@ -50,6 +50,10 @@ export class AuthController extends Controller {
 
       // Step 1.
       const userService = new UserService();
+      const existedemail = await userService.FindUserByEmail({ email });
+      if (existedemail) {
+        return { message: "this email already use" };
+      }
       const newUser = await userService.Create({
         username,
         email,
@@ -95,7 +99,7 @@ export class AuthController extends Controller {
 
       // Step 1.
       const user = await userService.VerifyEmailToken({ token });
-      console.log("user:",user);
+      console.log("user:", user);
 
       // Step 2.
       // const jwtToken = await generateSignature({userId: user._id});

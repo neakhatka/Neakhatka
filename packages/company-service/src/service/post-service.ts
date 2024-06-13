@@ -5,6 +5,7 @@ import {
   postupdateschema,
 } from "../database/repository/@types/post.repo.type";
 import PostJob from "../database/repository/post.repository";
+import { logger } from "../util/logger";
 class PostService {
   private postrepo: PostJob;
   constructor() {
@@ -35,11 +36,10 @@ class PostService {
       throw new APIError("Unable to get post job with this ID");
     }
   }
-  async FindByCidAndJobId(companyid:string, jobid:string){
-    try{
+  async FindByCidAndJobId(companyid: string, jobid: string) {
+    try {
       return await this.postrepo.FindByCidAndJobId(companyid, jobid); //
-
-    }catch(error){
+    } catch (error) {
       throw new APIError("Unable to get post job with this ID");
     }
   }
@@ -52,11 +52,11 @@ class PostService {
       throw new APIError("Unable to update job!");
     }
   }
-  async DeletePost(companyid:string, jobid:string) {
+  async DeletePost(companyid: string, jobid: string) {
     try {
-      return await this.postrepo.Delete(companyid , jobid);
+      return await this.postrepo.Delete(companyid, jobid);
     } catch (error) {
-      console.log(error);
+      logger.error(`PostService - DeletePost() method error: ${error}`);
       throw new APIError("Unable to delete Job");
     }
   }
