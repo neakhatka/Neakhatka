@@ -1,5 +1,5 @@
 "use client";
-import { Button, Typography } from "@/components";
+import { Button, Typography, Confetti } from "@/components"; // Import Confetti
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
@@ -51,7 +51,7 @@ const VerifiedPage = () => {
           } else {
             setVerificationStatus("error");
           }
-        }, 100);
+        }, 5000); // Delay redirection to show confetti
       } else {
         setVerificationStatus("error");
       }
@@ -102,6 +102,8 @@ const VerifiedPage = () => {
             <Typography fontSize="2xl" variant="black">
               {renderContent()}
             </Typography>
+            {verificationStatus === "success" && <Confetti />}{" "}
+            {/* Show confetti on success */}
           </div>
         </div>
       </div>
