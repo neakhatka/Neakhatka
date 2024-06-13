@@ -7,6 +7,7 @@ import {
   Query,
   Route,
   SuccessResponse,
+  Header,
 } from "tsoa";
 import axios from "axios";
 import { ROUTE_PATH } from "../routes/v1/routes-refer";
@@ -21,19 +22,13 @@ import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
 import APIError from "../errors/api-error";
 import validateInput from "../middlewares/validate-input";
+import { decodedToken } from "../utils/decodeToken";
 
 interface SignUpRequestBody {
   username: string;
   email: string;
   password: string;
   role: string;
-}
-interface VerifyEmailResponse {
-  status: string;
-  message: string;
-  token: string;
-  role: string;
-  id: string;
 }
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
@@ -86,7 +81,7 @@ export class AuthController extends Controller {
   @Get(ROUTE_PATH.AUTH.VERIFY)
   public async VerifyEmail(
     @Query() token: string
-  ): Promise<VerifyEmailResponse> {
+  ): Promise<{ status: string; message: string; token: string; role: string }> {
     try {
       const userService = new UserService();
 
@@ -127,13 +122,12 @@ export class AuthController extends Controller {
         id: userDetail.id,
         role: userDetail.role,
       });
-      // console.log("Jwttoken:",jwttoken)
+      console.log("Jwttoken:", jwttoken);
       return {
         status: "success",
         message: "User verify email successfully",
         token: jwttoken,
         role: userDetail.role,
-        id: user.id.toString(),
       };
     } catch (error) {
       throw error;
@@ -221,6 +215,24 @@ export class AuthController extends Controller {
     } catch (error) {
       this.setStatus(500);
       throw new Error("Error during Google authentication");
+    }
+  }
+
+  @SuccessResponse(StatusCode.OK, "OK")
+  @Get(ROUTE_PATH.AUTH.LOGOUT)
+  async logout(@Header("authorization") authorization: string): Promise<any> {
+    try {
+      const token = authorization?.split(" ")[1];
+      const userService = new UserService();
+      const decodedUser = await decodedToken(token);
+      const isLogout = await userService.logout(decodedUser);
+
+      if (!isLogout) {
+        throw new APIError("Unable to logout!");
+      }
+      return { message: "Success logout", isLogout: isLogout };
+    } catch (error: unknown) {
+      throw error;
     }
   }
 }

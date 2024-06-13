@@ -17,7 +17,7 @@ const VerifiedPage = () => {
   const verifyEmailToken = async (token: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/v1/auth/verify?token=${token}`,
+        `http://localhost:4000/v1/auth/verify?token=${token}`,
         {
           withCredentials: true,
         }

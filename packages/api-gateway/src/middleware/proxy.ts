@@ -62,14 +62,15 @@ const proxyConfigs: ProxyConfig = {
           const bodyString = Buffer.concat(originalBody).toString("utf8");
 
           let responseBody: {
-            verify_token: any;
+            id: any;
             message?: string;
             token?: string;
             errors?: Array<object>;
             role?: string;
             url?: string;
             status?: string;
-            id?: string;
+            verify_token?: string;
+            isLogout?: boolean;
           };
 
           try {
@@ -98,6 +99,12 @@ const proxyConfigs: ProxyConfig = {
 
             if (responseBody.verify_token) {
               return res.json(responseBody);
+            }
+
+            if(responseBody.isLogout) {
+                res.clearCookie("session");
+                res.clearCookie("session.sig");
+                res.clearCookie("persistent");
             }
 
             // if (responseBody.status) {

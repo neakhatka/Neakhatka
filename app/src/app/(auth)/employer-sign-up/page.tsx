@@ -44,7 +44,7 @@ const EmployerSignUp = () => {
         { abortEarly: false }
       );
 
-      await axios.post("http://localhost:5000/v1/auth/signup", {
+      await axios.post("http://localhost:4000/v1/auth/signup", {
         username,
         email,
         password,
