@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     ports:
-      - "5000:5000"
+      - "4000:4000"
     env_file: ./packages/api-gateway/configs/.env
     environment:
       AUTH_SERVICE_URL: http://auth-container:4001

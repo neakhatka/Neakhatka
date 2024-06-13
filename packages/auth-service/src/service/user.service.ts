@@ -219,6 +219,38 @@ class UserService {
     // const jwtToken = await generateSignature({ _id: user._id.toString() });
   }
 
+  // logout
+  async logout(decodedUser: any) {
+    try {
+      console.log("welcome to user service");
+      const { id, role } = decodedUser;
+      if (role == "seeker") {
+        const existingUser = await axios.get(
+          `http://profile-service:4003/v1/users/${id}`
+        );
+        if (!existingUser) {
+          throw new APIError("No user found!", StatusCode.NotFound);
+        }
+        return true;
+      }
+      if (role == "employer") {
+        const existingUser = await axios.get(
+          `http://company-service:4004/v1/companies/${id}`
+        );
+        if (!existingUser) {
+          throw new APIError("No user found!", StatusCode.NotFound);
+        }
+        return true;
+      }
+
+      if (role === undefined) {
+        throw new APIError("Role is undefined", StatusCode.NotFound);
+      }
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
   async Findbyid({ id }: { id: string }) {
     try {
       return await this.userRepo.FindUserById({ id });

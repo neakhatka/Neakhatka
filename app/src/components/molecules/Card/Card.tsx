@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { Icon } from "@/components";
 import { Typography } from "../../atoms/Typography";
 import { motion } from "framer-motion";
 import { IUserProfile } from "@/Types/UserProfile";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CardData {
   id: string;
@@ -47,6 +48,13 @@ const Card: React.FC<CardProps> = ({
   } = data;
 
   const [isFavorited, setIsFavorited] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    const { toast } = useToast();
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return null;
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -89,12 +97,22 @@ const Card: React.FC<CardProps> = ({
 
         // Notify Event Storage So That Listener could know total favorite is changing
         window.dispatchEvent(new Event("storage"));
+        toast({
+          description: isFavorited
+            ? "Removed from favorites successfully."
+            : "Added to favorite successfully.",
+        });
       }
     } else {
       // Display a message to the user indicating that they need to enable cookies
-      alert("Please enable cookies to use this feature.");
+      // alert("Please enable cookies to use this feature.");
       // You can also use a notification library like 'toast' to display a message to the user
       // Example: toast.error("Please enable cookies to use this feature.");
+      toast({
+        variant: "destructive",
+        title: "Uh oh! You don't have an account",
+        description: "Please signup or login first",
+      });
     }
   };
 

@@ -7,7 +7,7 @@ function createconfig(configPath: string) {
   const requiredConfig = [
     "NODE_ENV",
     "PORT",
-    "MONGODB_URL",
+    // "MONGODB_URL",
     "LOG_LEVEL",
     "RABBITMQ_ENDPOINT",
     "JWT_EXPIRES_IN",

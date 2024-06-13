@@ -6,6 +6,7 @@ import CardList from "@/components/molecules/Card/CardList";
 import CardContext from "@/contexts/CardInfoContext";
 import { cookies } from "next/headers";
 import axios from "axios";
+import { Toaster } from "@/components/ui/toaster";
 
 async function getProfileUser() {
   const cookieStore = cookies();
@@ -13,7 +14,7 @@ async function getProfileUser() {
   const sigSession = cookieStore.get("session.sig");
 
   try {
-    const response = await axios.get("http://localhost:5000/v1/users/all", {
+    const response = await axios.get("http://localhost:4000/v1/users/all", {
       withCredentials: true, // Include cookies if needed
       headers: {
         Cookie: ` ${session!.name}=${session!.value}; ${sigSession!.name}=${
@@ -35,6 +36,7 @@ export default async function Home() {
 
   return (
     <>
+      <Toaster />
       <Nav userProfile={result} />
       <CardContext>
         <Banner />

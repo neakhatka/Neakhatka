@@ -69,6 +69,7 @@ const proxyConfigs: ProxyConfig = {
             url?: string;
             status?: string;
             verify_token?: string;
+            isLogout?: boolean;
           };
 
           try {
@@ -97,6 +98,12 @@ const proxyConfigs: ProxyConfig = {
 
             if (responseBody.verify_token) {
               return res.json(responseBody);
+            }
+
+            if(responseBody.isLogout) {
+                res.clearCookie("session");
+                res.clearCookie("session.sig");
+                res.clearCookie("persistent");
             }
 
             // if (responseBody.status) {

@@ -53,7 +53,9 @@ function Nav({ userProfile }: { userProfile: IUserProfile }) {
   }, []);
 
   return (
-    <Navbar className="py-1" shouldHideOnScroll onMenuOpenChange={setIsMenuOpen}>
+    <Navbar className="py-1" 
+    // shouldHideOnScroll 
+    onMenuOpenChange={setIsMenuOpen}>
       {/* ==============LOGO WEBSITE=================== */}
       <NavbarContent>
         <NavbarBrand>
