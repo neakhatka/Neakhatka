@@ -24,7 +24,7 @@ import {
   postupdateschema,
 } from "../database/repository/@types/post.repo.type";
 import PostService from "../service/post-service";
-import { AuthRequest, authorize } from "../middleware/authMiddleware";
+import { AuthRequest,authorize } from "../middleware/authMiddleware";
 import { logger } from "../util/logger";
 
 @Route("v1/companies")

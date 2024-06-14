@@ -3,7 +3,7 @@ const ROUTE_PATHS = {
     CREATE:"/",
     GET_ALL: "/",
     UPDATE: "/:id", // As an example
-    GET_BY_ID: "/:id",
+    GET_BY_ID: "/profile",
     DELETE: "/:id",
     // Add other auth-related routes here
   },

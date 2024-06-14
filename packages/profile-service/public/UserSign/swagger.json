@@ -105,7 +105,6 @@
 					}
 				},
 				"required": [
-					"authid",
 					"fullname",
 					"email",
 					"DOB"
@@ -225,7 +224,7 @@
 				"parameters": []
 			}
 		},
-		"/v1/users/{id}": {
+		"/v1/users/profile": {
 			"get": {
 				"operationId": "GetCardById",
 				"responses": {
@@ -251,17 +250,10 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
+				"parameters": []
+			}
+		},
+		"/v1/users/{id}": {
 			"put": {
 				"operationId": "UpdateUserController",
 				"responses": {
