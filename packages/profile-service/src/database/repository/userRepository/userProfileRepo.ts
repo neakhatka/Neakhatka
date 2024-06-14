@@ -46,6 +46,16 @@ class UserRepository {
       throw new APIError("Unable to find user in database ");
     }
   }
+  async FindByAuthID({ userId }: { userId: string }): Promise<any> {
+    try {
+      const existed = await seeker_profile.findOne({
+        authid: userId,
+      });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to Find User in Database ");
+    }
+  }
   // update profile
 
   async updateUser({

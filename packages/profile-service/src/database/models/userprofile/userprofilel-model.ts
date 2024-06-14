@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const userschema: Schema = new Schema({
   profile: { type: String, required: false , default: ""},
-  authid:{ type: String, required: false },
+  authid:{ type: String, required: false,default: ""  },
   fullname: { type: String, required: true },
   // lastName: { type: String, required: true },
   email: {

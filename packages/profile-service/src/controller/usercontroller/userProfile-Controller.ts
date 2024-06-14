@@ -8,6 +8,8 @@ import {
   Post,
   Put,
   Delete,
+  Middlewares,
+  Request,
 } from "tsoa";
 import { UserService } from "../../service/userService/userProfileService";
 // import { IUserDocument } from "../../database/@types/user.interface";
@@ -18,6 +20,7 @@ import {
   updateuser,
 } from "../../database/repository/@types/user.repository.type";
 import { IUserDocument } from "../../database/@types/user.interface";
+import { AuthRequest, authorize } from "../../middleware/authmiddleware";
 
 @Route("/v1/users")
 export class UserController extends Controller {
@@ -55,16 +58,20 @@ export class UserController extends Controller {
       };
     }
   }
-
+  @Middlewares(authorize(["seeker"]))
   @Get(ROUTE_PATHS.PROFILE.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")
-  // @Response("404", "Card not found")
   public async GetCardById(
-    @Path() id: string
+    @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
+      const userId = (req as AuthRequest).seeker.id;
+      console.log("User ID:", userId);
       const userservice = new UserService();
-      const User = await userservice.GetByIdService({ id });
+      const user = await userservice.FindByAuthId({ userId });
+      console.log("Seeker", user);
+
+      const User = await userservice.GetByIdService({id:user._id});
       if (!User) {
         return { message: "Profile Not Found", data: null };
       } else {
@@ -84,7 +91,10 @@ export class UserController extends Controller {
   ): Promise<{ message: string; data: any }> {
     try {
       const { DOB } = updateData;
-      if (DOB !== null && !(DOB instanceof Date) || (DOB instanceof Date && isNaN(DOB.getTime()))) {
+      if (
+        (DOB !== null && !(DOB instanceof Date)) ||
+        (DOB instanceof Date && isNaN(DOB.getTime()))
+      ) {
         this.setStatus(400); // Set HTTP status code to 400 for bad request
         return { message: "Invalid dateOfBirth", data: null };
       }
@@ -106,7 +116,9 @@ export class UserController extends Controller {
   // delete USER by id
   @SuccessResponse(StatusCode.NoContent, "Successfully Delete  profile")
   @Delete(ROUTE_PATHS.PROFILE.DELETE)
-  public async DeleteUserContrioller(@Path() id: string): Promise<{ message: string; data: any }> {
+  public async DeleteUserContrioller(
+    @Path() id: string
+  ): Promise<{ message: string; data: any }> {
     try {
       const userservice = new UserService();
       const deleteuser = await userservice.DeleteProfileService({ id });

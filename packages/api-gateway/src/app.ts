@@ -13,17 +13,21 @@ import getConfig from "./utils/createCofig";
 import { RegisterRoutes } from "./routes/routs";
 import { verifyUser } from "./middleware/auth-middleware";
 import unless from "./middleware/unless-route";
-// import cookieParser from "cookie-parser";
 import cookieParser from 'cookie-parser';
 
 const app = express();
 
 const config = getConfig();
 
+// Log CORS configuration
+console.log("CORS configuration:", {
+  env: config.env,
+  clientUrl: config.clientUrl,
+});
+
 // ===================
 // Security Middleware
 // ===================
-// console.log("This is");
 
 app.set("trust proxy", 1);
 app.use(compression());
@@ -52,8 +56,7 @@ app.use(helmet());
 // Only Allow Specific Origin to Access API Gateway (Frontend)
 app.use(
   cors({
-    origin:
-      getConfig().env !== "development" ? "*" : [config.clientUrl as string],
+    origin: config.env !== "development" ? "*" : [config.clientUrl as string],
     credentials: true, // attach token from client
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -70,7 +73,7 @@ app.disable("x-powered-by");
 // Gateway Health Routes
 // ===================
 RegisterRoutes(app);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
 // ===================
 // JWT Middleware
 // ===================
@@ -81,7 +84,6 @@ const conditions = [
   { path: "/v1/jobs", method: "GET" }, // Exclude GET requests starting with /v1/events
 ];
 app.use(unless(conditions, verifyUser));
-// app.use(unless("/v1/uder", verifyUser));
 
 // ===================
 // Proxy Routes

@@ -40,6 +40,15 @@ export class UserService {
       throw new APIError("Unable to get user with this ID");
     }
   }
+  async FindByAuthId({ userId }: { userId: string }): Promise<any> {
+    try {
+      return await this.userRepo.FindByAuthID({ userId });
+    } catch (error) {
+      console.log(error);
+      // return null;
+      throw new APIError("Unable to get user with this ID");
+    }
+  }
 
   // update user
 
