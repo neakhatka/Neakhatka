@@ -4,6 +4,7 @@ export const ROUTE_PATH = {
     VERIFY: "/verify",
     LOGIN: "/login",
     GOOGLE: "/google",
+    LOGOUT: "/logout",
     GOOGLE_CALLBACK: "/google/callback",
   },
 };

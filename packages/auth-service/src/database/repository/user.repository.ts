@@ -49,6 +49,7 @@ class UserRepository {
       console.log("Unable to Fine user in database");
     }
   }
+  
   // update user
   async UpdateUserById({
     id,

@@ -264,6 +264,32 @@
 					}
 				]
 			}
+		},
+		"/v1/auth/logout": {
+			"get": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "authorization",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
 		}
 	},
 	"servers": [

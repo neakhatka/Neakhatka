@@ -7,6 +7,7 @@ import {
   Query,
   Route,
   SuccessResponse,
+  Header,
 } from "tsoa";
 import axios from "axios";
 import { ROUTE_PATH } from "../routes/v1/routes-refer";
@@ -21,6 +22,7 @@ import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
 import APIError from "../errors/api-error";
 import validateInput from "../middlewares/validate-input";
+import { decodedToken } from "../utils/decodeToken";
 
 interface SignUpRequestBody {
   username: string;
@@ -37,8 +39,6 @@ interface VerifyEmailResponse {
 }
 @Route(`/v1/auth`)
 export class AuthController extends Controller {
-  [x: string]: any;
-
   @SuccessResponse(StatusCode.Created, "Created")
   @Post(ROUTE_PATH.AUTH.SIGN_UP)
   @Middlewares(validateInput(UsersignUpSchema))
@@ -48,7 +48,6 @@ export class AuthController extends Controller {
     try {
       const { username, email, password, role } = requestBody;
 
-      // Step 1.
       const userService = new UserService();
       const existedemail = await userService.FindUserByEmail({ email });
       if (existedemail) {
@@ -71,7 +70,6 @@ export class AuthController extends Controller {
         template: "verifyEmail",
       };
 
-      // Publish To Notification Service
       await publishDirectMessage(
         authChannel,
         "neakhatka-email-notification",
@@ -82,10 +80,15 @@ export class AuthController extends Controller {
 
       return {
         message: "Sign up successfully. Please verify your email.",
-        // data: newUser,
+        verify_token: verificationToken.emailVerificationToken,
+        data: newUser,
       };
     } catch (error) {
+      console.error("Error during verify", error);
       throw error;
+      // throw new APIError("Email already exists. Please use a different email.",
+      //   StatusCode.Conflict
+      // );
     }
   }
 
@@ -97,14 +100,13 @@ export class AuthController extends Controller {
     try {
       const userService = new UserService();
 
-      // Step 1.
+      // Step 1: Verify email toke
       const user = await userService.VerifyEmailToken({ token });
-      console.log("user:", user);
+      console.log("Verified user:", user);
 
       // Step 2.
       // const jwtToken = await generateSignature({userId: user._id});
 
-      // Step 3.
       const userDetail = await userService.FindUserByEmail({
         email: user.date.email,
       });
@@ -153,20 +155,18 @@ export class AuthController extends Controller {
   @Middlewares(validateInput(UserSignInSchema))
   public async loginWithEmail(
     @Body() requestBody: { email: string; password: string }
-  ): Promise<{ message: string; token: string }> {
+  ): Promise<{ message: string; token: string; role: string }> {
     try {
       const userService = new UserService();
-      const user = await userService.Login(requestBody);
-      if (!user) {
-        throw new Error("Invalid credentials");
-      }
+      const { user, role } = await userService.Login(requestBody);
 
       console.log("User", user);
       const jwttoken = await generateSignature({
         id: user._id as string,
-        role: user.role,
+        role: role,
       });
-      return { message: "Success login", token: jwttoken };
+
+      return { message: "Success login", token: jwttoken, role: role };
     } catch (error) {
       console.log(error);
       throw new Error(
@@ -229,6 +229,24 @@ export class AuthController extends Controller {
     } catch (error) {
       this.setStatus(500);
       throw new Error("Error during Google authentication");
+    }
+  }
+
+  @SuccessResponse(StatusCode.OK, "OK")
+  @Get(ROUTE_PATH.AUTH.LOGOUT)
+  async logout(@Header("authorization") authorization: string): Promise<any> {
+    try {
+      const token = authorization?.split(" ")[1];
+      const userService = new UserService();
+      const decodedUser = await decodedToken(token);
+      const isLogout = await userService.logout(decodedUser);
+
+      if (!isLogout) {
+        throw new APIError("Unable to logout!");
+      }
+      return { message: "Success logout", isLogout: isLogout };
+    } catch (error: unknown) {
+      throw error;
     }
   }
 }

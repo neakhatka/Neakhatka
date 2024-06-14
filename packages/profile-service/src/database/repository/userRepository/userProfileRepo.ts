@@ -12,6 +12,7 @@ class UserRepository {
       const existingUser = await this.FindUserByEmail({
         email: UserDetail.email,
       });
+
       if (existingUser) {
         throw new DuplitcateError("Email alredy in use");
       }
