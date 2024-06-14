@@ -7,60 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"companycreateschema": {
-				"properties": {
-					"companyname": {
-						"type": "string"
-					},
-					"contactemail": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"companyname",
-					"contactemail"
-				],
-				"type": "object",
-				"additionalProperties": true
-			},
-			"companyupdateschema": {
-				"properties": {
-					"companyname": {
-						"type": "string"
-					},
-					"logo": {
-						"type": "string"
-					},
-					"contactphone": {
-						"type": "number",
-						"format": "double"
-					},
-					"websiteLink": {
-						"type": "string"
-					},
-					"location": {
-						"type": "string"
-					},
-					"contactemail": {
-						"type": "string"
-					},
-					"contactperson": {
-						"type": "string"
-					},
-					"numberOfemployees": {
-						"type": "number",
-						"format": "double"
-					},
-					"address": {
-						"type": "string"
-					},
-					"companydescription": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": true
-			},
 			"postcreateschema": {
 				"properties": {
 					"title": {
@@ -217,6 +163,60 @@
 				},
 				"type": "object",
 				"additionalProperties": true
+			},
+			"companycreateschema": {
+				"properties": {
+					"companyname": {
+						"type": "string"
+					},
+					"contactemail": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"companyname",
+					"contactemail"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"companyupdateschema": {
+				"properties": {
+					"companyname": {
+						"type": "string"
+					},
+					"logo": {
+						"type": "string"
+					},
+					"contactphone": {
+						"type": "number",
+						"format": "double"
+					},
+					"websiteLink": {
+						"type": "string"
+					},
+					"location": {
+						"type": "string"
+					},
+					"contactemail": {
+						"type": "string"
+					},
+					"contactperson": {
+						"type": "string"
+					},
+					"numberOfemployees": {
+						"type": "number",
+						"format": "double"
+					},
+					"address": {
+						"type": "string"
+					},
+					"companydescription": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -260,6 +260,168 @@
 				},
 				"security": [],
 				"parameters": []
+			},
+			"post": {
+				"operationId": "CreatePost",
+				"responses": {
+					"200": {
+						"description": "Posting Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/postcreateschema"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/jobs/{id}": {
+			"get": {
+				"operationId": "GetPost",
+				"responses": {
+					"302": {
+						"description": "Post Card Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdatePost",
+				"responses": {
+					"200": {
+						"description": "Update Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/postupdateschema"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeletePost",
+				"responses": {
+					"200": {
+						"description": "Delete Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/v1/companies": {
@@ -416,242 +578,6 @@
 					{
 						"in": "path",
 						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/v1/companies/{companyid}/jobs/{id}": {
-			"get": {
-				"operationId": "GetPost",
-				"responses": {
-					"302": {
-						"description": "Post Card Found",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "companyid",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "UpdatePost",
-				"responses": {
-					"200": {
-						"description": "Update Successfully",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "companyid",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/postupdateschema"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeletePost",
-				"responses": {
-					"200": {
-						"description": "Delete Successfully",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {
-											"items": {
-												"type": "string"
-											},
-											"type": "array"
-										},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "companyid",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/v1/companies/{companyid}/jobs": {
-			"post": {
-				"operationId": "CreatePost",
-				"responses": {
-					"200": {
-						"description": "Posting Successfully",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "companyid",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/postcreateschema"
-							}
-						}
-					}
-				}
-			},
-			"get": {
-				"operationId": "GetPostByCID",
-				"responses": {
-					"200": {
-						"description": "Successfully retrieved posts",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"data": {
-											"items": {},
-											"type": "array"
-										},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"data",
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "companyid",
 						"required": true,
 						"schema": {
 							"type": "string"

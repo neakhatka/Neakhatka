@@ -257,7 +257,7 @@ class UserService {
       const { id, role } = decodedUser;
       if (role == "seeker") {
         const existingUser = await axios.get(
-          `http://profile-service:4003/v1/users/${id}`
+          `http://profile-service:4003/v1/users/prrofile`
         );
         if (!existingUser) {
           throw new APIError("No user found!", StatusCode.NotFound);

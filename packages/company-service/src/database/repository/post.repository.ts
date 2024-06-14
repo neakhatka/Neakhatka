@@ -65,6 +65,18 @@ class PostJob {
       }
     }
   }
+  async FindByCompanyId(companyId: string) {
+    try {
+      const existed = await Post.find({ companyId: companyId });
+      if (!existed) {
+        throw new APIError("Unable to find in database", StatusCode.NoContent);
+      } else {
+        return existed;
+      }
+    } catch (error) {
+      throw new APIError("Unable to find in database");
+    }
+  }
   async FindByCidAndJobId(companyid: string, jobId: string) {
     try {
       const existed = await Post.findOne({ companyId: companyid, _id: jobId });
@@ -74,13 +86,13 @@ class PostJob {
     }
   }
 
-  async Delete(companyid: string, jobId: string) {
+  async Delete(jobId: string) {
     try {
       const existed = await this.FindById({ id: jobId });
       if (!existed) {
         throw new APIError("Unable to find in database", StatusCode.NoContent);
       }
-      return await Post.findByIdAndDelete({ companyId: companyid, _id: jobId });
+      return await Post.findByIdAndDelete({ _id: jobId });
     } catch (error) {
       logger.error(`PostRepository Delete() method error: ${error}`);
       if (error instanceof APIError) {
