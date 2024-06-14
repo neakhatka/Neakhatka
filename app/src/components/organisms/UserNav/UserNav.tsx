@@ -12,27 +12,34 @@ import axios from "axios";
 const UserNav = () => {
   const router = useRouter();
 
-const handleLogout = async () => {
-  try {
-    const response = await axios.get("http://localhost:4000/v1/auth/logout", {
-      withCredentials: true,
-    });
-    console.log("response : ", response.data);
-    // window.location.href = "/";
-    router.push('/login')
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Handle axios errors (e.g., network errors or backend errors)
-      if (error.response) {
-        // Server responded with a status other than 200 range
-        console.error("Backend returned an error:", error.response.data);
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/v1/auth/logout", {
+        withCredentials: true,
+      });
+      console.log("response:", response.data);
+      // router.replace("/"); // Use replace to avoid adding to history
+      window.location.href="/";
+    } catch (error) {
+      console.log("error:", error);
+      if (axios.isAxiosError(error)) {
+        // Handle axios errors (e.g., network errors or backend errors)
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error("Backend returned an error:", error.response.data);
+        } else if (error.request) {
+          // Request was made but no response received
+          console.error("No response received:", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.error("Error in setup:", error.message);
+        }
+      } else {
+        // Handle other potential errors
+        console.error("Error:", error);
       }
-    } else {
-      // Handle other potential errors (e.g., axios errors)
-      console.error("Error:", error); // Log the entire error object
     }
-  }
-};
+  };
 
   return (
     <div className="flex justify-center items-center py-20">

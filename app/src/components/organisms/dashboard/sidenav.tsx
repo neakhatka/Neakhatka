@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import NavLinks from './nav-links';
+import React from 'react';
 function SideNav() {
   return (
     <div className="flex h-full flex-col bg-white px-5 border-r-1 border-gray-200">

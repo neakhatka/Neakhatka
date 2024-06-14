@@ -45,9 +45,11 @@ const VerifiedPage = () => {
         setVerificationStatus("success");
         setTimeout(() => {
           if (response.role === "seeker") {
-            router.push("/");
+            window.location.href = "/";
+            // router.push("/");
           } else if (response.role === "employer") {
-            router.push("/dashboard");
+            window.location.href = "/dashboard";
+            // router.push("/dashboard");
           } else {
             setVerificationStatus("error");
           }
