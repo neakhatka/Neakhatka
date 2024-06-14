@@ -19,7 +19,8 @@ const UserNav = () => {
       });
       console.log("response:", response.data);
       // router.replace("/"); // Use replace to avoid adding to history
-      window.location.href="/";
+      // router.push("/");
+      window.location.href = "/";
     } catch (error) {
       console.log("error:", error);
       if (axios.isAxiosError(error)) {
