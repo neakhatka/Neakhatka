@@ -79,8 +79,11 @@ export class PostJob extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
+      console.log("Received request body:", requestBody); // Log request body
+
       const userId = (req as AuthRequest).employer.id;
-      console.log("Auth ID:", userId);
+      console.log("Authenticated employer ID:", userId); // Log authenticated user ID
+      // console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
       const companyId = company?.id;

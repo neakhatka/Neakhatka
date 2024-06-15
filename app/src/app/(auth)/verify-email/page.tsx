@@ -5,9 +5,10 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const VerifiedPage = () => {
-  const router = useRouter();
+const VerifyPage = () => {
+    const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [verificationStatus, setVerificationStatus] =
@@ -36,7 +37,7 @@ const VerifiedPage = () => {
     }
   };
 
-  const handleVerifyEmail = async () => {
+  const handleEmail = async () => {
     if (token) {
       setVerificationStatus("verifying");
       const response = await verifyEmailToken(token);
@@ -45,9 +46,11 @@ const VerifiedPage = () => {
         setVerificationStatus("success");
         setTimeout(() => {
           if (response.role === "seeker") {
-            router.push("/");
+            window.location.href = "/";
+            // router.push("/");
           } else if (response.role === "employer") {
-            router.push("/dashboard");
+            window.location.href = "/dashboard";
+            // router.push("/dashboard");
           } else {
             setVerificationStatus("error");
           }
@@ -63,7 +66,7 @@ const VerifiedPage = () => {
   useEffect(() => {
     if (!hasRun.current) {
       hasRun.current = true;
-      handleVerifyEmail();
+      handleEmail();
     }
   }, []);
 
@@ -111,4 +114,11 @@ const VerifiedPage = () => {
   );
 };
 
-export default VerifiedPage;
+
+const VerifyEmail = () => {
+  <Suspense>
+    <VerifyPage />
+  </Suspense>
+};
+
+export default VerifyEmail;

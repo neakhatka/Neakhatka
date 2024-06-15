@@ -52,5 +52,5 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to AWS with SST
-        run: npx sst deploy --stage prod
+        run: yarn deploy:prod
         working-directory: ./app

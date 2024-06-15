@@ -135,7 +135,7 @@ class UserService {
     await this.accountVerificationRepo.DeleteVerificationToken({ token });
     console.log("User", user);
 
-    const {id} = await this.SentRequestBaseOnRole(user);
+    const { id } = await this.SentRequestBaseOnRole(user);
     return {
       message: "User verify email successfully",
       token: jwttoken,
@@ -164,7 +164,8 @@ class UserService {
         // console.log(response.data);
         // const   jwttoken= await generateSignature( response.data.data.id , user.role)
         return { id: response.data._id };
-      } else {//(user.role === "employer") 
+      } else {
+        //(user.role === "employer")
         const response = await axios.post(
           "http://company-service:4004/v1/companies",
           {
@@ -257,7 +258,7 @@ class UserService {
       const { id, role } = decodedUser;
       if (role == "seeker") {
         const existingUser = await axios.get(
-          `http://profile-service:4003/v1/users/prrofile`
+          `http://profile-service:4003/v1/users`
         );
         if (!existingUser) {
           throw new APIError("No user found!", StatusCode.NotFound);

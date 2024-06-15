@@ -15,7 +15,7 @@ async function getProfileUser() {
 
   try {
     const response = await axios.get("http://localhost:4000/v1/users/profile", {
-      withCredentials: true, // Include cookies if needed
+      withCredentials: true, // Include cookies if needed!
       headers: {
         Cookie: ` ${session!.name}=${session!.value}; ${sigSession!.name}=${
           sigSession!.value

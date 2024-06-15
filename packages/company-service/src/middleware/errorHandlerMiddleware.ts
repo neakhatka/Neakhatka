@@ -14,6 +14,11 @@ const errorHandler = (
   if (err instanceof BaseCustomError) {
     return res.status(err.getStatusCode()).json({errors:err.serializeErrorOutput()});
   }
+  // if (err instanceof BaseCustomError) {
+  //   return res
+  //     .status(err.getStatusCode())
+  //     .json({ errors: err.serializeErrorOutput() });
+  // }
 
   return res
     .status(StatusCode.InternalServerError)

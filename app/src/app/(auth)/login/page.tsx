@@ -55,9 +55,11 @@ const Login = () => {
       console.log("Logging in with:", { email, password, role });
 
       if (role === "seeker") {
-        router.push("/");
+        // router.push("/");
+        window.location.href='/';
       } else if (role === "employer") {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
+        // router.push("/dashboard");
       } else {
         setLoginError("Invalid user role");
       }
@@ -77,9 +79,8 @@ const Login = () => {
         });
       } else {
         setLoginError("Invalid email or password");
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
