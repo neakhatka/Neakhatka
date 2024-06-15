@@ -1,10 +1,11 @@
-import { UserProfile } from "../../models/userprofile/userprofilel-model";
+import { seeker_profile } from "../../models/userprofile/userprofilel-model";
 // import { EmailPassword, EmailPasswordModel } from "../model/EmailPasswordModel";
 import { IUserDocument } from "../../@types/user.interface";
 import DuplitcateError from "../../../error/duplitcate-error";
 import APIError from "../../../error/api-error";
 import { createuser, updateuser } from "../@types/user.repository.type";
 import { StatusCode } from "../../../utils/consts/status.code";
+import { logger } from "../../../utils/logger";
 class UserRepository {
   // create user
   async createuser(UserDetail: createuser) {
@@ -12,10 +13,11 @@ class UserRepository {
       const existingUser = await this.FindUserByEmail({
         email: UserDetail.email,
       });
+
       if (existingUser) {
         throw new DuplitcateError("Email alredy in use");
       }
-      const user = new UserProfile(UserDetail);
+      const user = new seeker_profile(UserDetail);
       const userresult = await user.save();
       return userresult;
     } catch (error) {
@@ -29,7 +31,7 @@ class UserRepository {
   // get all user profile
   async GetAllUserRepo(): Promise<IUserDocument[]> {
     try {
-      return await UserProfile.find();
+      return await seeker_profile.find();
     } catch (error) {
       throw new APIError("Enable to find user");
     }
@@ -37,7 +39,7 @@ class UserRepository {
   // get profile by id
   async findById({ id }: { id: string }) {
     try {
-      const existedUser = await UserProfile.findById(id);
+      const existedUser = await seeker_profile.findById(id);
       return existedUser;
     } catch (error) {
       console.log(error);
@@ -45,55 +47,58 @@ class UserRepository {
       throw new APIError("Unable to find user in database ");
     }
   }
+  async FindByAuthID({ userId }: { userId: string }): Promise<any> {
+    try {
+      const existed = await seeker_profile.findOne({
+        authid: userId,
+      });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to Find User in Database ");
+    }
+  }
   // update profile
 
-  async updateUser({
-    id,
-    updateData,
-  }: {
-    id: string;
-    updateData: Partial<updateuser>;
-  }) {
+  async UpdateProfile({ id, update }: { id: string; update: updateuser }) {
     try {
-      const isExist = await this.findById({ id });
-      if (!isExist) {
-        return "User not Exsite";
+      const existed = await this.findById({ id });
+      if (!existed) {
+        // console.log("Unable to Update this post");
+        throw new APIError("post  does not exist", StatusCode.NotFound);
       }
-
-      const newuserupdate = await UserProfile.findByIdAndUpdate(
+      const updatepost = await seeker_profile.findByIdAndUpdate(
         id,
+        { $set: update },
         {
-          $set: {
-            updateData,
-          },
-        },
-        { new: true }
+          new: true,
+        }
       );
-      return newuserupdate;
+      return updatepost;
     } catch (error) {
+      console.log(error);
       if (error instanceof APIError) {
-        throw new APIError("Unable to update user in database");
+        throw new APIError("Unable to update that post");
       } else {
         throw new Error("An unexpected error occurred");
       }
     }
   }
-
   // delete profile
   async deleteUser({ id }: { id: string }) {
     try {
-      const existedID = await this.findById({id});
-      if(!existedID){
-        throw new APIError("Unable to find iin database",StatusCode.NoContent)
+      const existedID = await this.findById({ id });
+      if (!existedID) {
+        throw new APIError("Unable to find iin database", StatusCode.NoContent);
       }
-      return await UserProfile.findByIdAndDelete(id);
+      return await seeker_profile.findByIdAndDelete(id);
     } catch (error) {
+      logger.error(`UserRepository DeteleUser() method error: ${error}`);
       throw error;
     }
   }
   async FindUserByEmail({ email }: { email: string }) {
     try {
-      const existinguser = await UserProfile.findOne({ email: email });
+      const existinguser = await seeker_profile.findOne({ email: email });
       return existinguser;
     } catch (error) {
       // console.log(error);

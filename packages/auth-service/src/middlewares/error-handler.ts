@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import BaseCustomError from "../errors/base-custom-error";
+import { BaseCustomError } from "../errors/base-custom-error";
 import { StatusCode } from "../utils/consts/status-code";
 import { logger } from "../utils/logger";
 
@@ -17,16 +17,19 @@ const errorHandler = (
     });
   }
 
-
   // If the error is an instance of our own throw ERROR
   if (err instanceof BaseCustomError) {
-    return res.status(err.getStatusCode()).json(err.serializeErrorOutput());
+    return res
+      .status(err.getStatusCode())
+      .json({ errors: err.serializeErrors() });
   }
 
-  return res
-    .status(StatusCode.InternalServerError)
-    //.json({ errors: [{ message: "An unexpected error occurred" }] });
-    .json({message:err})
+  return (
+    res
+      .status(StatusCode.InternalServerError)
+      //.json({ errors: [{ message: "An unexpected error occurred" }] });
+      .json({ message: err })
+  );
 };
 
 export { errorHandler };

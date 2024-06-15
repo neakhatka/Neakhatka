@@ -12,16 +12,16 @@
 					"authid": {
 						"type": "string"
 					},
-					"profilePicture": {
+					"profile": {
 						"type": "string"
 					},
-					"FullName": {
+					"fullname": {
 						"type": "string"
 					},
 					"email": {
 						"type": "string"
 					},
-					"contactPhone": {
+					"contactphone": {
 						"type": "string"
 					},
 					"gender": {
@@ -30,9 +30,8 @@
 					"location": {
 						"type": "string"
 					},
-					"dateOfBirth": {
-						"type": "string",
-						"format": "date-time"
+					"DOB": {
+						"type": "string"
 					},
 					"nationality": {
 						"type": "string"
@@ -40,13 +39,13 @@
 					"address": {
 						"type": "string"
 					},
-					"educationBackground": {
+					"educationbackground": {
 						"type": "string"
 					}
 				},
 				"required": [
 					"authid",
-					"FullName",
+					"fullname",
 					"email"
 				],
 				"type": "object",
@@ -60,16 +59,16 @@
 					"authid": {
 						"type": "string"
 					},
-					"profilePicture": {
+					"profile": {
 						"type": "string"
 					},
-					"FullName": {
+					"fullname": {
 						"type": "string"
 					},
 					"email": {
 						"type": "string"
 					},
-					"contactPhone": {
+					"contactphone": {
 						"type": "string"
 					},
 					"gender": {
@@ -78,9 +77,8 @@
 					"location": {
 						"type": "string"
 					},
-					"dateOfBirth": {
-						"type": "string",
-						"format": "date-time"
+					"DOB": {
+						"type": "string"
 					},
 					"nationality": {
 						"type": "string"
@@ -88,10 +86,10 @@
 					"address": {
 						"type": "string"
 					},
-					"educationBackground": {
+					"educationbackground": {
 						"type": "string"
 					},
-					"favoriteCards": {
+					"favorite": {
 						"items": {
 							"type": "string"
 						},
@@ -103,26 +101,25 @@
 					}
 				},
 				"required": [
-					"authid",
-					"FullName",
+					"fullname",
 					"email",
-					"dateOfBirth"
+					"DOB"
 				],
 				"type": "object",
 				"additionalProperties": true
 			},
-			"Partial_updateuser_": {
+			"updateuser": {
 				"properties": {
-					"profilePicture": {
+					"profile": {
 						"type": "string"
 					},
-					"FullName": {
+					"fullname": {
 						"type": "string"
 					},
 					"email": {
 						"type": "string"
 					},
-					"contactPhone": {
+					"contactphone": {
 						"type": "string"
 					},
 					"gender": {
@@ -131,9 +128,8 @@
 					"location": {
 						"type": "string"
 					},
-					"dateOfBirth": {
-						"type": "string",
-						"format": "date-time"
+					"DOB": {
+						"type": "string"
 					},
 					"nationality": {
 						"type": "string"
@@ -141,12 +137,12 @@
 					"address": {
 						"type": "string"
 					},
-					"educationBackground": {
+					"educationbackground": {
 						"type": "string"
 					}
 				},
 				"type": "object",
-				"description": "Make all properties in T optional"
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -197,10 +193,22 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IUserDocument"
+									"properties": {
+										"data": {
+											"items": {
+												"$ref": "#/components/schemas/IUserDocument"
+											},
+											"type": "array"
+										},
+										"message": {
+											"type": "string"
+										}
 									},
-									"type": "array"
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -210,7 +218,7 @@
 				"parameters": []
 			}
 		},
-		"/v1/users/{id}": {
+		"/v1/users/profile": {
 			"get": {
 				"operationId": "GetCardById",
 				"responses": {
@@ -218,57 +226,65 @@
 						"description": "Successfully retrieved profile",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			},
 			"put": {
-				"operationId": "UpdateUserController",
+				"operationId": "UpdateProfile",
 				"responses": {
 					"200": {
 						"description": "Successfully Update profile",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
+				"parameters": [],
 				"requestBody": {
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_updateuser_"
+								"$ref": "#/components/schemas/updateuser"
 							}
 						}
 					}
 				}
-			},
+			}
+		},
+		"/v1/users/{id}": {
 			"delete": {
 				"operationId": "DeleteUserContrioller",
 				"responses": {
@@ -276,7 +292,19 @@
 						"description": "Successfully Delete  profile",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"data": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}

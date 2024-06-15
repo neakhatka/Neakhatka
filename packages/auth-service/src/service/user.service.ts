@@ -16,6 +16,7 @@ import APIError from "../errors/api-error";
 import { StatusCode } from "../utils/consts";
 import { logger } from "../utils/logger";
 import axios from "axios";
+// import { IAuthDocument } from "../database/model/user.repository";
 
 class UserService {
   private userRepo: UserRepository;
@@ -119,7 +120,6 @@ class UserService {
         StatusCode.BadRequest
       );
     }
-
     // Find the user associated with this token
     const user = await this.userRepo.FindUserById({
       id: isTokenExist.userId.toString(),
@@ -127,26 +127,32 @@ class UserService {
     if (!user) {
       throw new APIError("User does not exist.", StatusCode.NotFound);
     }
-    // Mark the user's email as verified
+    // Mark the user's email as verifie
     user.isVerified = true;
     await user.save();
-
+    const jwttoken = await generateSignature({ id: user.id, role: user.role });
     // Remove the verification token
-    // await this.accountVerificationRepo.DeleteVerificationToken({ token });
+    await this.accountVerificationRepo.DeleteVerificationToken({ token });
     console.log("User", user);
 
-    await this.SentRequestBaseOnRole(user);
-    return user;
+    const { id } = await this.SentRequestBaseOnRole(user);
+    return {
+      message: "User verify email successfully",
+      token: jwttoken,
+      status: "success",
+      date: user,
+      id: id,
+    };
+    // return user;
   }
-
-  async SentRequestBaseOnRole(user: any): Promise<void> {
+  async SentRequestBaseOnRole(user: any): Promise<{ id: string }> {
     try {
       if (user.role === "seeker") {
         const response = await axios.post(
           "http://profile-service:4003/v1/users",
           {
             authid: user._id.toString(),
-            FullName: user.username,
+            fullname: user.username,
             email: user.email,
           },
           {
@@ -155,14 +161,17 @@ class UserService {
             },
           }
         );
-        console.log(response.data);
-      } else if (user.role === "employer") {
+        // console.log(response.data);
+        // const   jwttoken= await generateSignature( response.data.data.id , user.role)
+        return { id: response.data._id };
+      } else {
+        //(user.role === "employer")
         const response = await axios.post(
-          "http://company-service:4004/v1/company",
+          "http://company-service:4004/v1/companies",
           {
             userId: user._id.toString(),
-            companyName: user.username,
-            contactEmail: user.email,
+            companyname: user.username,
+            contactemail: user.email,
           },
           {
             headers: {
@@ -171,6 +180,7 @@ class UserService {
           }
         );
         console.log(response.data);
+        return { id: response.data._id };
       }
     } catch (error) {
       console.log(error);
@@ -183,34 +193,109 @@ class UserService {
   }
 
   // Login method
+  // async Login(UserDetails: UsersignInSchemType) {
+  //   try {
+  //     const user = await this.userRepo.FindUser({ email: UserDetails.email });
+
+  //     if (!user) {
+  //       throw new APIError("User does not exist", StatusCode.NotFound);
+  //     }
+
+  //     const isPwdCorrect = await ValidatePassword({
+  //       enterpassword: UserDetails.password,
+  //       savedPassword: user.password as string,
+  //     });
+
+  //     if (!isPwdCorrect) {
+  //       throw new APIError(
+  //         "Email or Password is incorrect",
+  //         StatusCode.BadRequest
+  //       );
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+
+  //   //  const requestUser = new UserRepository();
+  //   //   const { data } = await requestUser.FindUserById(user._id.toString());
+
+  //   // const jwtToken = await generateSignature({ _id: user._id.toString() });
+  // }
   async Login(UserDetails: UsersignInSchemType) {
-    const user = await this.userRepo.FindUser({ email: UserDetails.email });
+    try {
+      const user = await this.userRepo.FindUser({ email: UserDetails.email });
 
-    if (!user) {
-      throw new APIError("User does not exist", StatusCode.NotFound);
+      if (!user) {
+        throw new APIError("User does not exist", StatusCode.NotFound);
+      }
+
+      const isPwdCorrect = await ValidatePassword({
+        enterpassword: UserDetails.password,
+        savedPassword: user.password as string,
+      });
+
+      if (!isPwdCorrect) {
+        throw new APIError(
+          "Email or Password is incorrect",
+          StatusCode.BadRequest
+        );
+      }
+
+      // Ensure the user object contains a role property
+      const userRole = user.role;
+
+      return { user, role: userRole };
+    } catch (error) {
+      throw error;
     }
-
-    const isPwdCorrect = await ValidatePassword({
-      enterpassword: UserDetails.password,
-      savedPassword: user.password as string,
-    });
-
-    if (!isPwdCorrect) {
-      throw new APIError(
-        "Email or Password is incorrect",
-        StatusCode.BadRequest
-      );
-    }
-
-    const token = await generateSignature({UserID: user._id});
-    return token;
   }
 
+  // logout
+  async logout(decodedUser: any) {
+    try {
+      console.log("welcome to user service");
+      const { id, role } = decodedUser;
+      if (role == "seeker") {
+        const existingUser = await axios.get(
+          `http://profile-service:4003/v1/users`
+        );
+        if (!existingUser) {
+          throw new APIError("No user found!", StatusCode.NotFound);
+        }
+        return true;
+      }
+      if (role == "employer") {
+        const existingUser = await axios.get(
+          `http://company-service:4004/v1/companies/${id}`
+        );
+        if (!existingUser) {
+          throw new APIError("No user found!", StatusCode.NotFound);
+        }
+        return true;
+      }
+
+      if (role === undefined) {
+        throw new APIError("Role is undefined", StatusCode.NotFound);
+      }
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async Findbyid({ id }: { id: string }) {
+    try {
+      return await this.userRepo.FindUserById({ id });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async FindUserByEmail({ email }: { email: string }) {
     try {
       const user = await this.userRepo.FindUser({ email });
       return user;
     } catch (error) {
+      console.error("Error finding user by email:", error);
       throw error;
     }
   }

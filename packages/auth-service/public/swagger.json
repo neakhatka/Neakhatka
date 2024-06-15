@@ -107,16 +107,24 @@
 							"application/json": {
 								"schema": {
 									"properties": {
+										"role": {
+											"type": "string"
+										},
 										"token": {
 											"type": "string"
 										},
 										"message": {
 											"type": "string"
+										},
+										"status": {
+											"type": "string"
 										}
 									},
 									"required": [
+										"role",
 										"token",
-										"message"
+										"message",
+										"status"
 									],
 									"type": "object"
 								}
@@ -249,6 +257,32 @@
 					{
 						"in": "query",
 						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/auth/logout": {
+			"get": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "authorization",
 						"required": true,
 						"schema": {
 							"type": "string"

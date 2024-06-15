@@ -5,7 +5,7 @@ import { logger } from "../utils/logger";
 import { ClientRequest, IncomingMessage } from "http";
 import getConfig from "@api-gateway/utils/createCofig";
 import { StatusCode } from "../utils/consts";
-// import { OptionCookie } from "@api-gateway/utils/cookieOption";
+import { OptionCookie } from "@api-gateway/utils/cookieOption";
 
 interface ProxyConfig {
   [context: string]: Options<IncomingMessage, Response>;
@@ -41,8 +41,9 @@ const proxyConfigs: ProxyConfig = {
 
         // Extract JWT token from session
         const token = expressReq.session!.jwt;
+        proxyReq.setHeader("Authorization", `Bearer ${token}`);
         if (token) {
-          proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          // proxyReq.setHeader("Authorization", `Bearer ${token}`);
           logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
         } else {
           logger.warn(`No JWT token found in session for AUTH_SERVICE`);
@@ -64,7 +65,12 @@ const proxyConfigs: ProxyConfig = {
             message?: string;
             token?: string;
             errors?: Array<object>;
+            role?: string;
             url?: string;
+            verify_token?: string;
+            isLogout?: boolean;
+            status?: string;
+            id?: string;
           };
 
           try {
@@ -72,7 +78,13 @@ const proxyConfigs: ProxyConfig = {
 
             responseBody = JSON.parse(bodyString);
 
-            logger.info(`Gateway received responsebody ${responseBody}`);
+            logger.info(
+              `***Gateway received responsebody: ${JSON.stringify(
+                responseBody,
+                null,
+                2
+              )}`
+            );
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
@@ -80,7 +92,10 @@ const proxyConfigs: ProxyConfig = {
 
             // Store JWT in session
             if (responseBody.token) {
+              console.log("Hi token!", responseBody.token);
               (req as Request).session!.jwt = responseBody.token;
+              res.cookie("persistent", responseBody.token, OptionCookie);
+              delete responseBody.token;
               logger.info(`New JWT token stored in session for AUTH_SERVICE`);
             }
 
@@ -88,8 +103,33 @@ const proxyConfigs: ProxyConfig = {
               res.redirect(responseBody.url);
             }
 
+            if (responseBody.verify_token) {
+              return res.json(responseBody);
+            }
+
+            if (responseBody.isLogout) {
+              res.clearCookie("session");
+              res.clearCookie("session.sig");
+              res.clearCookie("persistent");
+            }
+
+            // if (responseBody.status) {
+            //   return res.json(responseBody.status);
+            // }
+
+            // if (responseBody.message) {
+            //   return res.json(responseBody.message);
+            // }
+
             // Modify response to send only the message to the client
-            res.json({ message: responseBody.message });
+            return res.json({
+              status: responseBody.status,
+              message: responseBody.message,
+              role: responseBody.role,
+              id: responseBody.id,
+            });
+            console.log("Auth Data:", responseBody.role);
+            console.log("Auth Data:", responseBody.id);
           } catch (error) {
             return res.status(500).json({ message: "Error parsing response" });
           }
@@ -138,8 +178,9 @@ const proxyConfigs: ProxyConfig = {
 
         // Extract JWT token from session
         const token = expressReq.session!.jwt;
+        proxyReq.setHeader("Authorization", `Bearer ${token}`);
         if (token) {
-          proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          // proxyReq.setHeader("Authorization", `Bearer ${token}`);
           logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
         } else {
           logger.warn(`No JWT token found in session for AUTH_SERVICE`);
@@ -148,23 +189,30 @@ const proxyConfigs: ProxyConfig = {
           `Proxied request URL: ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
         );
         logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
+        // Attach the original URL and method to the headers
+        proxyReq.setHeader("X-Original-Url", expressReq.originalUrl);
+        proxyReq.setHeader("X-Original-Method", expressReq.method);
       },
-      proxyRes: (proxyRes, _req, res) => {
+      proxyRes: (proxyRes, req, res) => {
         let originalBody: Buffer[] = [];
         proxyRes.on("data", function (chunk: Buffer) {
           originalBody.push(chunk);
         });
         proxyRes.on("end", function () {
           const bodyString = Buffer.concat(originalBody).toString("utf8");
+          logger.info(`Response body: ${JSON.stringify(bodyString)}`);
+          logger.info(`Response body: ${bodyString}`);
+          logger.info(`Response body: ${originalBody}`);
 
           let responseBody: {
             message?: string;
             errors?: Array<object>;
             data?: Array<object>;
+            token?: string;
           };
 
           try {
-            logger.info(`Gateway recieved bodystrign ${bodyString}`);
+            logger.info(`Gateway received bodystring ${bodyString}`);
 
             responseBody = JSON.parse(bodyString);
 
@@ -174,11 +222,31 @@ const proxyConfigs: ProxyConfig = {
               return res.status(proxyRes.statusCode!).json(responseBody);
             }
 
+            if (responseBody.token) {
+              (req as Request).session!.jwt = responseBody.token;
+              res.cookie("persistent", responseBody.token, OptionCookie);
+              delete responseBody.token;
+            }
+            // Check if the original URL matches your delete API endpoint and the method is DELETE
+            const originalUrl = req.headers["x-original-url"] as string;
+            const originalMethod = req.headers["x-original-method"] as string;
+            if (
+              originalMethod === "DELETE" &&
+              originalUrl &&
+              originalUrl.includes("/v1/companies/") &&
+              originalUrl.includes("/jobs/")
+            ) {
+              // If it matches, change the status code
+              logger.info("Modifying status code for delete API response");
+              res.statusCode = 204; // Change the status code to 204 No Content
+            }
+
             // Modify response to send only the message to the client
             res.json({
               message: responseBody.message,
               data: responseBody.data,
             });
+            // console.log("Data", responseBody.data);
           } catch (error) {
             return res.status(500).json({ message: "Error parsing response" });
           }
@@ -206,97 +274,195 @@ const proxyConfigs: ProxyConfig = {
       },
     },
   },
+  //  Abouting user services
+  [ROUTE_PATHS.USER_SERVICE]: {
+    target: config.userServiceUrl as string,
+    changeOrigin: true,
+    selfHandleResponse: true,
+    pathRewrite: (path, _req) => {
+      return `${ROUTE_PATHS.USER_SERVICE}${path}`;
+    },
+    on: {
+      proxyReq: (
+        proxyReq: ClientRequest,
+        req: IncomingMessage,
+        _res: Response
+      ) => {
+        const expressReq = req as Request;
+        // Log the request payload
+        expressReq.on("data", (chunk) => {
+          logger.info(`Request Body Chunk: ${chunk}`);
+        });
+        // Extract JWT token from session
+        const token = expressReq.session!.jwt;
+        proxyReq.setHeader("Authorization", `Bearer ${token}`);
+        if (token) {
+          // proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
+        } else {
+          logger.warn(`No JWT token found in session for AUTH_SERVICE`);
+        }
+        logger.info(
+          `Proxied request URL: ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
+        );
+        logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
+      },
+      proxyRes: (proxyRes, req, res) => {
+        let originalBody: Buffer[] = [];
+        proxyRes.on("data", function (chunk: Buffer) {
+          originalBody.push(chunk);
+        });
+        proxyRes.on("end", function () {
+          const bodyString = Buffer.concat(originalBody).toString("utf8");
+          let responseBody: {
+            message?: string;
+            errors?: Array<object>;
+            data?: Array<object>;
+            token?: string;
+          };
+          try {
+            logger.info(`Gateway recieved bodystrign ${bodyString}`);
 
-  /// implement company service
-  // [ROUTE_PATHS.COMPANY_SERVICE]: {
-  //   target: config.companyserviceurl!,
-  //   changeOrigin: true,
-  //   selfHandleResponse: true,
-  //   pathRewrite: (path, _req) => {
-  //     return `${ROUTE_PATHS.COMPANY_SERVICE}${path}`;
-  //   },
-  //   on: {
-  //     proxyReq: (
-  //       proxyReq: ClientRequest,
-  //       req: IncomingMessage,
-  //       _res: Response
-  //     ) => {
-  //       const expressReq = req as Request;
-  //       expressReq.on("data", (chunk) => {
-  //         logger.info(`Request Body Chunk: ${chunk}`);
-  //       });
-  //       // Extract JWT token from session
-  //       const token = expressReq.session!.jwt;
-  //       if (token) {
-  //         proxyReq.setHeader("Authorization", `Bearer ${token}`);
-  //         logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
-  //       } else {
-  //         logger.warn(`No JWT token found in session for AUTH_SERVICE`);
-  //       }
-  //       logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
-  //     },
-  //     proxyRes: (proxyRes, _req, res) => {
-  //       let originalBody: Buffer[] = [];
-  //       proxyRes.on("data", function (chunk: Buffer) {
-  //         originalBody.push(chunk);
-  //       });
-  //       proxyRes.on("end", function () {
-  //         const bodyString = Buffer.concat(originalBody).toString("utf8");
-  //         let responseBody: {
-  //           message?: string;
-  //           data?: Array<object>;
-  //           errors?: Array<object>;
-  //         };
+            responseBody = JSON.parse(bodyString);
 
-  //         try {
-  //           logger.info(`Gateway recieved bodystrign ${bodyString}`);
+            logger.info(`Gateway received responsebody ${responseBody}`);
+            if (responseBody.errors) {
+              return res.status(proxyRes.statusCode!).json(responseBody);
+            }
+            if (responseBody.token) {
+              (req as Request).session!.jwt = responseBody.token;
+              res.cookie("persistent", responseBody.token, OptionCookie);
+              delete responseBody.token;
+            }
+            res.json({
+              message: responseBody.message,
+              data: responseBody.data,
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      },
+      error: (err: NetworkError, _req, res) => {
+        logger.error(`Proxy Error: ${err}`);
+        switch (err.code) {
+          case "ECONNREFUSED":
+            (res as Response).status(StatusCode.ServiceUnavailable).json({
+              message:
+                "The service is temporarily unavailable. Please try again later.",
+            });
+            break;
+          case "ETIMEDOUT":
+            (res as Response).status(StatusCode.GatewayTimeout).json({
+              message: "The request timed out. Please try again later.",
+            });
+            break;
+          default:
+            (res as Response)
+              .status(StatusCode.InternalServerError)
+              .json({ message: "An internal error occurred." });
+        }
+      },
+    },
+  },
+  //  FOR SAMPLE USER SEE ALL POST JOBS
+  [ROUTE_PATHS.POST]: {
+    target: config.companyserviceurl as string,
+    changeOrigin: true,
+    selfHandleResponse: true,
+    pathRewrite: (path, _req) => {
+      return `${ROUTE_PATHS.POST}${path}`;
+    },
+    on: {
+      proxyReq: (
+        proxyReq: ClientRequest,
+        req: IncomingMessage,
+        _res: Response
+      ) => {
+        const expressReq = req as Request;
+        // Log the request payload
+        expressReq.on("data", (chunk) => {
+          logger.info(`Request Body Chunk: ${chunk}`);
+        });
 
-  //           responseBody = JSON.parse(bodyString);
+        // Extract JWT token from session
+        const token = expressReq.session!.jwt;
+        proxyReq.setHeader("Authorization", `Bearer ${token}`);
+        if (token) {
+          // proxyReq.setHeader("Authorization", `Bearer ${token}`);
+          logger.info(`JWT Token set in Authorization header for AUTH_SERVICE`);
+        } else {
+          logger.warn(`No JWT token found in session for AUTH_SERVICE`);
+        }
+        logger.info(
+          `Proxied request URL: ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
+        );
+        logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
+      },
+      proxyRes: (proxyRes, _req, res) => {
+        let originalBody: Buffer[] = [];
+        proxyRes.on("data", function (chunk: Buffer) {
+          originalBody.push(chunk);
+        });
+        proxyRes.on("end", function () {
+          const bodyString = Buffer.concat(originalBody).toString("utf8");
 
-  //           logger.info(`Gateway received responsebody ${responseBody}`);
+          let responseBody: {
+            // message?: string;
+            errors?: Array<object>;
+            data?: Array<object>;
+            // token?: string;
+          };
 
-  //           logger.info(`Gateway recieved bodystrign ${bodyString}`);
+          try {
+            logger.info(`Gateway recieved bodystrign ${bodyString}`);
 
-  //           responseBody = JSON.parse(bodyString);
+            responseBody = JSON.parse(bodyString);
 
-  //           logger.info(`Gateway received responsebody ${responseBody}`);
-  //           // If Response Error, Not Modified Response
-  //           if (responseBody.errors) {
-  //             return res.status(proxyRes.statusCode!).json(responseBody);
-  //           }
+            logger.info(`Gateway received responsebody ${responseBody}`);
+            // If Response Error, Not Modified Response
+            if (responseBody.errors) {
+              return res.status(proxyRes.statusCode!).json(responseBody);
+            }
+            // if (responseBody.token) {
+            //   (req as Request).session!.jwt = responseBody.token;
+            //   res.cookie("persistent", responseBody.token, OptionCookie);
+            //   delete responseBody.token;
+            // }
 
-  //           // Modify response to send only the message to the client
-  //           res.json({
-  //             message: responseBody.message,
-  //             data: responseBody.data,
-  //           });
-  //         } catch (error) {
-  //           console.log(error);
-  //         }
-  //       });
-  //     },
-  //     error: (err: NetworkError, _req, res) => {
-  //       logger.error(`Proxy Error: ${err}`);
-  //       switch (err.code) {
-  //         case "ECONNREFUSED":
-  //           (res as Response).status(StatusCode.ServiceUnavailable).json({
-  //             message:
-  //               "The service is temporarily unavailable. Please try again later.",
-  //           });
-  //           break;
-  //         case "ETIMEDOUT":
-  //           (res as Response).status(StatusCode.GatewayTimeout).json({
-  //             message: "The request timed out. Please try again later.",
-  //           });
-  //           break;
-  //         default:
-  //           (res as Response)
-  //             .status(StatusCode.InternalServerError)
-  //             .json({ message: "An internal error occurred." });
-  //       }
-  //     },
-  //   },
-  // },
+            // Modify response to send only the message to the client
+            res.json({
+              // message: responseBody.message,
+              data: responseBody.data,
+            });
+            // console.log("Data", responseBody.data);
+          } catch (error) {
+            return res.status(500).json({ message: "Error parsing response" });
+          }
+        });
+      },
+      error: (err: NetworkError, _req, res) => {
+        logger.error(`Proxy Error: ${err}`);
+        switch (err.code) {
+          case "ECONNREFUSED":
+            (res as Response).status(StatusCode.ServiceUnavailable).json({
+              message:
+                "The service is temporarily unavailable. Please try again later.",
+            });
+            break;
+          case "ETIMEDOUT":
+            (res as Response).status(StatusCode.GatewayTimeout).json({
+              message: "The request timed out. Please try again later.",
+            });
+            break;
+          default:
+            (res as Response)
+              .status(StatusCode.InternalServerError)
+              .json({ message: "An internal error occurred." });
+        }
+      },
+    },
+  },
 };
 
 const applyProxy = (app: express.Application) => {

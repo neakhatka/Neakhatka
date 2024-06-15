@@ -10,6 +10,8 @@ import { FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
 import { Icon } from "@/components";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [loginError, setLoginError] = useState("");
@@ -17,42 +19,74 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!email || !password) {
+      // Display errors if any field is empty
+      if (!email) setEmailError("Email is required");
+      if (!password) setPasswordError("Password is required");
+      return;
+    }
+
+    setLoading(true);
+    setLoginError("");
 
     try {
       await LoginSchema.validate({ email, password }, { abortEarly: false });
 
-      // Your login logic goes here
-      console.log("Logging in with:", { email, password });
-    } catch (error) {
+      const response = await axios.post(
+        "http://localhost:4000/v1/auth/login",
+        { email, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      // Clear errors upon successful login
+      setEmailError("");
+      setPasswordError("");
+
+      const { role, token } = response.data;
+      console.log("Logging in with:", { email, password, role });
+
+      if (role === "seeker") {
+        // router.push("/");
+        window.location.href='/';
+      } else if (role === "employer") {
+        window.location.href = "/dashboard";
+        // router.push("/dashboard");
+      } else {
+        setLoginError("Invalid user role");
+      }
+    } catch (error: any) {
       if (error instanceof Yup.ValidationError) {
-        error.inner.forEach((e) => {
-          if (e.path === "email") setEmailError(e.message);
-          if (e.path === "password") setPasswordError(e.message);
+        error.inner.forEach((e: any) => {
+          switch (e.path) {
+            case "email":
+              setEmailError(e.message);
+              break;
+            case "password":
+              setPasswordError(e.message);
+              break;
+            default:
+              break;
+          }
         });
       } else {
         setLoginError("Invalid email or password");
+        setLoading(false);
       }
     }
   };
 
-  const handleEmailFocus = () => {
-    setEmailError("");
-  };
-
-  const handlePasswordFocus = () => {
-    setPasswordError("");
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  // **Clear Errors on Focus**
+  const handleEmailFocus = () => setEmailError("");
+  const handlePasswordFocus = () => setPasswordError("");
 
   return (
     <div className="flex h-screen mx-auto overflow-hidden">
@@ -105,7 +139,7 @@ const Login = () => {
                 type="email"
                 placeholder="example@gmail.com"
                 className={`w-[350px] ${emailError ? "border-red-500" : ""}`}
-                onChange={handleEmailChange}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 onFocus={handleEmailFocus}
               />
@@ -120,7 +154,7 @@ const Login = () => {
                 type="password"
                 placeholder="password123"
                 className={`w-[350px] ${passwordError ? "border-red-500" : ""}`}
-                onChange={handlePasswordChange}
+                onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 onFocus={handlePasswordFocus}
               />
@@ -141,8 +175,9 @@ const Login = () => {
             <Button
               type="submit"
               className="mt-4 w-[350px] bg-[#343A40] hover:bg-[#4a535c]"
+              disabled={loading}
             >
-              Login
+              {loading ? <div className="spinner"></div> : "Login"}
             </Button>
           </form>
           <div className="mt-5">

@@ -5,10 +5,10 @@ import { Request, Response, NextFunction } from "express";
 import { decodedToken } from "../util/jwt";
 import { logger } from "../util/logger";
 import { StatusCode } from "../util/consts/status.code";
-import APIError from "../controller/error/api-error";
-import BaseCustomError from "../controller/error/base-custom-error";
+import APIError from "../database/error/api-error";
+import BaseCustomError from "../database/error/base-custom-error";
 
-export  interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   employer?: any;
 }
 
@@ -21,7 +21,7 @@ export const authorize = (requireRole: string[]) => {
       const { role } = decoded;
       if (!requireRole.includes(role)) {
         // throw new BaseCustomError(StatusCode.Forbidden, "User does not have the required role");
-        return {message: "Role did mot have"}
+        return { message: "Role did mot have" };
       }
       (req as AuthRequest).employer = decoded;
 

@@ -3,6 +3,8 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { TsoaRoute, fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PostJob } from './../../controller/post.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CompanyController } from './../../controller/company.controller';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
@@ -11,32 +13,6 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "companycreateschema": {
-        "dataType": "refObject",
-        "properties": {
-            "companyName": {"dataType":"string","required":true},
-            "contactEmail": {"dataType":"string","required":true},
-        },
-        "additionalProperties": true,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "companyupdateschema": {
-        "dataType": "refObject",
-        "properties": {
-            "companyName": {"dataType":"string"},
-            "logo": {"dataType":"string"},
-            "contactPhone": {"dataType":"double"},
-            "websiteLink": {"dataType":"string"},
-            "location": {"dataType":"string"},
-            "contactEmail": {"dataType":"string"},
-            "contactPerson": {"dataType":"string"},
-            "numberOfEmployees": {"dataType":"double"},
-            "address": {"dataType":"string"},
-            "companyDescription": {"dataType":"string"},
-        },
-        "additionalProperties": true,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "postcreateschema": {
         "dataType": "refObject",
         "properties": {
@@ -77,6 +53,32 @@ const models: TsoaRoute.Models = {
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "companycreateschema": {
+        "dataType": "refObject",
+        "properties": {
+            "companyname": {"dataType":"string","required":true},
+            "contactemail": {"dataType":"string","required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "companyupdateschema": {
+        "dataType": "refObject",
+        "properties": {
+            "companyname": {"dataType":"string"},
+            "logo": {"dataType":"string"},
+            "contactphone": {"dataType":"double"},
+            "websiteLink": {"dataType":"string"},
+            "location": {"dataType":"string"},
+            "contactemail": {"dataType":"string"},
+            "contactperson": {"dataType":"string"},
+            "numberOfemployees": {"dataType":"double"},
+            "address": {"dataType":"string"},
+            "companydescription": {"dataType":"string"},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"ignore","bodyCoercion":true});
 
@@ -87,13 +89,12 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.post('/v1/company',
-            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Create)),
+        app.get('/v1/jobs',
+            ...(fetchMiddlewares<RequestHandler>(PostJob)),
+            ...(fetchMiddlewares<RequestHandler>(PostJob.prototype.GetAllPosts)),
 
-            async function CompanyController_Create(request: ExRequest, response: ExResponse, next: any) {
+            async function PostJob_GetAllPosts(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"companycreateschema"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -102,22 +103,147 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new CompanyController();
+                const controller = new PostJob();
 
               await templateService.apiHandler({
-                methodName: 'Create',
+                methodName: 'GetAllPosts',
                 controller,
                 response,
                 next,
                 validatedArgs,
-                successStatus: 201,
+                successStatus: 302,
               });
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/company/get',
+        app.get('/v1/jobs/:id',
+            ...(fetchMiddlewares<RequestHandler>(PostJob)),
+            ...(fetchMiddlewares<RequestHandler>(PostJob.prototype.GetPost)),
+
+            async function PostJob_GetPost(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new PostJob();
+
+              await templateService.apiHandler({
+                methodName: 'GetPost',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 302,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/v1/jobs',
+            ...(fetchMiddlewares<RequestHandler>(PostJob)),
+            ...(fetchMiddlewares<RequestHandler>(PostJob.prototype.CreatePost)),
+
+            async function PostJob_CreatePost(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"postcreateschema"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new PostJob();
+
+              await templateService.apiHandler({
+                methodName: 'CreatePost',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/v1/jobs/:id',
+            ...(fetchMiddlewares<RequestHandler>(PostJob)),
+            ...(fetchMiddlewares<RequestHandler>(PostJob.prototype.UpdatePost)),
+
+            async function PostJob_UpdatePost(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    update: {"in":"body","name":"update","required":true,"ref":"postupdateschema"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new PostJob();
+
+              await templateService.apiHandler({
+                methodName: 'UpdatePost',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/v1/jobs/:id',
+            ...(fetchMiddlewares<RequestHandler>(PostJob)),
+            ...(fetchMiddlewares<RequestHandler>(PostJob.prototype.DeletePost)),
+
+            async function PostJob_DeletePost(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new PostJob();
+
+              await templateService.apiHandler({
+                methodName: 'DeletePost',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/v1/companies',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
             ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetAll)),
 
@@ -146,11 +272,11 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/company/:id',
+        app.get('/v1/companies/:id',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetByid)),
+            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetById)),
 
-            async function CompanyController_GetByid(request: ExRequest, response: ExResponse, next: any) {
+            async function CompanyController_GetById(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
             };
@@ -164,7 +290,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new CompanyController();
 
               await templateService.apiHandler({
-                methodName: 'GetByid',
+                methodName: 'GetById',
                 controller,
                 response,
                 next,
@@ -176,11 +302,41 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/v1/company/:id',
+        app.post('/v1/companies',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Update)),
+            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.CreateCompany)),
 
-            async function CompanyController_Update(request: ExRequest, response: ExResponse, next: any) {
+            async function CompanyController_CreateCompany(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"companycreateschema"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new CompanyController();
+
+              await templateService.apiHandler({
+                methodName: 'CreateCompany',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/v1/companies/:id',
+            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
+            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.UpdateCompany)),
+
+            async function CompanyController_UpdateCompany(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
                     update: {"in":"body","name":"update","required":true,"ref":"companyupdateschema"},
@@ -195,7 +351,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new CompanyController();
 
               await templateService.apiHandler({
-                methodName: 'Update',
+                methodName: 'UpdateCompany',
                 controller,
                 response,
                 next,
@@ -207,11 +363,11 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/v1/company/:id',
+        app.delete('/v1/companies/:id',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Delete)),
+            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.DeleteCompany)),
 
-            async function CompanyController_Delete(request: ExRequest, response: ExResponse, next: any) {
+            async function CompanyController_DeleteCompany(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
             };
@@ -225,158 +381,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new CompanyController();
 
               await templateService.apiHandler({
-                methodName: 'Delete',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 204,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/v1/company/posting',
-            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Postng)),
-
-            async function CompanyController_Postng(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"postcreateschema"},
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new CompanyController();
-
-              await templateService.apiHandler({
-                methodName: 'Postng',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 200,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/company/posting',
-            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetAllPost)),
-
-            async function CompanyController_GetAllPost(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new CompanyController();
-
-              await templateService.apiHandler({
-                methodName: 'GetAllPost',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 302,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/company/post/:id',
-            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetPostCard)),
-
-            async function CompanyController_GetPostCard(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new CompanyController();
-
-              await templateService.apiHandler({
-                methodName: 'GetPostCard',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 302,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/v1/company/post/:id',
-            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.Updatepost)),
-
-            async function CompanyController_Updatepost(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                    update: {"in":"body","name":"update","required":true,"ref":"postupdateschema"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new CompanyController();
-
-              await templateService.apiHandler({
-                methodName: 'Updatepost',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 200,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/v1/company/post/:id',
-            ...(fetchMiddlewares<RequestHandler>(CompanyController)),
-            ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.DeletePost)),
-
-            async function CompanyController_DeletePost(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new CompanyController();
-
-              await templateService.apiHandler({
-                methodName: 'DeletePost',
+                methodName: 'DeleteCompany',
                 controller,
                 response,
                 next,

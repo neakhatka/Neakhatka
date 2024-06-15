@@ -8,6 +8,6 @@ export const OptionCookie: CookieOptions = {
   httpOnly: true,
   secure: config.env !== "development", // set to true in production
   sameSite: config.env !== "development" ? "strict" : "lax", // 'strict' in production, 'lax' in development
-  domain: config.env !== "development" ? "www.learnwithkru.com" : undefined, // Set domain in production, undefined in development
+  domain: config.env !== "development" ? "www.neakhatka.com" : undefined, // Set domain in production, undefined in development
   path: "/", // Ensure the path is set to the root
 };

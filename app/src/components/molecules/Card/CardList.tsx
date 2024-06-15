@@ -2,9 +2,11 @@
 import { MyContext } from '@/contexts/CardInfoContext'
 import React, { useContext } from 'react'
 import { Card } from './Card'
+import {IUserProfile} from '@/Types/UserProfile'
 
-const CardList = () => {
-  const {CardInfo} = useContext(MyContext)
+const CardList = ({ userProfile }: { userProfile: IUserProfile }) => {
+  const { CardInfo } = useContext(MyContext);
+
   return (
     <div>
       <main className="max-w-[1200px] mx-auto my-10">
@@ -14,13 +16,13 @@ const CardList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px] container">
           {CardInfo.map((job) => (
             <div key={job.id} className="card-container">
-              <Card className="w-full h-auto" data={job} />
+              <Card className="w-full h-auto" data={job} userProfile={userProfile}/>
             </div>
           ))}
         </div>
       </main>
     </div>
   );
-}
+};
 
 export default CardList

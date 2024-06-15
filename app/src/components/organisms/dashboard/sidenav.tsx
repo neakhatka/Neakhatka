@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import NavLinks from './nav-links';
+import Link from "next/link";
+import NavLinks from "./nav-links";
 function SideNav() {
   return (
     <div className="flex h-full flex-col bg-white px-5 border-r-1 border-gray-200">
@@ -11,7 +11,7 @@ function SideNav() {
           <div className="avatar rounded-full h-10 w-10 bg-emerald-500 font-[700] flex items-center justify-center">
             <p>SM</p>
           </div>
-          <p className='ml-2 text-gray-900'>Svat Manith</p>
+          <p className="ml-2 text-gray-900">Svat Manith</p>
         </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
@@ -28,4 +28,4 @@ function SideNav() {
   );
 }
 
-export {SideNav}
+export { SideNav };

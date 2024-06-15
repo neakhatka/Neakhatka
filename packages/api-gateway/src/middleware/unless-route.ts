@@ -1,11 +1,19 @@
-
 import { NextFunction, Request, Response } from "express";
 
-
 // Middleware to conditionally apply another middleware unless the route matches a specific path
-export default function unless(path: string, middleware: Function) {
+interface Conditions {
+  path: string;
+  method?: string;
+}
+export default function unless(conditions: Conditions[], middleware: Function) {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (req.path.startsWith(path)) {
+    const shouldskip = conditions.some((conditions) => {
+      const pathMatches = req.path.startsWith(conditions.path);
+      const methodMatches =
+        !conditions.method || req.method === conditions.method;
+      return pathMatches && methodMatches;
+    });
+    if (shouldskip) {
       return next();
     } else {
       middleware(req, res, next);

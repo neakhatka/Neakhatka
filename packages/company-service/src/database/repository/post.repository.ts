@@ -1,7 +1,8 @@
-import APIError from "../../controller/error/api-error";
+import APIError from "../error/api-error";
 import { StatusCode } from "../../util/consts/status.code";
 import { Post } from "../model/post.repo.model";
 import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
+import { logger } from "../../util/logger";
 // import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
 
 class PostJob {
@@ -45,11 +46,15 @@ class PostJob {
       const existed = await this.FindById({ id });
       if (!existed) {
         // console.log("Unable to Update this post");
-        return "Post Card Not Exsite";
+        throw new APIError("post  does not exist", StatusCode.NotFound);
       }
-      const updatepost = await Post.findByIdAndUpdate(id, update, {
-        new: true,
-      });
+      const updatepost = await Post.findByIdAndUpdate(
+        id,
+        { $set: update },
+        {
+          new: true,
+        }
+      );
       return updatepost;
     } catch (error) {
       console.log(error);
@@ -60,22 +65,44 @@ class PostJob {
       }
     }
   }
-
-  async Delete({ id }: { id: string }) {
+  async FindByCompanyId(companyId: string) {
     try {
-      const existed = await this.FindById({ id });
+      const existed = await Post.find({ companyId: companyId });
       if (!existed) {
-        throw new APIError("Unable to find iin database", StatusCode.NoContent);
+        throw new APIError("Unable to find in database", StatusCode.NoContent);
+      } else {
+        return existed;
       }
-      return await Post.findByIdAndDelete(id);
     } catch (error) {
-      // console.log(error);
+      throw new APIError("Unable to find in database");
+    }
+  }
+  async FindByCidAndJobId(companyid: string, jobId: string) {
+    try {
+      const existed = await Post.findOne({ companyId: companyid, _id: jobId });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to find in database");
+    }
+  }
+
+  async Delete(jobId: string) {
+    try {
+      const existed = await this.FindById({ id: jobId });
+      if (!existed) {
+        throw new APIError("Unable to find in database", StatusCode.NoContent);
+      }
+      return await Post.findByIdAndDelete({ _id: jobId });
+    } catch (error) {
+      logger.error(`PostRepository Delete() method error: ${error}`);
       if (error instanceof APIError) {
         throw new APIError("Unable to Delete User in database");
       }
+      throw new APIError(
+        "Internal Server Error",
+        StatusCode.InternalServerError
+      );
     }
   }
 }
 export default PostJob;
-// }
-// export default PostJob;

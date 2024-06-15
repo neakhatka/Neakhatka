@@ -1,8 +1,9 @@
 // import { string } from "zod";
 import APIError from "../../errors/api-error";
+import DubplicateError from "../../errors/duplicate-error";
 import { UserSignUpResult } from "../../service/@types/user.service.type";
 import { StatusCode } from "../../utils/consts";
-import AuthModel from "../model/user.repository";
+import authentication from "../model/user.repository";
 import {
   UserCreateRepository,
   UserUpdateRepository,
@@ -20,17 +21,20 @@ class UserRepository {
           StatusCode.BadRequest
         );
       }
-      const newUser = new AuthModel(UserDetail);
+      const newUser = new authentication(UserDetail);
       const userResult = await newUser.save();
       return userResult as UserSignUpResult;
     } catch (error) {
-      throw error;
+      if (error instanceof DubplicateError) {
+        throw error;
+      }
+      throw new APIError("Unable to Create User in Database");
     }
   }
 
   async FindUser({ email }: { email: string }) {
     try {
-      const existingUser = await AuthModel.findOne({ email: email });
+      const existingUser = await authentication.findOne({ email: email });
       return existingUser;
     } catch (error) {
       console.log(error);
@@ -39,12 +43,13 @@ class UserRepository {
 
   async FindUserById({ id }: { id: string }) {
     try {
-      const existedUser = await AuthModel.findById(id);
+      const existedUser = await authentication.findById(id);
       return existedUser;
     } catch (error) {
       console.log("Unable to Fine user in database");
     }
   }
+  
   // update user
   async UpdateUserById({
     id,
@@ -58,7 +63,7 @@ class UserRepository {
       if (!isExist) {
         return "User not Exist";
       }
-      const newUserUpdate = await AuthModel.findByIdAndUpdate(id, update, {
+      const newUserUpdate = await authentication.findByIdAndUpdate(id, update, {
         new: true,
       });
       return newUserUpdate;

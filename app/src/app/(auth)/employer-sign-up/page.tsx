@@ -8,7 +8,7 @@ import { FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
 import { Icon } from "@/components";
-import { EmployerSignupSchema } from "@/validation/employerSignUp";
+import { EmployerSignupSchema } from "../../../validation/employerSignUp";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -27,15 +27,10 @@ const EmployerSignUp = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !password) {
-      if (!username) setUsernameError("Company name is required");
-      if (!email) setEmailError("Email is required");
-      if (!password) setPasswordError("Password is required");
-      return;
-    }
-
-    setLoading(true);
     setSignupError("");
+    setUsernameError("");
+    setEmailError("");
+    setPasswordError("");
 
     try {
       await EmployerSignupSchema.validate(
@@ -43,22 +38,22 @@ const EmployerSignUp = () => {
         { abortEarly: false }
       );
 
-      await axios.post("http://localhost:4000/v1/auth/signup", {
-        username,
-        email,
-        password,
-        role,
-      });
+      setLoading(true);
 
-      console.log("data : ", username, email, password, role);
+      const response = await axios.post(
+        "http://localhost:4000/v1/auth/signup",
+        {
+          username,
+          email,
+          password,
+          role,
+        }
+      );
 
-      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
+      router.push(`/send-email?email=${encodeURIComponent(email)}`);
     } catch (error: any | unknown) {
-      console.log("error**", error);
-      setLoading(false);
-
+      console.log("error from backend : ", error);
       if (error instanceof Yup.ValidationError) {
-        console.log("error form", error);
         error.inner.forEach((e) => {
           switch (e.path) {
             case "username":
@@ -74,13 +69,20 @@ const EmployerSignUp = () => {
               break;
           }
         });
+      } else if (axios.isAxiosError(error)) {
+        console.log("error from axios : ", error);
+        if (error.response) {
+          setEmailError(error.response?.data?.errors[0]?.message);
+          setLoading(false);
+        }
       } else {
-        console.error("Signup error:", error); // Debugging
         setSignupError("Error signing up. Please try again.");
+        setLoading(false);
       }
     }
   };
 
+  // **Clear Errors on Focus**
   const handleUsernameFocus = () => setUsernameError("");
   const handleEmailFocus = () => setEmailError("");
   const handlePasswordFocus = () => setPasswordError("");
