@@ -9,156 +9,121 @@
 		"schemas": {
 			"postcreateschema": {
 				"properties": {
-					"title": {
+					"companyName": {
 						"type": "string"
 					},
-					"description": {
+					"workplace": {
 						"type": "string"
-					},
-					"requirements": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"responsibilities": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"people": {
-						"type": "number",
-						"format": "double"
 					},
 					"location": {
 						"type": "string"
 					},
-					"duration": {
+					"jobDescription": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"jobResponsibilities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"salary": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"totalEmployees": {
 						"type": "number",
 						"format": "double"
 					},
-					"gender": {
-						"type": "string",
-						"enum": [
-							"male",
-							"female",
-							"other"
-						]
-					},
-					"type": {
+					"time": {
 						"type": "string",
 						"enum": [
 							"full-time",
 							"part-time"
 						]
 					},
-					"available_position": {
+					"duration": {
+						"type": "string"
+					},
+					"availablePositions": {
 						"type": "number",
 						"format": "double"
 					},
-					"language": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"deadline": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"salaries": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
+					"gender": {
+						"type": "string"
 					}
 				},
-				"required": [
-					"title",
-					"description",
-					"requirements",
-					"responsibilities",
-					"people",
-					"location",
-					"duration",
-					"gender",
-					"type",
-					"available_position",
-					"language",
-					"deadline",
-					"salaries"
-				],
 				"type": "object",
 				"additionalProperties": true
 			},
 			"postupdateschema": {
 				"properties": {
-					"title": {
+					"companyName": {
 						"type": "string"
 					},
-					"description": {
+					"workplace": {
 						"type": "string"
-					},
-					"requirements": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"responsibilities": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"people": {
-						"type": "number",
-						"format": "double"
 					},
 					"location": {
 						"type": "string"
 					},
-					"duration": {
+					"jobDescription": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"jobResponsibilities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"salary": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"totalEmployees": {
 						"type": "number",
 						"format": "double"
 					},
-					"gender": {
-						"type": "string",
-						"enum": [
-							"male",
-							"female",
-							"other"
-						]
-					},
-					"type": {
+					"time": {
 						"type": "string",
 						"enum": [
 							"full-time",
 							"part-time"
 						]
 					},
-					"available_position": {
+					"duration": {
+						"type": "string"
+					},
+					"availablePositions": {
 						"type": "number",
 						"format": "double"
 					},
-					"language": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"deadline": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"salaries": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
+					"gender": {
+						"type": "string"
 					}
 				},
 				"type": "object",

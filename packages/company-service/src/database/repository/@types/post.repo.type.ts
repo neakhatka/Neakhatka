@@ -1,31 +1,31 @@
 export interface postcreateschema {
-  title: string;
-  description: string;
-  requirements: string[];
-  responsibilities: string[];
-  people: number;
-  location: string;
-  duration: number;
-  gender: "male" | "female" | "other";
-  type: "full-time" | "part-time";
-  available_position: number;
-  language: string[];
-  deadline: Date;
-  salaries: number[];
+  companyName?: string;
+  workplace?: string;
+  location?: string;
+  jobDescription?: string[];
+  jobResponsibilities?: string[]; 
+  startDate?: string;
+  endDate?:string;
+  salary?: number[];
+  totalEmployees?: number;
+  time?: "full-time" | "part-time";
+  duration?: string;
+  availablePositions?: number;
+  gender?: string;
 }
 
 export interface postupdateschema {
-  title?: string;
-  description?: string;
-  requirements?: string[];
-  responsibilities?: string[];
-  people?: number;
+  companyName?: string;
+  workplace?: string;
   location?: string;
-  duration?: number;
-  gender?: "male" | "female" | "other";
-  type?: "full-time" | "part-time";
-  available_position?: number;
-  language?: string[];
-  deadline?: Date;
-  salaries?: number[];
+  jobDescription?: string[];
+  jobResponsibilities?: string[]; 
+  startDate?: string;
+  endDate?:string;
+  salary?: number[];
+  totalEmployees?: number;
+  time?: "full-time" | "part-time";
+  duration?: string;
+  availablePositions?: number;
+  gender?: string;
 }
