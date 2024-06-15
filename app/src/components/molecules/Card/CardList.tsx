@@ -29,6 +29,7 @@ const CardList = ({ userProfile }: { userProfile: IUserProfile }) => {
             type: item.type || 'Unknown Type',
             deadline: item.deadline || 'No deadline',
             salary: item.salaries || [], 
+            people: item.people || 'number'
           }));
           console.log("Mapped data:", data);
           setCardInfo(data);

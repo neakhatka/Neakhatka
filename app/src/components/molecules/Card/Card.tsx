@@ -185,7 +185,7 @@ const Card: React.FC<CardProps> = ({
         <div className="flex">
           <div>
             <Typography className="mt-5" fontSize="sm">
-              {description}
+              Salary
             </Typography>
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
