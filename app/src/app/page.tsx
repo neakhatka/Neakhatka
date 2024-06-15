@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 
+
 async function getProfileUser() {
   const cookieStore = cookies();
   const session = cookieStore.get("session");
@@ -30,9 +31,11 @@ async function getProfileUser() {
   }
 }
 
+
+
 export default async function Home() {
   const result = await getProfileUser();
-  // console.log("result", result);
+    console.log("result", result);
 
   return (
     <>
@@ -43,8 +46,9 @@ export default async function Home() {
         <CardTip />
         <CardList userProfile={result} />
         <CardReview />
-      </CardContext>
+        </CardContext>
       <Footer />
     </>
   );
-}
+};
+

@@ -10,14 +10,23 @@ import { useToast } from "@/components/ui/use-toast";
 
 interface CardData {
   id: string;
+  companyId: string;
   companyLogo: string;
-  companyName?: string;
-  peopleAmount: string;
-  jobTitle: string;
-  salary: string;
-  Emploment: string;
+  title: string;
+  description: string;
   location: string;
-  DeadLine: string;
+  type: string;
+  deadline: string;
+  salary: number[];
+  available_position: number;
+  people: number;
+  duration: number;
+  gender: string;
+  language: string[];
+  requirements: string[];
+  responsibilities: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface CardProps {
@@ -37,14 +46,23 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const {
     id,
+    companyId,
     companyLogo,
-    companyName,
-    peopleAmount,
-    jobTitle,
-    salary,
-    Emploment,
+    title,
+    description,
     location,
-    DeadLine,
+    type,
+    deadline,
+    salary,
+    available_position,
+    people,
+    duration,
+    gender,
+    language,
+    requirements,
+    responsibilities,
+    createdAt,
+    updatedAt,
   } = data;
 
   const [isFavorited, setIsFavorited] = useState(false);
@@ -130,7 +148,7 @@ const Card: React.FC<CardProps> = ({
         ease: "easeInOut",
       }}
     >
-      <Link href={`/detail/${id}`}>
+       <Link href={`/detail/${id}`}>
         <div className="flex justify-between items-center">
           <div className="flex">
             <Image
@@ -141,9 +159,9 @@ const Card: React.FC<CardProps> = ({
               height={48}
             />
             <div className="font-Poppins ml-2">
-              <Typography>{companyName}</Typography>
+              <Typography>{title}</Typography>
               <Typography fontSize="sm" className="text-gray-500">
-                {peopleAmount}
+                {people} people
               </Typography>
             </div>
           </div>
@@ -167,12 +185,12 @@ const Card: React.FC<CardProps> = ({
         <div className="flex">
           <div>
             <Typography className="mt-5" fontSize="sm">
-              {jobTitle}
+              {description}
             </Typography>
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
                 <Icon className="mr-0.5" label="Dollar" size="sm" />
-                {salary}
+                {salary.join(", ")}
               </div>
             </Typography>
             <div>
@@ -182,7 +200,7 @@ const Card: React.FC<CardProps> = ({
               <Typography className="text-gray-500" fontSize="sm">
                 <div className="flex">
                   <Icon className="mr-2" label="Bag" size="sm" />
-                  {Emploment}
+                  {type}
                 </div>
               </Typography>
             </div>
@@ -203,7 +221,7 @@ const Card: React.FC<CardProps> = ({
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
                 <Icon className="mr-2" label="Calendar" size="sm" />
-                {DeadLine}
+                {deadline}
               </div>
             </Typography>
           </div>

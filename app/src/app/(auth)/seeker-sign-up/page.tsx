@@ -27,16 +27,10 @@ const SeekerSignUp = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !password) {
-      // Display errors if any field is empty
-      if (!username) setUsernameError("Username is required");
-      if (!email) setEmailError("Email is required");
-      if (!password) setPasswordError("Password is required");
-      return;
-    }
-
-    setLoading(true);
     setSignupError("");
+    setUsernameError("");
+    setEmailError("");
+    setPasswordError("");
 
     try {
       await SeekerSignUpSchema.validate(
@@ -44,21 +38,22 @@ const SeekerSignUp = () => {
         { abortEarly: false }
       );
 
-      await axios.post("http://localhost:4000/v1/auth/signup", {
-        username,
-        email,
-        password,
-        role,
-      });
+      setLoading(true);
 
-      // Clear errors upon successful signup
-      setUsernameError("");
-      setEmailError("");
-      setPasswordError("");
+      const response = await axios.post(
+        "http://localhost:4000/v1/auth/signup",
+        {
+          username,
+          email,
+          password,
+          role,
+        }
+      );
 
       router.push(`/send-email?email=${encodeURIComponent(email)}`);
-    } catch (error: any | unknown) {
+    } catch (error: any) {
       if (error instanceof Yup.ValidationError) {
+        console.log("error from backend : ", error);
         error.inner.forEach((e) => {
           switch (e.path) {
             case "username":
@@ -74,8 +69,15 @@ const SeekerSignUp = () => {
               break;
           }
         });
+      } else if (axios.isAxiosError(error)) {
+        console.log("error from axios : ", error);
+        if (error.response) {
+          setEmailError(error.response?.data?.errors[0]?.message);
+          setLoading(false);
+        }
       } else {
         setSignupError("Error signing up. Please try again.");
+        setLoading(false);
       }
     }
   };

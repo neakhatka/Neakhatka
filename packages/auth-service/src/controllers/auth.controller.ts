@@ -73,7 +73,11 @@ export class AuthController extends Controller {
         data: newUser,
       };
     } catch (error) {
+      console.error("Error during verify", error);
       throw error;
+      // throw new APIError("Email already exists. Please use a different email.",
+      //   StatusCode.Conflict
+      // );
     }
   }
 
@@ -139,20 +143,18 @@ export class AuthController extends Controller {
   @Middlewares(validateInput(UserSignInSchema))
   public async loginWithEmail(
     @Body() requestBody: { email: string; password: string }
-  ): Promise<{ message: string; token: string }> {
+  ): Promise<{ message: string; token: string; role: string }> {
     try {
       const userService = new UserService();
-      const user = await userService.Login(requestBody);
-      if (!user) {
-        throw new Error("Invalid credentials");
-      }
+      const { user, role } = await userService.Login(requestBody);
 
       console.log("User", user);
       const jwttoken = await generateSignature({
         id: user._id as string,
-        role: user.role,
+        role: role,
       });
-      return { message: "Success login", token: jwttoken };
+
+      return { message: "Success login", token: jwttoken, role: role };
     } catch (error) {
       console.log(error);
       throw new Error(
