@@ -424,6 +424,38 @@
 				]
 			}
 		},
+		"/v1/jobs/profile/jobs": {
+			"get": {
+				"operationId": "GetPostByCID",
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved posts",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"items": {},
+											"type": "array"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/v1/companies": {
 			"get": {
 				"operationId": "GetAll",
@@ -478,7 +510,7 @@
 				}
 			}
 		},
-		"/v1/companies/{id}": {
+		"/v1/companies/profile": {
 			"get": {
 				"operationId": "GetById",
 				"responses": {
@@ -504,16 +536,7 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			},
 			"put": {
 				"operationId": "UpdateCompany",
@@ -540,16 +563,7 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
+				"parameters": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -568,22 +582,23 @@
 						"description": "Successfully Delete  profile",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			}
 		}
 	},
