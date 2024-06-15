@@ -6,9 +6,9 @@ export interface IpostDocument {
   workplace?: string;
   location?: string;
   jobDescription?: string[];
-  jobResponsibilities?: string[]; 
+  jobResponsibilities?: string[];
   startDate: string;
-  endDate:string;
+  endDate: string;
   salary?: number[];
   totalEmployees?: number;
   time: "full-time" | "part-time";

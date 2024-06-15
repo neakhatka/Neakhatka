@@ -3,9 +3,9 @@ export interface postcreateschema {
   workplace?: string;
   location?: string;
   jobDescription?: string[];
-  jobResponsibilities?: string[]; 
+  jobResponsibilities?: string[];
   startDate?: string;
-  endDate?:string;
+  endDate?: string;
   salary?: number[];
   totalEmployees?: number;
   time?: "full-time" | "part-time";
@@ -19,9 +19,9 @@ export interface postupdateschema {
   workplace?: string;
   location?: string;
   jobDescription?: string[];
-  jobResponsibilities?: string[]; 
+  jobResponsibilities?: string[];
   startDate?: string;
-  endDate?:string;
+  endDate?: string;
   salary?: number[];
   totalEmployees?: number;
   time?: "full-time" | "part-time";
