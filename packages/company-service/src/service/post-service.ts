@@ -43,6 +43,13 @@ class PostService {
       throw new APIError("Unable to get post job with this ID");
     }
   }
+  async FindByCompanyId(companyid: string) {
+    try {
+      return await this.postrepo.FindByCompanyId(companyid);
+    } catch (error) {
+      throw new APIError("Unable to get post job with this ID");
+    }
+  }
 
   async UpdatePost({ id, update }: { id: string; update: postupdateschema }) {
     try {
@@ -52,9 +59,9 @@ class PostService {
       throw new APIError("Unable to update job!");
     }
   }
-  async DeletePost(companyid: string, jobid: string) {
+  async DeletePost(jobid: string) {
     try {
-      return await this.postrepo.Delete(companyid, jobid);
+      return await this.postrepo.Delete(jobid);
     } catch (error) {
       logger.error(`PostService - DeletePost() method error: ${error}`);
       throw new APIError("Unable to delete Job");

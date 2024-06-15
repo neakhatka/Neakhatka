@@ -5,6 +5,7 @@ import DuplitcateError from "../../../error/duplitcate-error";
 import APIError from "../../../error/api-error";
 import { createuser, updateuser } from "../@types/user.repository.type";
 import { StatusCode } from "../../../utils/consts/status.code";
+import { logger } from "../../../utils/logger";
 class UserRepository {
   // create user
   async createuser(UserDetail: createuser) {
@@ -58,36 +59,30 @@ class UserRepository {
   }
   // update profile
 
-  async updateUser({
-    id,
-    updateData,
-  }: {
-    id: string;
-    updateData: updateuser;
-  }) {
+  async UpdateProfile({ id, update }: { id: string; update: updateuser }) {
     try {
-      const isExist = await this.findById({ id });
-      if (!isExist) {
+      const existed = await this.findById({ id });
+      if (!existed) {
+        // console.log("Unable to Update this post");
         throw new APIError("post  does not exist", StatusCode.NotFound);
       }
-
-      const newuserupdate = await seeker_profile.findByIdAndUpdate(
+      const updatepost = await seeker_profile.findByIdAndUpdate(
         id,
+        { $set: update },
         {
-          $set:updateData,
-        },
-        { new: true }
+          new: true,
+        }
       );
-      return newuserupdate;
+      return updatepost;
     } catch (error) {
+      console.log(error);
       if (error instanceof APIError) {
-        throw new APIError("Unable to update user in database");
+        throw new APIError("Unable to update that post");
       } else {
         throw new Error("An unexpected error occurred");
       }
     }
   }
-
   // delete profile
   async deleteUser({ id }: { id: string }) {
     try {
@@ -97,6 +92,7 @@ class UserRepository {
       }
       return await seeker_profile.findByIdAndDelete(id);
     } catch (error) {
+      logger.error(`UserRepository DeteleUser() method error: ${error}`);
       throw error;
     }
   }

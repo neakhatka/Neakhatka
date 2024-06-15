@@ -5,8 +5,10 @@ import { Editor, Typography, Input, Button } from "@/components";
 import { useState } from "react";
 import { PostJobSchema } from "../../../validation/postJob";
 import axios from "axios";
+import "../../globals.css";
 
 const PostJob: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const [formState, setFormState] = useState({
     companyName: "",
     position: "",
@@ -51,6 +53,8 @@ const PostJob: React.FC = () => {
       await PostJobSchema.validate(formState, { abortEarly: false });
       setFormErrors({ ...formErrors, postError: "" });
 
+      setLoading(true);
+
       // Prepare data to send to backend
       const postData = {
         companyName: formState.companyName,
@@ -65,13 +69,25 @@ const PostJob: React.FC = () => {
 
       // Send POST request to backend
       const response = await axios.post(
-        `http//:4000/v1/companies/${id}/jobs`,
-        postData
+        `http://localhost:4000/v1/jobs`,
+        postData,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
 
       console.log("Form submitted successfully!", response.data);
+      console.log("post data : ", postData);
+
+      console.log("response message : ", response.data.message);
       // Optionally, reset form state or redirect after successful submission
+      setLoading(false);
     } catch (error) {
+      console.log("error from backend : ", error);
+
+      setLoading(false);
+
       if (error instanceof Yup.ValidationError) {
         const errors = error.inner.reduce(
           (acc, err) => {
@@ -81,7 +97,29 @@ const PostJob: React.FC = () => {
           { ...formErrors }
         );
         setFormErrors(errors);
+      } else if (axios.isAxiosError(error)) {
+        // Handle Axios error
+        if (error.response) {
+          // Server responded with a status other than 2xx
+          setFormErrors({
+            ...formErrors,
+            postError: `Server Error: ${error.response.status} ${error.response?.data?.errors[0]?.message}`,
+          });
+        } else if (error.request) {
+          // Request was made but no response was received
+          setFormErrors({
+            ...formErrors,
+            postError: "Network Error: No response received from server",
+          });
+        } else {
+          // Something else happened while setting up the request
+          setFormErrors({
+            ...formErrors,
+            postError: `Error: ${error.message}`,
+          });
+        }
       } else {
+        // Handle other errors
         setFormErrors({
           ...formErrors,
           postError: "Error Posting. Please try again.",
@@ -95,7 +133,6 @@ const PostJob: React.FC = () => {
     console.log(formState);
     handlePostNowClick();
   };
-
 
   return (
     <div className="h-auto max-w-[1200px] mx-auto px-5 md:px-10 rounded-lg shadow-sm">
@@ -323,7 +360,7 @@ const PostJob: React.FC = () => {
             className="w-24 text-white rounded-lg"
             type="submit"
           >
-            Post Now
+            {loading ? <div className="spinner"></div> : "Post Now"}
           </Button>
         </div>
       </form>

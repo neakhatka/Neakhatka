@@ -18,10 +18,10 @@ const models: TsoaRoute.Models = {
             "profile": {"dataType":"string"},
             "fullname": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactphone": {"dataType":"double"},
+            "contactphone": {"dataType":"string"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
-            "DOB": {"dataType":"datetime"},
+            "DOB": {"dataType":"string"},
             "nationality": {"dataType":"string"},
             "address": {"dataType":"string"},
             "educationbackground": {"dataType":"string"},
@@ -37,10 +37,10 @@ const models: TsoaRoute.Models = {
             "profile": {"dataType":"string"},
             "fullname": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "contactphone": {"dataType":"double"},
+            "contactphone": {"dataType":"string"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
-            "DOB": {"dataType":"datetime","required":true},
+            "DOB": {"dataType":"string","required":true},
             "nationality": {"dataType":"string"},
             "address": {"dataType":"string"},
             "educationbackground": {"dataType":"string"},
@@ -56,10 +56,10 @@ const models: TsoaRoute.Models = {
             "profile": {"dataType":"string"},
             "fullname": {"dataType":"string"},
             "email": {"dataType":"string"},
-            "contactphone": {"dataType":"double"},
+            "contactphone": {"dataType":"string"},
             "gender": {"dataType":"string"},
             "location": {"dataType":"string"},
-            "DOB": {"dataType":"datetime"},
+            "DOB": {"dataType":"string"},
             "nationality": {"dataType":"string"},
             "address": {"dataType":"string"},
             "educationbackground": {"dataType":"string"},
@@ -166,14 +166,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/v1/users/:id',
+        app.put('/v1/users/profile',
             ...(fetchMiddlewares<RequestHandler>(UserController)),
-            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.updateUserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.UpdateProfile)),
 
-            async function UserController_updateUserController(request: ExRequest, response: ExResponse, next: any) {
+            async function UserController_UpdateProfile(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                    updateData: {"in":"body","name":"updateData","required":true,"ref":"updateuser"},
+                    update: {"in":"body","name":"update","required":true,"ref":"updateuser"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -185,7 +185,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new UserController();
 
               await templateService.apiHandler({
-                methodName: 'updateUserController',
+                methodName: 'UpdateProfile',
                 controller,
                 response,
                 next,

@@ -58,6 +58,7 @@ export class UserController extends Controller {
       };
     }
   }
+
   @Middlewares(authorize(["seeker"]))
   @Get(ROUTE_PATHS.PROFILE.GET_BY_ID)
   @SuccessResponse(StatusCode.OK, "Successfully retrieved profile")
@@ -71,7 +72,7 @@ export class UserController extends Controller {
       const user = await userservice.FindByAuthId({ userId });
       console.log("Seeker", user);
 
-      const User = await userservice.GetByIdService({id:user._id});
+      const User = await userservice.GetByIdService({ id: user._id });
       if (!User) {
         return { message: "Profile Not Found", data: null };
       } else {
@@ -83,37 +84,33 @@ export class UserController extends Controller {
   }
 
   // update user
+  @Middlewares(authorize(["seeker"]))
   @Put(ROUTE_PATHS.PROFILE.UPDATE)
   @SuccessResponse(StatusCode.OK, "Successfully Update profile")
-  public async updateUserController(
-    @Path() id: string,
-    @Body() updateData: updateuser
+  public async UpdateProfile(
+    // @Path() companyid: string,
+    @Body() update: updateuser,
+    @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      const { DOB } = updateData;
-      if (
-        (DOB !== null && !(DOB instanceof Date)) ||
-        (DOB instanceof Date && isNaN(DOB.getTime()))
-      ) {
-        this.setStatus(400); // Set HTTP status code to 400 for bad request
-        return { message: "Invalid dateOfBirth", data: null };
-      }
+      console.log("Auth ID:**************");
+
+      const userId = (req as AuthRequest).seeker.id;
       const userservice = new UserService();
-      const updateuser = await userservice.updateProfileService({
-        id,
-        updateData,
+      const user = await userservice.FindByAuthId({ userId });
+      const Id = user?.id;
+      const updatepost = await userservice.UpdateProfileService({
+        id: Id,
+        update,
       });
-      if (!updateuser) {
-        this.setStatus(404); // Set HTTP status code to 404
-        return { message: "Profile Not Found", data: null };
-      }
-      return { message: "Successfully updated profile", data: updateuser };
+      return { message: "Update successfully", data: updatepost };
     } catch (error: any) {
+      console.log(error);
       this.setStatus(500); // Set HTTP status code to 500 for server errors
       return { message: error.message || "Internal Server Error", data: null };
     }
   }
-  // delete USER by id
+  // DEETE USER
   @SuccessResponse(StatusCode.NoContent, "Successfully Delete  profile")
   @Delete(ROUTE_PATHS.PROFILE.DELETE)
   public async DeleteUserContrioller(
