@@ -22,7 +22,7 @@ import {
 } from "../database/repository/@types/post.repo.type";
 import CompanyService from "../service/company-servive";
 import { logger } from "../util/logger";
-@Route("v1/")
+@Route("v1/jobs")
 export class PostJob extends Controller {
   @Get(ROUTE_PATHS.POSTING.GET_ALL_POST)
   @SuccessResponse(StatusCode.Found, "Data Found")
@@ -59,13 +59,12 @@ export class PostJob extends Controller {
       // FIND COMPANYID IN JOB ()
       const postservice = new PostService();
       const companyId = await postservice.FindByCompanyId(company._id);
-      if (companyId){
-        const getcard = await postservice.FindById({id});
+      if (companyId) {
+        const getcard = await postservice.FindById({ id });
         return { message: "Found!", data: getcard };
-      }else{
+      } else {
         return { message: "Not Found!", data: null };
       }
-     
     } catch (error) {
       throw error;
     }
@@ -154,8 +153,8 @@ export class PostJob extends Controller {
       const company = await companyservice.FindByAuthId({ userId });
       // FIND COMPANYID IN JOB ()
       const postservice = new PostService();
-      const companyId = await postservice.FindByCompanyId(company._id);
-      if (companyId) {
+      const companydetail = await postservice.FindByCompanyId(company._id);
+      if (companydetail) {
         await postservice.DeletePost(id);
         return { message: "Delete successfully", data: [] };
       } else {
@@ -166,19 +165,28 @@ export class PostJob extends Controller {
       throw error;
     }
   }
-
-  // @Get(ROUTE_PATHS.POSTING.GET_JOBS_BY_CID)
-  // @SuccessResponse(StatusCode.OK, "Successfully retrieved posts")
-  // public async GetPostByCID(
-  //   @Path() companyid: string
-  // ): Promise<{ message: string; data: any[] }> {
-  //   try {
-  //     const postService = new PostService();
-  //     const posts = await postService.getPostsByCompanyId(companyid);
-  //     return { message: "Successfully retrieved posts", data: posts };
-  //   } catch (error: any) {
-  //     this.setStatus(500);
-  //     return { message: error.message || "Internal Server Error", data: [] };
-  //   }
-  // }
+  @Middlewares(authorize(["employer"]))
+  @Get(ROUTE_PATHS.POSTING.GET_JOBS_BY_CID)
+  @SuccessResponse(StatusCode.OK, "Successfully retrieved posts")
+  public async GetPostByCID(
+    // @Path() companyid: string,
+    @Request() req: Express.Request
+  ): Promise<{ message: string; data: any[] }> {
+    try {
+      const userId = (req as AuthRequest).employer.id;
+      console.log("Auth ID:", userId);
+      const companyservice = new CompanyService();
+      // FIND COMPANY WITH AUTH ID
+      const company = await companyservice.FindByAuthId({ userId });
+      // FIND COMPANYID IN JOB ()
+      const postservice = new PostService();
+      // const job = await postservice.FindByCompanyId(company._id);
+      // const postService = new PostService();
+      const posts = await postservice.getPostsByCompanyId(company._id);
+      return { message: "Successfully retrieved posts", data: posts };
+    } catch (error: any) {
+      this.setStatus(500);
+      return { message: error.message || "Internal Server Error", data: [] };
+    }
+  }
 }

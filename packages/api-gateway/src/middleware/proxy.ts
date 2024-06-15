@@ -408,7 +408,7 @@ const proxyConfigs: ProxyConfig = {
           const bodyString = Buffer.concat(originalBody).toString("utf8");
 
           let responseBody: {
-            // message?: string;
+            message?: string;
             errors?: Array<object>;
             data?: Array<object>;
             // token?: string;
@@ -432,7 +432,7 @@ const proxyConfigs: ProxyConfig = {
 
             // Modify response to send only the message to the client
             res.json({
-              // message: responseBody.message,
+              message: responseBody.message,
               data: responseBody.data,
             });
             // console.log("Data", responseBody.data);

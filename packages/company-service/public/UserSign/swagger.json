@@ -424,6 +424,38 @@
 				]
 			}
 		},
+		"/v1/jobs/profile/jobs": {
+			"get": {
+				"operationId": "GetPostByCID",
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved posts",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"items": {},
+											"type": "array"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/v1/companies": {
 			"get": {
 				"operationId": "GetAll",
