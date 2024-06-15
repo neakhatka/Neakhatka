@@ -4,7 +4,7 @@ const ROUTE_PATHS = {
     GET_ALL: "/",
     UPDATE: "/profile", // As an example
     GET_BY_ID: "/profile",
-    DELETE: "/:id",
+    DELETE: "/profile",
     // Add other auth-related routes here
   },
   // Define other route groups as needed

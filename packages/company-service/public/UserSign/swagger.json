@@ -478,7 +478,7 @@
 				}
 			}
 		},
-		"/v1/companies/{id}": {
+		"/v1/companies/profile": {
 			"get": {
 				"operationId": "GetById",
 				"responses": {
@@ -504,16 +504,7 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			},
 			"put": {
 				"operationId": "UpdateCompany",
@@ -540,16 +531,7 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
+				"parameters": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -568,22 +550,23 @@
 						"description": "Successfully Delete  profile",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			}
 		}
 	},

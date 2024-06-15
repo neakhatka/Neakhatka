@@ -92,8 +92,10 @@ export class PostJob extends Controller {
         const postservice = new PostService();
         const post = await postservice.Create(postData);
         console.log("post Data", post);
+        this.setStatus(StatusCode.OK); // Set status code to 200
         return { message: "Success post job", data: post };
       } else {
+        this.setStatus(StatusCode.Forbidden); // Set status code to 403
         return {
           // status: 403,
           message: "You are not authorized to post for this company",
