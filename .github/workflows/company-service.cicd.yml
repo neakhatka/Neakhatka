@@ -56,8 +56,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            mkdir -p /home/ubuntu
-            chown ubuntu:ubuntu /home/ubuntu
+            mkdir -p /home/ubuntu/packages/company-service/build/configs
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@master
@@ -67,7 +66,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "packages/company-service/build/*"
-          target: "/home/ubuntu"
+          target: "/home/ubuntu/packages/company-service/build/"
 
       - name: Create .env file
         uses: appleboy/ssh-action@master
@@ -87,9 +86,8 @@ jobs:
             RABBITMQ_ENDPOINT=${{ secrets.RABBITMQ_ENDPOINT }}
             USER_SERVICE_URL=${{ secrets.USER_SERVICE_URL }}
             AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }}
-            COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL}}
+            COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL }}
             API_GATEWAY=${{ secrets.API_GATEWAY }}
-           
             EOF
 
       - name: Start
@@ -113,8 +111,3 @@ jobs:
               echo "Application is not running. Starting..."
               yarn start
             fi
-
-
-
-
-
