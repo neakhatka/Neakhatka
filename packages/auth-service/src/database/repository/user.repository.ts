@@ -1,5 +1,6 @@
 // import { string } from "zod";
 import APIError from "../../errors/api-error";
+import DubplicateError from "../../errors/duplicate-error";
 import { UserSignUpResult } from "../../service/@types/user.service.type";
 import { StatusCode } from "../../utils/consts";
 import authentication from "../model/user.repository";
@@ -24,7 +25,10 @@ class UserRepository {
       const userResult = await newUser.save();
       return userResult as UserSignUpResult;
     } catch (error) {
-      throw error;
+      if (error instanceof DubplicateError) {
+        throw error;
+      }
+      throw new APIError("Unable to Create User in Database");
     }
   }
 
@@ -45,6 +49,7 @@ class UserRepository {
       console.log("Unable to Fine user in database");
     }
   }
+  
   // update user
   async UpdateUserById({
     id,

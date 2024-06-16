@@ -22,8 +22,7 @@
 						"type": "string"
 					},
 					"contactphone": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"gender": {
 						"type": "string"
@@ -32,8 +31,7 @@
 						"type": "string"
 					},
 					"DOB": {
-						"type": "string",
-						"format": "date-time"
+						"type": "string"
 					},
 					"nationality": {
 						"type": "string"
@@ -71,8 +69,7 @@
 						"type": "string"
 					},
 					"contactphone": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"gender": {
 						"type": "string"
@@ -81,8 +78,7 @@
 						"type": "string"
 					},
 					"DOB": {
-						"type": "string",
-						"format": "date-time"
+						"type": "string"
 					},
 					"nationality": {
 						"type": "string"
@@ -105,7 +101,6 @@
 					}
 				},
 				"required": [
-					"authid",
 					"fullname",
 					"email",
 					"DOB"
@@ -125,8 +120,7 @@
 						"type": "string"
 					},
 					"contactphone": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"gender": {
 						"type": "string"
@@ -135,8 +129,7 @@
 						"type": "string"
 					},
 					"DOB": {
-						"type": "string",
-						"format": "date-time"
+						"type": "string"
 					},
 					"nationality": {
 						"type": "string"
@@ -225,7 +218,7 @@
 				"parameters": []
 			}
 		},
-		"/v1/users/{id}": {
+		"/v1/users/profile": {
 			"get": {
 				"operationId": "GetCardById",
 				"responses": {
@@ -251,19 +244,10 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			},
 			"put": {
-				"operationId": "UpdateUserController",
+				"operationId": "UpdateProfile",
 				"responses": {
 					"200": {
 						"description": "Successfully Update profile",
@@ -287,16 +271,7 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
+				"parameters": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -333,16 +308,7 @@
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			}
 		}
 	},

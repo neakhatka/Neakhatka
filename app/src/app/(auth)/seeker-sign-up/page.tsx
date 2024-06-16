@@ -2,15 +2,15 @@
 import * as Yup from "yup";
 import React, { useState } from "react";
 import Link from "next/link";
-import {  Input } from "@/components/ui/input";
-import {  Button } from "@/components/ui/button";
-import {  FaFacebook } from "react-icons/fa";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { FaFacebook } from "react-icons/fa";
 import Image from "next/legacy/image";
 import "../../globals.css";
-import {  Icon } from "@/components";
-import {  SeekerSignUpSchema } from "../../../validation/seekerSignUp";
+import { Icon } from "@/components";
+import { SeekerSignUpSchema } from "../../../validation/seekerSignUp";
 import axios from "axios";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const SeekerSignUp = () => {
   const [signupError, setSignupError] = useState("");
@@ -27,16 +27,10 @@ const SeekerSignUp = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !password) {
-      // Display errors if any field is empty
-      if (!username) setUsernameError("Username is required");
-      if (!email) setEmailError("Email is required");
-      if (!password) setPasswordError("Password is required");
-      return;
-    }
-
-    setLoading(true);
     setSignupError("");
+    setUsernameError("");
+    setEmailError("");
+    setPasswordError("");
 
     try {
       await SeekerSignUpSchema.validate(
@@ -44,24 +38,22 @@ const SeekerSignUp = () => {
         { abortEarly: false }
       );
 
-      await axios.post("http://localhost:4000/v1/auth/signup", {
-        username,
-        email,
-        password,
-        role,
-      });
+      setLoading(true);
 
-      // Clear errors upon successful signup
-      setUsernameError("");
-      setEmailError("");
-      setPasswordError("");
-      setLoading(false);
+      const response = await axios.post(
+        "http://localhost:4000/v1/auth/signup",
+        {
+          username,
+          email,
+          password,
+          role,
+        }
+      );
 
-      router.push(`/signup-success?email=${encodeURIComponent(email)}`);
-    } catch (error: any | unknown) {
-      setLoading(false);
-
+      router.push(`/send-email?email=${encodeURIComponent(email)}`);
+    } catch (error: any) {
       if (error instanceof Yup.ValidationError) {
+        console.log("error from backend : ", error);
         error.inner.forEach((e) => {
           switch (e.path) {
             case "username":
@@ -77,8 +69,15 @@ const SeekerSignUp = () => {
               break;
           }
         });
+      } else if (axios.isAxiosError(error)) {
+        console.log("error from axios : ", error);
+        if (error.response) {
+          setEmailError(error.response?.data?.errors[0]?.message);
+          setLoading(false);
+        }
       } else {
         setSignupError("Error signing up. Please try again.");
+        setLoading(false);
       }
     }
   };

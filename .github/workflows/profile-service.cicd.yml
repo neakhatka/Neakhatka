@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - "profile-service/**"
+      - "packages/profile-service/**"
 
 defaults:
   run:
-    working-directory: profile-service
+    working-directory: packages/profile-service
 
 jobs:
   build:
@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Generate API documentation
+        run: yarn gen:all
+
       - name: Build the project
         run: yarn build
 
@@ -33,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ./profile-service/build
+          path: packages/profile-service/build
 
   deploy:
     needs: build
@@ -43,7 +46,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build
-          path: ./profile-service/build
+          path: packages/profile-service/build
 
       - name: Ensure target directory exists
         uses: appleboy/ssh-action@master
@@ -53,8 +56,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            mkdir -p /home/ubuntu/apps
-            chown ubuntu:ubuntu /home/ubuntu/apps
+            mkdir -p /home/ubuntu
+            chown ubuntu:ubuntu /home/ubuntu
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@master
@@ -63,8 +66,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: "profile-service/build/*"
-          target: "/home/ubuntu/apps/"
+          source: "packages/profile-service/build/*"
+          target: "/home/ubuntu"
 
       - name: Create .env file
         uses: appleboy/ssh-action@master
@@ -74,7 +77,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cat <<EOF > /home/ubuntu/apps/auth-service/build/configs/.env.prod
+            cat <<EOF > /home/ubuntu/packages/profile-service/build/configs/.env
             NODE_ENV=${{ secrets.NODE_ENV }}
             PORT=${{ secrets.PORT }}
             COOKIE_SECRET_KEY_ONE=${{ secrets.COOKIE_SECRET_KEY_ONE }}
@@ -85,6 +88,7 @@ jobs:
             USER_SERVICE_URL=${{ secrets.USER_SERVICE_URL }}
             AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }}
             COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL}}
+            API_GATEWAY=${{ secrets.API_GATEWAY }}
             EOF
 
       - name: Start
@@ -97,14 +101,36 @@ jobs:
           script: |
             source /home/ubuntu/.nvm/nvm.sh
             source /home/ubuntu/.profile
-            cd /home/ubuntu/apps/auth-service
+            cd /home/ubuntu/packages/profile-service/build
             echo "Checking directory contents..."
             ls -alh
             yarn install
-            if pm2 show company-service > /dev/null; then
+            if pm2 show profile-service > /dev/null; then
               echo "Application is running. Restarting..."
               yarn restart
             else
               echo "Application is not running. Starting..."
               yarn start
             fi
+
+
+
+
+
+
+
+
+
+            cat <<EOF > /home/ubuntu/apps/auth-service/build/configs/.env
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            PORT=${{ secrets.PORT }}
+            COOKIE_SECRET_KEY_ONE=${{ secrets.COOKIE_SECRET_KEY_ONE }}
+            COOKIE_SECRET_KEY_TWO=${{ secrets.COOKIE_SECRET_KEY_TWO }}
+            CLIENT_URL=${{ secrets.CLIENT_URL }}
+            LOG_LEVEL=${{ secrets.LOG_LEVEL }}
+            RABBITMQ_ENDPOINT=${{ secrets.RABBITMQ_ENDPOINT }}
+            USER_SERVICE_URL=${{ secrets.USER_SERVICE_URL }}
+            AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }}
+            COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL}}
+            API_GATEWAY=${{ secrets.API_GATEWAY }}
+            EOF

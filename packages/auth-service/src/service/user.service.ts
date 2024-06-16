@@ -132,10 +132,10 @@ class UserService {
     await user.save();
     const jwttoken = await generateSignature({ id: user.id, role: user.role });
     // Remove the verification token
-    // await this.accountVerificationRepo.DeleteVerificationToken({ token });
+    await this.accountVerificationRepo.DeleteVerificationToken({ token });
     console.log("User", user);
 
-    const {id} = await this.SentRequestBaseOnRole(user);
+    const { id } = await this.SentRequestBaseOnRole(user);
     return {
       message: "User verify email successfully",
       token: jwttoken,
@@ -164,7 +164,8 @@ class UserService {
         // console.log(response.data);
         // const   jwttoken= await generateSignature( response.data.data.id , user.role)
         return { id: response.data._id };
-      } else {//(user.role === "employer") 
+      } else {
+        //(user.role === "employer")
         const response = await axios.post(
           "http://company-service:4004/v1/companies",
           {
@@ -192,6 +193,35 @@ class UserService {
   }
 
   // Login method
+  // async Login(UserDetails: UsersignInSchemType) {
+  //   try {
+  //     const user = await this.userRepo.FindUser({ email: UserDetails.email });
+
+  //     if (!user) {
+  //       throw new APIError("User does not exist", StatusCode.NotFound);
+  //     }
+
+  //     const isPwdCorrect = await ValidatePassword({
+  //       enterpassword: UserDetails.password,
+  //       savedPassword: user.password as string,
+  //     });
+
+  //     if (!isPwdCorrect) {
+  //       throw new APIError(
+  //         "Email or Password is incorrect",
+  //         StatusCode.BadRequest
+  //       );
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+
+  //   //  const requestUser = new UserRepository();
+  //   //   const { data } = await requestUser.FindUserById(user._id.toString());
+
+  //   // const jwtToken = await generateSignature({ _id: user._id.toString() });
+  // }
   async Login(UserDetails: UsersignInSchemType) {
     try {
       const user = await this.userRepo.FindUser({ email: UserDetails.email });
@@ -211,15 +241,46 @@ class UserService {
           StatusCode.BadRequest
         );
       }
-      return user;
+
+      // Ensure the user object contains a role property
+      const userRole = user.role;
+
+      return { user, role: userRole };
     } catch (error) {
       throw error;
     }
+  }
 
-    //  const requestUser = new UserRepository();
-    //   const { data } = await requestUser.FindUserById(user._id.toString());
+  // logout
+  async logout(decodedUser: any) {
+    try {
+      console.log("welcome to user service");
+      const { id, role } = decodedUser;
+      if (role == "seeker") {
+        const existingUser = await axios.get(
+          `http://profile-service:4003/v1/users`
+        );
+        if (!existingUser) {
+          throw new APIError("No user found!", StatusCode.NotFound);
+        }
+        return true;
+      }
+      if (role == "employer") {
+        const existingUser = await axios.get(
+          `http://company-service:4004/v1/companies/${id}`
+        );
+        if (!existingUser) {
+          throw new APIError("No user found!", StatusCode.NotFound);
+        }
+        return true;
+      }
 
-    // const jwtToken = await generateSignature({ _id: user._id.toString() });
+      if (role === undefined) {
+        throw new APIError("Role is undefined", StatusCode.NotFound);
+      }
+    } catch (error: unknown) {
+      throw error;
+    }
   }
 
   async Findbyid({ id }: { id: string }) {

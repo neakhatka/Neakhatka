@@ -1,7 +1,7 @@
 export interface ICompanyDocument {
   companyname?: string;
   logo?: string;
-  contactphone?: number;
+  contactphone?: string;
   websiteLink?: string;
   location?: string;
   contactemail?: string | undefined;

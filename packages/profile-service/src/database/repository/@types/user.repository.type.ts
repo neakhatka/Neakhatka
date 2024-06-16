@@ -4,10 +4,10 @@ export interface createuser {
     profile?: string;
     fullname: string;
     email:string,
-    contactphone?: number;
+    contactphone?: string;
     gender?: string;
     location?: string;
-    DOB?: Date;
+    DOB?: string;
     nationality?: string;
     address?: string;
     educationbackground?: string;
@@ -17,10 +17,10 @@ export interface updateuser{
     profile?: string;
     fullname?: string;
     email?: string;
-    contactphone?: number;
+    contactphone?: string;
     gender?: string;
     location?: string;
-    DOB?: Date;
+    DOB?: string;
     nationality?: string;
     address?: string;
     educationbackground?: string;

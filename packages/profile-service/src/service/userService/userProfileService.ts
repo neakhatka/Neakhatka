@@ -6,6 +6,7 @@ import {
   createuser,
   updateuser,
 } from "../../database/repository/@types/user.repository.type";
+import { logger } from "../../utils/logger";
 export class UserService {
   private userRepo: UserRepository;
   constructor() {
@@ -40,18 +41,27 @@ export class UserService {
       throw new APIError("Unable to get user with this ID");
     }
   }
+  async FindByAuthId({ userId }: { userId: string }): Promise<any> {
+    try {
+      return await this.userRepo.FindByAuthID({ userId });
+    } catch (error) {
+      console.log(error);
+      // return null;
+      throw new APIError("Unable to get user with this ID");
+    }
+  }
 
   // update user
 
-  async updateProfileService({
+  async UpdateProfileService({
     id,
-    updateData,
+    update,
   }: {
     id: string;
-    updateData: updateuser;
+    update: updateuser;
   }): Promise<any> {
     try {
-      return await this.userRepo.updateUser({ id, updateData });
+      return await this.userRepo.UpdateProfile({ id, update });
     } catch (error) {
       // throw error;
       throw new APIError("Unable to update User profile!");
@@ -64,6 +74,9 @@ export class UserService {
       return await this.userRepo.deleteUser({ id });
     } catch (error) {
       // throw error;
+      logger.error(
+        `UserProfileService DeleteProfileService() method error: ${error}`
+      );
       throw new APIError("Unable to delete User profile");
     }
   }

@@ -1,10 +1,8 @@
+import React from "react";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import {Nav} from "@/components/organisms/Navbar/Nav";
-import { Footer } from "@/components";
-import CardContext from "@/contexts/CardInfoContext";
-import { CountProvider } from "../contexts/CountContext";
+import { Toaster } from "@/components/ui/toaster";
 
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
@@ -21,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <link rel="icon" href="/logo.svg" />
       <body>{children}</body>
+      {/* <Toaster /> */}
     </html>
   );
 }

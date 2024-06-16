@@ -67,6 +67,8 @@ const proxyConfigs: ProxyConfig = {
             errors?: Array<object>;
             role?: string;
             url?: string;
+            verify_token?: string;
+            isLogout?: boolean;
             status?: string;
             id?: string;
           };
@@ -76,7 +78,13 @@ const proxyConfigs: ProxyConfig = {
 
             responseBody = JSON.parse(bodyString);
 
-            logger.info(`Gateway received responsebody ${responseBody}`);
+            logger.info(
+              `***Gateway received responsebody: ${JSON.stringify(
+                responseBody,
+                null,
+                2
+              )}`
+            );
             // If Response Error, Not Modified Response
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
@@ -95,8 +103,26 @@ const proxyConfigs: ProxyConfig = {
               res.redirect(responseBody.url);
             }
 
+            if (responseBody.verify_token) {
+              return res.json(responseBody);
+            }
+
+            if (responseBody.isLogout) {
+              res.clearCookie("session");
+              res.clearCookie("session.sig");
+              res.clearCookie("persistent");
+            }
+
+            // if (responseBody.status) {
+            //   return res.json(responseBody.status);
+            // }
+
+            // if (responseBody.message) {
+            //   return res.json(responseBody.message);
+            // }
+
             // Modify response to send only the message to the client
-            res.json({
+            return res.json({
               status: responseBody.status,
               message: responseBody.message,
               role: responseBody.role,
@@ -163,6 +189,9 @@ const proxyConfigs: ProxyConfig = {
           `Proxied request URL: ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
         );
         logger.info(`Headers Sent: ${JSON.stringify(proxyReq.getHeaders())}`);
+        // Attach the original URL and method to the headers
+        proxyReq.setHeader("X-Original-Url", expressReq.originalUrl);
+        proxyReq.setHeader("X-Original-Method", expressReq.method);
       },
       proxyRes: (proxyRes, req, res) => {
         let originalBody: Buffer[] = [];
@@ -171,6 +200,9 @@ const proxyConfigs: ProxyConfig = {
         });
         proxyRes.on("end", function () {
           const bodyString = Buffer.concat(originalBody).toString("utf8");
+          logger.info(`Response body: ${JSON.stringify(bodyString)}`);
+          logger.info(`Response body: ${bodyString}`);
+          logger.info(`Response body: ${originalBody}`);
 
           let responseBody: {
             message?: string;
@@ -180,7 +212,7 @@ const proxyConfigs: ProxyConfig = {
           };
 
           try {
-            logger.info(`Gateway recieved bodystrign ${bodyString}`);
+            logger.info(`Gateway received bodystring ${bodyString}`);
 
             responseBody = JSON.parse(bodyString);
 
@@ -189,10 +221,24 @@ const proxyConfigs: ProxyConfig = {
             if (responseBody.errors) {
               return res.status(proxyRes.statusCode!).json(responseBody);
             }
+
             if (responseBody.token) {
               (req as Request).session!.jwt = responseBody.token;
               res.cookie("persistent", responseBody.token, OptionCookie);
               delete responseBody.token;
+            }
+            // Check if the original URL matches your delete API endpoint and the method is DELETE
+            const originalUrl = req.headers["x-original-url"] as string;
+            const originalMethod = req.headers["x-original-method"] as string;
+            if (
+              originalMethod === "DELETE" &&
+              originalUrl &&
+              originalUrl.includes("/v1/companies/") &&
+              originalUrl.includes("/jobs/")
+            ) {
+              // If it matches, change the status code
+              logger.info("Modifying status code for delete API response");
+              res.statusCode = 204; // Change the status code to 204 No Content
             }
 
             // Modify response to send only the message to the client
@@ -362,7 +408,7 @@ const proxyConfigs: ProxyConfig = {
           const bodyString = Buffer.concat(originalBody).toString("utf8");
 
           let responseBody: {
-            // message?: string;
+            message?: string;
             errors?: Array<object>;
             data?: Array<object>;
             // token?: string;
@@ -386,7 +432,7 @@ const proxyConfigs: ProxyConfig = {
 
             // Modify response to send only the message to the client
             res.json({
-              // message: responseBody.message,
+              message: responseBody.message,
               data: responseBody.data,
             });
             // console.log("Data", responseBody.data);

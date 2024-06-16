@@ -2,6 +2,7 @@ import APIError from "../error/api-error";
 import { StatusCode } from "../../util/consts/status.code";
 import { Post } from "../model/post.repo.model";
 import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
+import { logger } from "../../util/logger";
 // import { postcreateschema, postupdateschema } from "./@types/post.repo.type";
 
 class PostJob {
@@ -64,28 +65,43 @@ class PostJob {
       }
     }
   }
+  async FindByCompanyId(companyId: string) {
+    try {
+      const existed = await Post.find({ companyId: companyId });
+      if (!existed) {
+        throw new APIError("Unable to find in database", StatusCode.NoContent);
+      } else {
+        return existed;
+      }
+    } catch (error) {
+      throw new APIError("Unable to find in database");
+    }
+  }
   async FindByCidAndJobId(companyid: string, jobId: string) {
-    try{
-      const existed = await Post.findOne({companyId: companyid, _id: jobId});
+    try {
+      const existed = await Post.findOne({ companyId: companyid, _id: jobId });
       return existed;
-
-    }catch(error){
+    } catch (error) {
       throw new APIError("Unable to find in database");
     }
   }
 
-  async Delete(companyid: string, jobId: string) {
+  async Delete(jobId: string) {
     try {
-      const existed = await this.FindById({ id:jobId });
+      const existed = await this.FindById({ id: jobId });
       if (!existed) {
         throw new APIError("Unable to find in database", StatusCode.NoContent);
       }
-      return await Post.findByIdAndDelete({companyId: companyid, _id: jobId});
+      return await Post.findByIdAndDelete({ _id: jobId });
     } catch (error) {
-      // console.log(error);
+      logger.error(`PostRepository Delete() method error: ${error}`);
       if (error instanceof APIError) {
         throw new APIError("Unable to Delete User in database");
       }
+      throw new APIError(
+        "Internal Server Error",
+        StatusCode.InternalServerError
+      );
     }
   }
 }

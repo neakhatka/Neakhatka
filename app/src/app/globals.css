@@ -74,8 +74,27 @@ body {
   display: inline-block;
 }
 
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+  animation: pulse 1.5s infinite;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  40%,
+  100% {
+    opacity: 0.5;
+  }
+
+  20% {
+    opacity: 1;
   }
 }

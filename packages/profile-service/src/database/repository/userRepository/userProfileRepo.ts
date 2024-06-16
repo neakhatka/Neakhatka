@@ -5,6 +5,7 @@ import DuplitcateError from "../../../error/duplitcate-error";
 import APIError from "../../../error/api-error";
 import { createuser, updateuser } from "../@types/user.repository.type";
 import { StatusCode } from "../../../utils/consts/status.code";
+import { logger } from "../../../utils/logger";
 class UserRepository {
   // create user
   async createuser(UserDetail: createuser) {
@@ -12,6 +13,7 @@ class UserRepository {
       const existingUser = await this.FindUserByEmail({
         email: UserDetail.email,
       });
+
       if (existingUser) {
         throw new DuplitcateError("Email alredy in use");
       }
@@ -45,38 +47,42 @@ class UserRepository {
       throw new APIError("Unable to find user in database ");
     }
   }
+  async FindByAuthID({ userId }: { userId: string }): Promise<any> {
+    try {
+      const existed = await seeker_profile.findOne({
+        authid: userId,
+      });
+      return existed;
+    } catch (error) {
+      throw new APIError("Unable to Find User in Database ");
+    }
+  }
   // update profile
 
-  async updateUser({
-    id,
-    updateData,
-  }: {
-    id: string;
-    updateData: updateuser;
-  }) {
+  async UpdateProfile({ id, update }: { id: string; update: updateuser }) {
     try {
-      const isExist = await this.findById({ id });
-      if (!isExist) {
+      const existed = await this.findById({ id });
+      if (!existed) {
+        // console.log("Unable to Update this post");
         throw new APIError("post  does not exist", StatusCode.NotFound);
       }
-
-      const newuserupdate = await seeker_profile.findByIdAndUpdate(
+      const updatepost = await seeker_profile.findByIdAndUpdate(
         id,
+        { $set: update },
         {
-          $set:updateData,
-        },
-        { new: true }
+          new: true,
+        }
       );
-      return newuserupdate;
+      return updatepost;
     } catch (error) {
+      console.log(error);
       if (error instanceof APIError) {
-        throw new APIError("Unable to update user in database");
+        throw new APIError("Unable to update that post");
       } else {
         throw new Error("An unexpected error occurred");
       }
     }
   }
-
   // delete profile
   async deleteUser({ id }: { id: string }) {
     try {
@@ -86,6 +92,7 @@ class UserRepository {
       }
       return await seeker_profile.findByIdAndDelete(id);
     } catch (error) {
+      logger.error(`UserRepository DeteleUser() method error: ${error}`);
       throw error;
     }
   }

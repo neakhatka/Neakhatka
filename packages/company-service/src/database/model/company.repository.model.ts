@@ -1,3 +1,4 @@
+
 import { Schema, model,
   //  Document,
     // Model
@@ -6,7 +7,7 @@ const companySchema = new Schema(
   {
     companyname: { type: String, required: true },
     logo: { type: String, required: false, default: "" },
-    contactphone: { type: Number, required: false, default: 0 },
+    contactphone: { type: String, required: false, default: 0 },
     contactemail: {
       type: String,
       // required: true,

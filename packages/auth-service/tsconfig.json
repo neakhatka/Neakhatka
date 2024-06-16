@@ -3,7 +3,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es2021", // compile to es6
-    "lib": ["es2021"],
+    "lib": ["es2021", "dom"],  // Add "dom" here
     "moduleResolution": "node",
     "sourceMap": true,
     "rootDir": "./",
