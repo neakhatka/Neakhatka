@@ -154,8 +154,7 @@
 						"type": "string"
 					},
 					"contactphone": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"websiteLink": {
 						"type": "string"

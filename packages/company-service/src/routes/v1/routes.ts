@@ -67,7 +67,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "companyname": {"dataType":"string"},
             "logo": {"dataType":"string"},
-            "contactphone": {"dataType":"double"},
+            "contactphone": {"dataType":"string"},
             "websiteLink": {"dataType":"string"},
             "location": {"dataType":"string"},
             "contactemail": {"dataType":"string"},
