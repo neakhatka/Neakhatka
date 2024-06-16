@@ -18,6 +18,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "companyName": {"dataType":"string"},
             "workplace": {"dataType":"string"},
+            "position": {"dataType":"string"},
             "location": {"dataType":"string"},
             "jobDescription": {"dataType":"array","array":{"dataType":"string"}},
             "jobResponsibilities": {"dataType":"array","array":{"dataType":"string"}},
@@ -38,6 +39,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "companyName": {"dataType":"string"},
             "workplace": {"dataType":"string"},
+            "position": {"dataType":"string"},
             "location": {"dataType":"string"},
             "jobDescription": {"dataType":"array","array":{"dataType":"string"}},
             "jobResponsibilities": {"dataType":"array","array":{"dataType":"string"}},

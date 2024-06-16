@@ -4,6 +4,7 @@ export interface IpostDocument {
   companyId?: mongoose.Schema.Types.ObjectId;
   companyName?: string;
   workplace?: string;
+  position?: string;
   location?: string;
   jobDescription?: string[];
   jobResponsibilities?: string[];

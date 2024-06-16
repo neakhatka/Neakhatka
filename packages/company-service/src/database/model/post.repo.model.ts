@@ -8,6 +8,7 @@ const postingSchema: Schema = new Schema(
     },
     companyName: { type: String, required: false },
     workplace: { type: String, required: false },
+    position:{type :String , required: false},
     location: { type: String, required: false },
     jobDescription: { type: [String], required: false, default: [] },
     jobResponsibilities: { type: [String], required: false, default: [] },

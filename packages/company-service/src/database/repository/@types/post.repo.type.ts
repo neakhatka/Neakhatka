@@ -1,6 +1,7 @@
 export interface postcreateschema {
   companyName?: string;
   workplace?: string;
+  position?: string;
   location?: string;
   jobDescription?: string[];
   jobResponsibilities?: string[];
@@ -17,6 +18,7 @@ export interface postcreateschema {
 export interface postupdateschema {
   companyName?: string;
   workplace?: string;
+  position?: string;
   location?: string;
   jobDescription?: string[];
   jobResponsibilities?: string[];
