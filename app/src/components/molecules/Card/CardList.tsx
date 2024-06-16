@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import { MyContext } from '@/contexts/CardInfoContext';
-import { Card } from './Card';
-import { IUserProfile } from '@/Types/UserProfile';
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { MyContext } from "@/contexts/CardInfoContext";
+import { Card } from "./Card";
+import { IUserProfile } from "@/Types/UserProfile";
+import "../../../app/globals.css";
 
 const CardList = ({ userProfile }: { userProfile: IUserProfile }) => {
   const { CardInfo, setCardInfo } = useContext(MyContext);
@@ -47,13 +48,13 @@ const CardList = ({ userProfile }: { userProfile: IUserProfile }) => {
     fetchData();
   }, [setCardInfo]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error}</div>;
+  // }
 
   return (
     <div>
@@ -64,9 +65,16 @@ const CardList = ({ userProfile }: { userProfile: IUserProfile }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px] container">
           {CardInfo.map((job) => (
             <div key={job.id} className="card-container">
-              <Card className="w-full h-auto" data={job} userProfile={userProfile} />
+              <Card
+                className="w-full h-auto"
+                data={job}
+                userProfile={userProfile}
+              />
             </div>
           ))}
+        </div>
+        <div className="flex justify-center items-center">
+          {loading ? <div className="spinner"></div> : null}
         </div>
       </main>
     </div>
