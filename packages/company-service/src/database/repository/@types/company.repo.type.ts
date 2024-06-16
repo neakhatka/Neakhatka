@@ -7,7 +7,7 @@ export interface companycreateschema {
   export interface companyupdateschema {
   companyname?: string;
   logo?: string;
-  contactphone?: number;
+  contactphone?: string;
   websiteLink?: string;
   location?: string;
   contactemail?: string;

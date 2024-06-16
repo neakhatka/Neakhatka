@@ -68,7 +68,7 @@ const VerifyPage = () => {
       hasRun.current = true;
       handleEmail();
     }
-  }, []);
+  });
 
   const renderContent = () => {
     switch (verificationStatus) {

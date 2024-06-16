@@ -92,6 +92,7 @@ jobs:
             COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL}}
             API_GATEWAY=${{ secrets.API_GATEWAY }}
             JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}
+            
             EOF
 
       - name: Start

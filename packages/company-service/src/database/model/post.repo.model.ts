@@ -1,7 +1,11 @@
 import mongoose, { Schema, model } from "mongoose";
 const postingSchema: Schema = new Schema(
   {
-    companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'companymodels', required: false },
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "companymodels",
+      required: false,
+    },
     companyName: { type: String, required: false },
     workplace: { type: String, required: false },
     location: { type: String, required: false },
