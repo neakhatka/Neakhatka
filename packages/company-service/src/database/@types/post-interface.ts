@@ -10,7 +10,7 @@ export interface IpostDocument {
   jobResponsibilities?: string[];
   startDate: string;
   endDate: string;
-  salary?: number[];
+  salary?: string;
   totalEmployees?: number;
   time: "full-time" | "part-time";
   duration?: string;

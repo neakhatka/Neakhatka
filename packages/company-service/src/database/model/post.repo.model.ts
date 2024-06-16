@@ -14,7 +14,7 @@ const postingSchema: Schema = new Schema(
     jobResponsibilities: { type: [String], required: false, default: [] },
     startDate: { type: String, required: true },
     endDate: { type: String, required: true },
-    salary: { type: [Number], required: false, default: [] },
+    salary: { type: String, required: false, default: [] },
     totalEmployees: { type: Number, required: false, default: 0 },
     time: {
       type: String,
