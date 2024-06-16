@@ -13,20 +13,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyUser = void 0;
-const api_error_1 = __importDefault(require("../error/api-error"));
 const consts_1 = require("../utils/consts");
 const logger_1 = require("../utils/logger");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const server_1 = require("../server");
+const api_error_1 = __importDefault(require("../error/api-error"));
 function verifyUser(req, _res, _next) {
     return __awaiter(this, void 0, void 0, function* () {
-        var _a;
+        var _a, _b;
+        const sessionCookie = (_a = req.session) === null || _a === void 0 ? void 0 : _a.jwt;
+        const persistentCookie = (_b = req.cookies) === null || _b === void 0 ? void 0 : _b.persistent;
         try {
-            if (!((_a = req.session) === null || _a === void 0 ? void 0 : _a.jwt)) {
-                logger_1.logger.error("Token is not available. Gateway Service verifyUser() method error");
-                throw new api_error_1.default("Please login to access this resource.", consts_1.StatusCode.Unauthorized);
+            console.log(sessionCookie, persistentCookie);
+            if (!sessionCookie) {
+                if (!persistentCookie) {
+                    logger_1.logger.error("Token is not available. Gateway Service verifyUser() method error ");
+                    throw new api_error_1.default("Please login to access this resource.", consts_1.StatusCode.Unauthorized);
+                }
+                req.session.jwt = persistentCookie;
             }
-            yield (0, jsonwebtoken_1.verify)(req.session.jwt, server_1.publicKey, { algorithms: ["RS256"] });
+            // Use the same token verification logic you're currently using
+            yield (0, jsonwebtoken_1.verify)(sessionCookie || persistentCookie, server_1.publicKey, {
+                algorithms: ["RS256"],
+            });
+            // If the token is valid, proceed to the next middleware
             _next();
         }
         catch (error) {

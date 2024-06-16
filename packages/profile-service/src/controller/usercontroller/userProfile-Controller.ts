@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Route,
-  Path,
   SuccessResponse,
   Post,
   Put,
@@ -67,10 +66,8 @@ export class UserController extends Controller {
   ): Promise<{ message: string; data: any }> {
     try {
       const userId = (req as AuthRequest).seeker.id;
-      console.log("User ID:", userId);
       const userservice = new UserService();
       const user = await userservice.FindByAuthId({ userId });
-      console.log("Seeker", user);
 
       const User = await userservice.GetByIdService({ id: user._id });
       if (!User) {
@@ -93,8 +90,6 @@ export class UserController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      console.log("Auth ID:**************");
-
       const userId = (req as AuthRequest).seeker.id;
       const userservice = new UserService();
       const user = await userservice.FindByAuthId({ userId });
@@ -111,14 +106,20 @@ export class UserController extends Controller {
     }
   }
   // DEETE USER
+  @Middlewares(authorize(["seeker"]))
   @SuccessResponse(StatusCode.NoContent, "Successfully Delete  profile")
   @Delete(ROUTE_PATHS.PROFILE.DELETE)
   public async DeleteUserContrioller(
-    @Path() id: string
+    // @Path() id: string
+    @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
+      const userId = (req as AuthRequest).seeker.id;
       const userservice = new UserService();
-      const deleteuser = await userservice.DeleteProfileService({ id });
+      const user = await userservice.FindByAuthId({ userId });
+      const deleteuser = await userservice.DeleteProfileService({
+        id: user._id,
+      });
       if (deleteuser) {
         return { message: "Successfully deleted profile", data: null };
       } else {

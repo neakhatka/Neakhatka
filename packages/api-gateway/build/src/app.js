@@ -14,19 +14,26 @@ const compression_1 = __importDefault(require("compression"));
 const logger_1 = require("./utils/logger");
 const consts_1 = require("./utils/consts");
 const error_handle_1 = require("./middleware/error-handle");
-// import { RegisterRoutes } from "./routes/routes";
 const createCofig_1 = __importDefault(require("./utils/createCofig"));
+const routs_1 = require("./routes/routs");
 const auth_middleware_1 = require("./middleware/auth-middleware");
 const unless_route_1 = __importDefault(require("./middleware/unless-route"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 const config = (0, createCofig_1.default)();
+// Log CORS configuration
+console.log("CORS configuration:", {
+    env: config.env,
+    clientUrl: config.clientUrl,
+});
 // ===================
 // Security Middleware
 // ===================
 app.set("trust proxy", 1);
 app.use((0, compression_1.default)());
-app.use((0, cookie_session_1.default)(Object.assign({ name: "session", keys: [`${config.cookieSecretKeyOne}`, `${config.cookieSecretKeyTwo}`], maxAge: 24 * 7 * 3600000, secure: config.env !== "development" }, (config.env !== 'development' && {
-    sameSite: 'none'
+app.use((0, cookie_parser_1.default)());
+app.use((0, cookie_session_1.default)(Object.assign({ name: "session", keys: [`${config.cookieSecretKeyOne}`, `${config.cookieSecretKeyTwo}`], maxAge: 24 * 60 * 60 * 1000, secure: config.env !== "development" }, (config.env !== "development" && {
+    sameSite: "none",
 }))));
 // Prevent HTTP Parameter Pollution attacks
 app.use((0, hpp_1.default)());
@@ -37,7 +44,7 @@ app.use((0, hpp_1.default)());
 app.use((0, helmet_1.default)());
 // Only Allow Specific Origin to Access API Gateway (Frontend)
 app.use((0, cors_1.default)({
-    origin: (0, createCofig_1.default)().env === 'development' ? '*' : [config.clientUrl],
+    origin: config.env !== "development" ? "*" : [config.clientUrl],
     credentials: true, // attach token from client
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,11 +56,16 @@ app.disable("x-powered-by");
 // ===================
 // Gateway Health Routes
 // ===================
-// RegisterRoutes(app);
+(0, routs_1.RegisterRoutes)(app);
 // ===================
 // JWT Middleware
 // ===================
-app.use((0, unless_route_1.default)('/v1/auth', auth_middleware_1.verifyUser));
+// Conditions array
+const conditions = [
+    { path: "/v1/auth" }, // Exclude all routes starting with /v1/auth
+    { path: "/v1/jobs", method: "GET" }, // Exclude GET requests starting with /v1/events
+];
+app.use((0, unless_route_1.default)(conditions, auth_middleware_1.verifyUser));
 // ===================
 // Proxy Routes
 // ===================
@@ -63,6 +75,7 @@ app.use((0, unless_route_1.default)('/v1/auth', auth_middleware_1.verifyUser));
 // ====================
 app.use("*", (req, res, _next) => {
     const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+    console.log(fullUrl);
     logger_1.logger.error(`${fullUrl} endpoint does not exist`);
     res
         .status(consts_1.StatusCode.NotFound)

@@ -27,66 +27,115 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const tsoa_1 = require("tsoa");
 const userProfileService_1 = require("../../service/userService/userProfileService");
-const useProfile_Route_1 = __importDefault(require("../../routes/useProfile.Route"));
+// import { IUserDocument } from "../../database/@types/user.interface";
+const useProfile_Route_1 = __importDefault(require("../../routes/v1/useProfile.Route"));
+const status_code_1 = require("../../utils/consts/status.code");
+const authmiddleware_1 = require("../../middleware/authmiddleware");
 let UserController = class UserController extends tsoa_1.Controller {
-    constructor(userservice) {
-        super();
-        this.userservice = userservice;
-    }
-    GetAllUserController() {
+    CreateUser(requestBody) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.userservice.GetAllProfileervice();
-        });
-    }
-    // GET USER BY ID
-    //   @Get("/profile/:id")
-    GetCardById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
+            console.log("Recived data", requestBody);
             try {
-                const User = yield this.userservice.GetByIdService(id);
-                if (User) {
-                    return User;
-                }
-                else {
-                    return { message: "Profile Not Found" };
-                }
+                const userService = new userProfileService_1.UserService();
+                const userProfile = yield userService.createuser(requestBody);
+                return userProfile;
             }
             catch (error) {
                 console.log(error);
+                throw error;
             }
         });
     }
-    // update card
-    //   @Put("/update/:id")
-    UpdateUserController(id, UpdateData) {
+    GetAllUserController() {
         return __awaiter(this, void 0, void 0, function* () {
-            const updateuser = yield this.userservice.updateProfileService(id, UpdateData);
-            if (updateuser) {
-                return updateuser;
+            try {
+                const userService = new userProfileService_1.UserService();
+                const result = yield userService.GetAllProfileservice();
+                return { message: "Success retrieved!", data: result };
             }
-            else {
-                this.setStatus(404);
-                return { message: "Profile Not Found" };
+            catch (err) {
+                console.log(err);
+                throw {
+                    status: status_code_1.StatusCode.NotFound,
+                    message: "Can not found with that id",
+                    detail: err.message,
+                };
             }
         });
     }
-    // delete USER by id
-    //   @Delete("/delete/:id")
-    DeleteUserContrioller(id) {
+    GetCardById(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deleteuser = yield this.userservice.DeleteProfileService(id);
-            if (deleteuser) {
-                return deleteuser;
+            try {
+                const userId = req.seeker.id;
+                const userservice = new userProfileService_1.UserService();
+                const user = yield userservice.FindByAuthId({ userId });
+                const User = yield userservice.GetByIdService({ id: user._id });
+                if (!User) {
+                    return { message: "Profile Not Found", data: null };
+                }
+                else {
+                    return { message: "Successfully retrieved profile", data: User };
+                }
             }
-            else {
-                return { message: "Profile Not Found" };
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    // update user
+    UpdateProfile(update, req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.seeker.id;
+                const userservice = new userProfileService_1.UserService();
+                const user = yield userservice.FindByAuthId({ userId });
+                const Id = user === null || user === void 0 ? void 0 : user.id;
+                const updatepost = yield userservice.UpdateProfileService({
+                    id: Id,
+                    update,
+                });
+                return { message: "Update successfully", data: updatepost };
+            }
+            catch (error) {
+                console.log(error);
+                this.setStatus(500); // Set HTTP status code to 500 for server errors
+                return { message: error.message || "Internal Server Error", data: null };
+            }
+        });
+    }
+    // DEETE USER
+    DeleteUserContrioller(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.seeker.id;
+                const userservice = new userProfileService_1.UserService();
+                const user = yield userservice.FindByAuthId({ userId });
+                const deleteuser = yield userservice.DeleteProfileService({
+                    id: user._id,
+                });
+                if (deleteuser) {
+                    return { message: "Successfully deleted profile", data: null };
+                }
+                else {
+                    return { message: "Profile Not Found", data: null };
+                }
+            }
+            catch (error) {
+                throw error;
             }
         });
     }
 };
 exports.UserController = UserController;
 __decorate([
-    (0, tsoa_1.Post)(useProfile_Route_1.default.PROFILE.GET_ALL)
+    (0, tsoa_1.Post)(useProfile_Route_1.default.PROFILE.CREATE),
+    __param(0, (0, tsoa_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "CreateUser", null);
+__decorate([
+    (0, tsoa_1.Get)(useProfile_Route_1.default.PROFILE.GET_ALL)
     //   @Get("/all-profile")
     ,
     __metadata("design:type", Function),
@@ -94,32 +143,34 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "GetAllUserController", null);
 __decorate([
-    (0, tsoa_1.Post)(useProfile_Route_1.default.PROFILE.GET_BY_ID),
-    (0, tsoa_1.SuccessResponse)("200", "Successfully retrieved profile")
-    // @Response("404", "Card not found")
-    ,
-    __param(0, (0, tsoa_1.Path)()),
+    (0, tsoa_1.Middlewares)((0, authmiddleware_1.authorize)(["seeker"])),
+    (0, tsoa_1.Get)(useProfile_Route_1.default.PROFILE.GET_BY_ID),
+    (0, tsoa_1.SuccessResponse)(status_code_1.StatusCode.OK, "Successfully retrieved profile"),
+    __param(0, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "GetCardById", null);
 __decorate([
-    (0, tsoa_1.Post)(useProfile_Route_1.default.PROFILE.UPDATE),
-    __param(0, (0, tsoa_1.Path)()),
-    __param(1, (0, tsoa_1.Body)()),
+    (0, tsoa_1.Middlewares)((0, authmiddleware_1.authorize)(["seeker"])),
+    (0, tsoa_1.Put)(useProfile_Route_1.default.PROFILE.UPDATE),
+    (0, tsoa_1.SuccessResponse)(status_code_1.StatusCode.OK, "Successfully Update profile"),
+    __param(0, (0, tsoa_1.Body)()),
+    __param(1, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "UpdateUserController", null);
+], UserController.prototype, "UpdateProfile", null);
 __decorate([
-    (0, tsoa_1.Post)(useProfile_Route_1.default.PROFILE.DELETE),
-    __param(0, (0, tsoa_1.Path)()),
+    (0, tsoa_1.Middlewares)((0, authmiddleware_1.authorize)(["seeker"])),
+    (0, tsoa_1.SuccessResponse)(status_code_1.StatusCode.NoContent, "Successfully Delete  profile"),
+    (0, tsoa_1.Delete)(useProfile_Route_1.default.PROFILE.DELETE),
+    __param(0, (0, tsoa_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "DeleteUserContrioller", null);
 exports.UserController = UserController = __decorate([
-    (0, tsoa_1.Route)("/v1/users"),
-    __metadata("design:paramtypes", [userProfileService_1.UserService])
+    (0, tsoa_1.Route)("/v1/users")
 ], UserController);
 //# sourceMappingURL=userProfile-Controller.js.map

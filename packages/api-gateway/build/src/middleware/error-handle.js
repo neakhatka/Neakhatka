@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandler = void 0;
-const base_custom_error_1 = __importDefault(require("@api-gateway/error/base-custom-error"));
+const base_custom_error_1 = __importDefault(require("../error/base-custom-error"));
 const status_code_1 = require("../utils/consts/status-code");
 const logger_1 = require("../utils/logger");
 const errorHandler = (err, _req, res, _next) => {

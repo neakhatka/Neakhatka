@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// Middleware to conditionally apply another middleware unless the route matches a specific path
-function unless(path, middleware) {
+function unless(conditions, middleware) {
     return (req, res, next) => {
-        if (req.path.startsWith(path)) {
+        const shouldskip = conditions.some((conditions) => {
+            const pathMatches = req.path.startsWith(conditions.path);
+            const methodMatches = !conditions.method || req.method === conditions.method;
+            return pathMatches && methodMatches;
+        });
+        if (shouldskip) {
             return next();
         }
         else {

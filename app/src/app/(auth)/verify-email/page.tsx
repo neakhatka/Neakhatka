@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 const VerifyPage = () => {
-    const router = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [verificationStatus, setVerificationStatus] =
@@ -68,7 +68,7 @@ const VerifyPage = () => {
       hasRun.current = true;
       handleEmail();
     }
-  }, []);
+  });
 
   const renderContent = () => {
     switch (verificationStatus) {
@@ -114,11 +114,14 @@ const VerifyPage = () => {
   );
 };
 
-
 const VerifyEmail = () => {
-  <Suspense>
-    <VerifyPage />
-  </Suspense>
+  return (
+    <>
+      <Suspense>
+        <VerifyPage />
+      </Suspense>
+    </>
+  );
 };
 
 export default VerifyEmail;

@@ -16,19 +16,20 @@ const models: TsoaRoute.Models = {
     "postcreateschema": {
         "dataType": "refObject",
         "properties": {
-            "title": {"dataType":"string","required":true},
-            "description": {"dataType":"string","required":true},
-            "requirements": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "responsibilities": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "people": {"dataType":"double","required":true},
-            "location": {"dataType":"string","required":true},
-            "duration": {"dataType":"double","required":true},
-            "gender": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["male"]},{"dataType":"enum","enums":["female"]},{"dataType":"enum","enums":["other"]}],"required":true},
-            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["full-time"]},{"dataType":"enum","enums":["part-time"]}],"required":true},
-            "available_position": {"dataType":"double","required":true},
-            "language": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "deadline": {"dataType":"datetime","required":true},
-            "salaries": {"dataType":"array","array":{"dataType":"double"},"required":true},
+            "companyName": {"dataType":"string"},
+            "workplace": {"dataType":"string"},
+            "position": {"dataType":"string"},
+            "location": {"dataType":"string"},
+            "jobDescription": {"dataType":"array","array":{"dataType":"string"}},
+            "jobResponsibilities": {"dataType":"array","array":{"dataType":"string"}},
+            "startDate": {"dataType":"string"},
+            "endDate": {"dataType":"string"},
+            "salary": {"dataType":"string"},
+            "totalEmployees": {"dataType":"double"},
+            "time": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["full-time"]},{"dataType":"enum","enums":["part-time"]}]},
+            "duration": {"dataType":"string"},
+            "availablePositions": {"dataType":"double"},
+            "gender": {"dataType":"string"},
         },
         "additionalProperties": true,
     },
@@ -36,19 +37,20 @@ const models: TsoaRoute.Models = {
     "postupdateschema": {
         "dataType": "refObject",
         "properties": {
-            "title": {"dataType":"string"},
-            "description": {"dataType":"string"},
-            "requirements": {"dataType":"array","array":{"dataType":"string"}},
-            "responsibilities": {"dataType":"array","array":{"dataType":"string"}},
-            "people": {"dataType":"double"},
+            "companyName": {"dataType":"string"},
+            "workplace": {"dataType":"string"},
+            "position": {"dataType":"string"},
             "location": {"dataType":"string"},
-            "duration": {"dataType":"double"},
-            "gender": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["male"]},{"dataType":"enum","enums":["female"]},{"dataType":"enum","enums":["other"]}]},
-            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["full-time"]},{"dataType":"enum","enums":["part-time"]}]},
-            "available_position": {"dataType":"double"},
-            "language": {"dataType":"array","array":{"dataType":"string"}},
-            "deadline": {"dataType":"datetime"},
-            "salaries": {"dataType":"array","array":{"dataType":"double"}},
+            "jobDescription": {"dataType":"array","array":{"dataType":"string"}},
+            "jobResponsibilities": {"dataType":"array","array":{"dataType":"string"}},
+            "startDate": {"dataType":"string"},
+            "endDate": {"dataType":"string"},
+            "salary": {"dataType":"string"},
+            "totalEmployees": {"dataType":"double"},
+            "time": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["full-time"]},{"dataType":"enum","enums":["part-time"]}]},
+            "duration": {"dataType":"string"},
+            "availablePositions": {"dataType":"double"},
+            "gender": {"dataType":"string"},
         },
         "additionalProperties": true,
     },
@@ -67,7 +69,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "companyname": {"dataType":"string"},
             "logo": {"dataType":"string"},
-            "contactphone": {"dataType":"double"},
+            "contactphone": {"dataType":"string"},
             "websiteLink": {"dataType":"string"},
             "location": {"dataType":"string"},
             "contactemail": {"dataType":"string"},
@@ -243,6 +245,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/v1/jobs/profile/jobs',
+            ...(fetchMiddlewares<RequestHandler>(PostJob)),
+            ...(fetchMiddlewares<RequestHandler>(PostJob.prototype.GetPostByCID)),
+
+            async function PostJob_GetPostByCID(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new PostJob();
+
+              await templateService.apiHandler({
+                methodName: 'GetPostByCID',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/v1/companies',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
             ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetAll)),
@@ -272,13 +304,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/v1/companies/:id',
+        app.get('/v1/companies/profile',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
             ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.GetById)),
 
             async function CompanyController_GetById(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -332,13 +364,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/v1/companies/:id',
+        app.put('/v1/companies/profile',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
             ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.UpdateCompany)),
 
             async function CompanyController_UpdateCompany(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
                     update: {"in":"body","name":"update","required":true,"ref":"companyupdateschema"},
             };
 
@@ -363,13 +395,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/v1/companies/:id',
+        app.delete('/v1/companies/profile',
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
             ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.DeleteCompany)),
 
             async function CompanyController_DeleteCompany(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

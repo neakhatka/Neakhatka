@@ -10,14 +10,20 @@ import { useToast } from "@/components/ui/use-toast";
 
 interface CardData {
   id: string;
+  companyId: string;
   companyLogo: string;
-  companyName?: string;
-  peopleAmount: string;
-  jobTitle: string;
-  salary: string;
-  Emploment: string;
+  position: string;
+  jobDescription: string;
   location: string;
-  DeadLine: string;
+  time: string;
+  salary: string;
+  availablePositions: number;
+  totalEmployees: number;
+  duration: string;
+  gender: string;
+  jobResponsibilities: string[];
+  startDate: string;
+  endDate: string;
 }
 
 interface CardProps {
@@ -37,24 +43,30 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const {
     id,
+    companyId,
     companyLogo,
-    companyName,
-    peopleAmount,
-    jobTitle,
-    salary,
-    Emploment,
+    position,
+    jobDescription,
     location,
-    DeadLine,
+    time,
+    salary,
+    availablePositions,
+    totalEmployees,
+    duration,
+    gender,
+    jobResponsibilities,
+    startDate,
+    endDate,
   } = data;
 
   const [isFavorited, setIsFavorited] = useState(false);
-    const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-    const { toast } = useToast();
+  const { toast } = useToast();
 
-    useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), []);
 
-    if (!mounted) return null;
+  if (!mounted) return null;
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -141,9 +153,9 @@ const Card: React.FC<CardProps> = ({
               height={48}
             />
             <div className="font-Poppins ml-2">
-              <Typography>{companyName}</Typography>
+              <Typography>{position}</Typography>
               <Typography fontSize="sm" className="text-gray-500">
-                {peopleAmount}
+                {totalEmployees} people
               </Typography>
             </div>
           </div>
@@ -167,7 +179,7 @@ const Card: React.FC<CardProps> = ({
         <div className="flex">
           <div>
             <Typography className="mt-5" fontSize="sm">
-              {jobTitle}
+              Salary
             </Typography>
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
@@ -182,7 +194,7 @@ const Card: React.FC<CardProps> = ({
               <Typography className="text-gray-500" fontSize="sm">
                 <div className="flex">
                   <Icon className="mr-2" label="Bag" size="sm" />
-                  {Emploment}
+                  {time}
                 </div>
               </Typography>
             </div>
@@ -203,7 +215,7 @@ const Card: React.FC<CardProps> = ({
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
                 <Icon className="mr-2" label="Calendar" size="sm" />
-                {DeadLine}
+                {endDate}
               </div>
             </Typography>
           </div>

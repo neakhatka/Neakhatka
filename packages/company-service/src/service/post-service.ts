@@ -64,7 +64,7 @@ class PostService {
       return await this.postrepo.Delete(jobid);
     } catch (error) {
       logger.error(`PostService - DeletePost() method error: ${error}`);
-      throw new APIError("Unable to delete Job");
+      throw new APIError(" Unable to Delete Job in database");
     }
   }
   //  implementation for get all post job that company posted

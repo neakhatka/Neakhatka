@@ -6,11 +6,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const UserNav = () => {
-  const router = useRouter();
 
   const handleLogout = async () => {
     try {

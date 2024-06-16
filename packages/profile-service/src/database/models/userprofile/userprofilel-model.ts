@@ -4,7 +4,7 @@ const userschema: Schema = new Schema(
   {
     profile: { type: String, required: false, default: "" },
     authid: { type: String, required: false, default: "" },
-    fullname: { type: String, required: true },
+    fullname: { type: String, required: true, default: ""  },
     // lastName: { type: String, required: true },
     email: {
       type: String,
@@ -13,7 +13,7 @@ const userschema: Schema = new Schema(
       lowercase: true,
       trim: true,
     },
-    contactphone: { type: String, required: false, default: null },
+    contactphone: { type: String, required: false, default: "" },
     gender: { type: String, required: false, default: "" },
     location: { type: String, required: false, default: "" },
     DOB: { type: String, required: false, default: "" },
