@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   CardDashboard,
   DonutChartHero,
@@ -18,16 +18,14 @@ export default function Page() {
       // Fetch data asynchronously here
       // const candidatesData = await fetchCandidatesData();
       // const jobData = await fetchJobData();
-      
+
       setDataLoaded(true);
     };
 
     fetchData();
   }, []);
 
-
-
-  return dataLoaded ?(
+  return dataLoaded ? (
     <main>
       <h1 className={`mb-4 text-xl`}>Dashboard</h1>
       <div>
@@ -42,5 +40,5 @@ export default function Page() {
         </div>
       </div>
     </main>
- ) : null;
+  ) : null;
 }

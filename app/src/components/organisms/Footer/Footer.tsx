@@ -8,7 +8,6 @@ import {
   Select,
   Search,
   Banner,
-  Promote,
 } from "@/components";
 import Image from "next/legacy/image";
 const Footer : React.FC = () => {

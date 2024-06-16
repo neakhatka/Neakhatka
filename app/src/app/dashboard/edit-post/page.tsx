@@ -14,16 +14,16 @@ const PostJob: React.FC = () => {
     position: "",
     workplace: "",
     location: "",
-    jobDescription: "",
-    jobResponsibilities: "",
+    jobDescription: [], // Initialize as empty array for job description
+    jobResponsibilities: [], // Initialize as empty array for job responsibilities
     startDate: "",
     endDate: "",
-    salary: "50-100", // default value
-    totalEmployees: "1-10", // default value
-    time: "full-time", // default value
-    duration: "1-3", // default value
-    availablePositions: "", // new field
-    gender: "any", // default value
+    salary: "50-100", // Default value as an array of two numbers
+    totalEmployees: 1, // Default value as a number
+    time: "full-time", // Default value as "full-time"
+    duration: "1-3", // Default value as a string
+    availablePositions: undefined, // Initialize as undefined or specify default value
+    gender: "any", // Default value as "any"
   });
 
   const [formErrors, setFormErrors] = useState({

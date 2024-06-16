@@ -40,11 +40,7 @@
 						"type": "string"
 					},
 					"salary": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
+						"type": "string"
 					},
 					"totalEmployees": {
 						"type": "number",
@@ -104,11 +100,7 @@
 						"type": "string"
 					},
 					"salary": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
+						"type": "string"
 					},
 					"totalEmployees": {
 						"type": "number",
