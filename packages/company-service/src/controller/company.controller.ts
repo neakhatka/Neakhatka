@@ -74,7 +74,7 @@ export class CompanyController extends Controller {
       };
     }
   }
-  @Middlewares(authorize(["employer"]))
+  // @Middlewares(authorize(["employer"]))
   @SuccessResponse(StatusCode.Created, "Created")
   @Post(ROUTE_PATHS.COMPANY.CREATE)
   public async CreateCompany(
