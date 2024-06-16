@@ -77,7 +77,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cat <<EOF > /home/ubuntu/apps/auth-service/build/configs/.env
+            cat <<EOF > /home/ubuntu/packages/auth-service/build/configs/.env
             NODE_ENV=${{ secrets.NODE_ENV }}
             PORT=${{ secrets.PORT }}
             COOKIE_SECRET_KEY_ONE=${{ secrets.COOKIE_SECRET_KEY_ONE }}
