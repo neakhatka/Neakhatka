@@ -8,7 +8,7 @@ import { StatusCode } from "../utils/consts/status.code";
 import APIError from "../error/api-error";
 import BaseCustomError from "../error/base-custom-error";
 
-export  interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   seeker?: any;
 }
 

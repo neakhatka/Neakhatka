@@ -24,8 +24,15 @@ import { StatusCode } from "../util/consts/status.code";
 //   postupdateschema,
 // } from "../database/repository/@types/post.repo.type";
 // import PostService from "../service/post-service";
-import { AuthRequest, authorize } from "../middleware/authmiddleware";
+import { authorize } from "../middleware/authmiddleware";
 // import { logger } from "../util/logger";
+
+interface AuthRequest extends Request {
+  employer?: {
+    id: string;
+    // Add other properties if needed
+  };
+}
 
 @Route("v1/companies")
 export class CompanyController extends Controller {
@@ -55,7 +62,8 @@ export class CompanyController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      const userId = (req as AuthRequest).employer.id;
+      const authReq = req as unknown as AuthRequest;
+      const userId = authReq!.employer!.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -103,7 +111,8 @@ export class CompanyController extends Controller {
     @Body() update: companyupdateschema
   ): Promise<{ message: string; data: any }> {
     try {
-      const userId = (req as AuthRequest).employer.id;
+      const authReq = req as unknown as AuthRequest;
+      const userId = authReq!.employer!.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -127,7 +136,8 @@ export class CompanyController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string }> {
     try {
-      const userId = (req as AuthRequest).employer.id;
+      const authReq = req as unknown as AuthRequest;
+      const userId = authReq!.employer!.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
