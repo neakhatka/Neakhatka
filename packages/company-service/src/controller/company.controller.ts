@@ -1,5 +1,4 @@
 import {
-  // DeleteCompanyRequest,
   companycreateschema,
   companyupdateschema,
 } from "../database/repository/@types/company.repo.type";
@@ -10,7 +9,6 @@ import {
   Controller,
   Post,
   Get,
-  // Path,
   Route,
   Put,
   SuccessResponse,
@@ -19,18 +17,12 @@ import {
   Request,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
-// import {
-//   postcreateschema,
-//   postupdateschema,
-// } from "../database/repository/@types/post.repo.type";
-// import PostService from "../service/post-service";
-import { authorize } from "../middleware/authmiddleware";
+import { authorize } from "../middleware/auth_middleware";
 // import { logger } from "../util/logger";
 
 interface AuthRequest extends Request {
   employer?: {
     id: string;
-    // Add other properties if needed
   };
 }
 
@@ -99,7 +91,6 @@ export class CompanyController extends Controller {
         message: "Can not create that User!",
         detail: error.message,
       };
-      // throw error;
     }
   }
   @Middlewares(authorize(["employer"]))
@@ -155,8 +146,4 @@ export class CompanyController extends Controller {
       };
     }
   }
-
-  // ===================================================
-  // ============= JOBS RESOURCE =======================
-  // ===================================================
 }
