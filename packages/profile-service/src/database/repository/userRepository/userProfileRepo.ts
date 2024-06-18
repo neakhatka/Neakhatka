@@ -39,7 +39,7 @@ class UserRepository {
   // get profile by id
   async findById({ id }: { id: string }) {
     try {
-      const existedUser = await seeker_profile.findById(id);
+      const existedUser = await seeker_profile.findById(id).exec();
       return existedUser;
     } catch (error) {
       console.log(error);

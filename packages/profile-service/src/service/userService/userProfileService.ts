@@ -80,4 +80,26 @@ export class UserService {
       throw new APIError("Unable to delete User profile");
     }
   }
+  async addFavoriteJobPost(userId: string, jobId: string): Promise<{ message: string; data: any }> {
+    try {
+      const user = await this.userRepo.findById({ id: userId });
+      if (!user) {
+        throw new APIError("User not found");
+      }
+
+      if (!user.favorite) {
+        user.favorite = [];
+      }
+
+      if (!user.favorite.includes(jobId)) {
+        user.favorite.push(jobId);
+        await user.save();
+      }
+
+      return { message: "Favorite", data: user.favorite };
+    } catch (error) {
+      console.log(error);
+      throw new APIError("Unable to add favorite job post");
+    }
+  }
 }
