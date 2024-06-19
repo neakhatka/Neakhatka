@@ -43,9 +43,16 @@ function SideNav({ companyProfile }: { companyProfile: ICompanyProfile }) {
   };
 
   // Ensure companyProfile.companyname is defined before using it
-  const initials = companyProfile.companyname
-    ? getInitials(companyProfile.companyname)
-    : "";
+  const initials =
+    companyProfile && companyProfile.companyname
+      ? getInitials(companyProfile.companyname)
+      : "";
+
+
+    console.log("inititals : ", initials);
+    
+
+  console.log('company profile in sidenav : ', companyProfile)
 
   return (
     <div className="flex h-full flex-col bg-white px-5 border-r-1 border-gray-200">
@@ -57,7 +64,9 @@ function SideNav({ companyProfile }: { companyProfile: ICompanyProfile }) {
           <div className="avatar rounded-full h-10 w-10 bg-emerald-500 font-[700] flex items-center justify-center">
             <p>{initials}</p>
           </div>
-          <p className="ml-4 text-gray-900 capitalize">{companyProfile.companyname}</p>
+          <p className="ml-4 text-gray-900 capitalize">
+            {companyProfile.companyname}
+          </p>
         </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">

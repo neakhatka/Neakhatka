@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Typography, Input, Button } from "@/components";
 
 const EditEmployer = () => {
@@ -7,6 +8,23 @@ const EditEmployer = () => {
   const [selectedImage, setSelectedImage] = useState<
     string | ArrayBuffer | null
   >(null);
+  const [formData, setFormData] = useState({
+    companyname: "",
+    contactemail: "",
+    contactphone: "",
+    contactPerson: "",
+    websitelink: "",
+    numberOfemployees: "", // Initialize as string
+    location: "",
+    address: "",
+    companydescription: "",
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    // Fetch initial data here if needed
+  }, []);
 
   const handleCancel = () => {
     setIsOpen(false);
@@ -27,8 +45,56 @@ const EditEmployer = () => {
     setSelectedImage(null);
   };
 
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = event.target;
+    console.log(`Updating ${name} to ${value}`); // Debugging statement
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    console.log("Form Data:", formData); // Debugging statement
+    try {
+      const response = await axios.put(
+        "http://localhost:4000/v1/companies/profile",
+        {
+          ...formData,
+          image: selectedImage,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Response:", response.data);
+      // Handle success (e.g., display a success message, redirect, etc.)
+    } catch (error: any | unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          setError(
+            `Error: ${error.response.data.message || error.response.statusText}`
+          );
+        } else if (error.request) {
+          setError("Error: No response from server. Please try again later.");
+        } else {
+          setError(`Error: ${error.message}`);
+        }
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="w-full flex justify-center items-center mx-auto">
         <div className="max-w-[880px] mx-auto rounded-lg shadow-sm">
           <Typography fontSize="xl" className="text-center">
@@ -43,6 +109,9 @@ const EditEmployer = () => {
               Please enter accurate information about your company.
             </Typography>
           </div>
+          {error && (
+            <div className="text-red-600 text-center mb-4">{error}</div>
+          )}
           <div className="flex flex-col md:flex-row items-center justify-start mb-10">
             <div
               className="avatar rounded-full h-32 w-32 my-2 bg-gray-300 font-[700] flex items-center justify-center"
@@ -85,7 +154,9 @@ const EditEmployer = () => {
                 type="text"
                 placeholder="Company name"
                 className="text-sm w-full"
-                name="companyName"
+                name="companyname"
+                value={formData.companyname}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
@@ -94,7 +165,9 @@ const EditEmployer = () => {
                 type="email"
                 placeholder="sathapanabankinfo@gmail.com"
                 className="text-sm w-full"
-                name="contactEmail"
+                name="contactemail"
+                value={formData.contactemail}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
@@ -103,7 +176,9 @@ const EditEmployer = () => {
                 type="tel"
                 placeholder="0965774927"
                 className="text-sm w-full"
-                name="contactPhone"
+                name="contactphone"
+                value={formData.contactphone}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
@@ -113,6 +188,8 @@ const EditEmployer = () => {
                 placeholder="Sal Visal"
                 className="text-sm w-full"
                 name="contactPerson"
+                value={formData.contactPerson}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
@@ -121,21 +198,26 @@ const EditEmployer = () => {
                 type="url"
                 placeholder="https://www.saathapana.com.kh"
                 className="text-sm w-full"
-                name="websiteLink"
+                name="websitelink"
+                value={formData.websitelink}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
               <label className="mb-2 text-sm">Total Employees</label>
               <select
-                id="totalEmployees"
+                id="numberOfemployees"
                 className="border text-[#424242] outline-none text-sm rounded-lg block w-full h-[35px]"
-                name="totalEmployees"
+                name="numberOfemployees" // Ensure name matches the formData key
+                value={formData.numberOfemployees} // Ensure value is from formData
+                onChange={handleChange} // Ensure onChange is correctly set
               >
                 <option value="10-20">10-20</option>
                 <option value="20-50">20-50</option>
-                <option value="100">&#x3e; 100</option>
+                <option value="100+">100+</option>
               </select>
             </div>
+
             <div className="flex flex-col">
               <label className="mb-2 text-sm">Location</label>
               <Input
@@ -143,6 +225,8 @@ const EditEmployer = () => {
                 placeholder="Phnom Penh"
                 className="text-sm w-full"
                 name="location"
+                value={formData.location}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
@@ -152,6 +236,8 @@ const EditEmployer = () => {
                 placeholder="8391 Elgin. St. Celina. Delaware 10"
                 className="text-sm w-full"
                 name="address"
+                value={formData.address}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -162,7 +248,9 @@ const EditEmployer = () => {
               rows={4}
               className="p-2 w-full text-sm text-gray-900 rounded-lg border border-gray-300 outline-none"
               placeholder="Typing something..."
-              name="description"
+              name="companydescription"
+              value={formData.companydescription}
+              onChange={handleChange}
             />
           </div>
           <div className="flex justify-end">
@@ -181,7 +269,7 @@ const EditEmployer = () => {
               colorScheme="primary"
               className="w-[175px] text-white"
             >
-              Save changes
+              {isSubmitting ? "Submitting..." : "Save changes"}
             </Button>
           </div>
         </div>

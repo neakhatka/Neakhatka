@@ -19,6 +19,5 @@
     "start-auth-service": "yarn workspace auth-service run start:dev",
     "start-profile-service": "yarn workspace profile-service run start:dev",
     "start-notification" : "yarn workspace notification run start:dev"
-  
   }
 }

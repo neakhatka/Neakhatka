@@ -26,7 +26,7 @@ async function getProfileUser() {
     return response.data;
   } catch (error) {
     console.error(`getProfileUser() Method error: `, error);
-    return undefined;
+    // return undefined;
   }
 }
 

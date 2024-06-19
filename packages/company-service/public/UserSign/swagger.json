@@ -167,8 +167,7 @@
 						"type": "string"
 					},
 					"numberOfemployees": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"address": {
 						"type": "string"

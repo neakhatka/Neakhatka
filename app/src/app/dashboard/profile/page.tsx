@@ -1,32 +1,41 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import { Icon } from "@/components";
-import { Typography } from "../../../components/atoms/Typography";
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/molecules/Modal/Modal";
-import EditEmployer from "@/app/dashboard/edit-employer/page";
+import { Typography } from "@/components/atoms/Typography";
+import EditProfile from "./editProfile"; // Make sure the path is correct
+import { cookies } from "next/headers";
+import axios from "axios";
 
-const EmployerProfile: React.FC = () => {
-  const [employerData, setEmployerData] = useState({
-    id: "1",
-    companyName: "Sathapana Bank",
-    contactEmail: "sathapanabankinfo@gmail.com",
-    contactPhone: "0965774927",
-    contactPerson: "Sal Visal",
-    websiteLink: "https://www.saathapana.com.kh",
-    location: "Phnom Penh",
-    address: "8391 Elgin. St. Celina. Delaware 10",
-    totalEmployees: "10-20",
-    description:
-      "SATHAPANA Limited was originally established as a non-government organization (NGO) in 1995, and at the time of acquisition, it had become a deposit-taking microfinance institution providing funds to the low income people throughout the country with a strong contribution track record in Cambodia economic development.",
-  });
+async function getProfileCompany() {
+  const cookieStore = cookies();
+  const session = cookieStore.get("session");
+  const sigSession = cookieStore.get("session.sig");
 
-  const [isOpen, setIsOpen] = useState(false);
+  try {
+    const response = await axios.get(
+      "http://localhost:4000/v1/companies/profile",
+      {
+        withCredentials: true, // Include cookies if needed!
+        headers: {
+          Cookie: ` ${session!.name}=${session!.value}; ${sigSession!.name}=${
+            sigSession!.value
+          }`,
+        },
+      }
+    );
 
-  const updateEmployerData = (updatedData: any) => {
-    setEmployerData(updatedData);
-    setIsOpen(false);
+    return response.data.data;
+  } catch (error) {
+    console.error(`getProfileCompany() Method error: `, error);
+    return undefined;
+  }
+}
+
+const EmployerProfile = async () => {
+  const result = await getProfileCompany();
+  console.log("result company: ", result);
+
+  const getDisplayValue = (value: string | number) => {
+    return value ? value : "N/A";
   };
 
   return (
@@ -42,71 +51,57 @@ const EmployerProfile: React.FC = () => {
               className="rounded-full w-[60px] h-[60px] md:w-[80px] md:h-[80px]"
             />
             <div className="ml-4 md:ml-6">
-              <Typography className="mb-1 md:mb-2 text-[18px] md:text-[20px]">
-                {employerData.companyName}
+              <Typography className="mb-1 md:mb-2 text-[18px] md:text-[20px] capitalize">
+                {getDisplayValue(result?.companyname)}
               </Typography>
               <Typography className="text-gray-400 text-[12px] md:text-[16px]">
-                {employerData.contactEmail}
+                {getDisplayValue(result?.contactemail)}
               </Typography>
             </div>
           </div>
           <div className="flex items-center">
-            <Button
-              onClick={() => setIsOpen(true)}
-              className="bg-[#4B9960] rounded-full flex items-center justify-center gap-2 px-4 md:px-6 py-2"
-            >
-              <Icon label="Edit" className="flex items-center justify-center" />
-              <span className="hidden md:block">Edit profile</span>
-            </Button>
+            <EditProfile />
           </div>
         </div>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          size="xl"
-          corner="3xl"
-        >
-          <div className="bg-white p-8">
-            <h1 className="flex justify-center flex-col items-center">
-              <EditEmployer />
-            </h1>
-          </div>
-        </Modal>
         <div className="flex flex-col md:flex-row justify-between mt-5">
           <div className="w-full">
             <div className="my-[25px]">
               <Typography fontSize="lg">Contact Email</Typography>
-              <Typography>{employerData.contactEmail}</Typography>
+              <Typography>{getDisplayValue(result?.contactemail)}</Typography>
             </div>
             <div className="my-[25px]">
               <Typography fontSize="lg">Contact Number</Typography>
-              <Typography>{employerData.contactPhone}</Typography>
+              <Typography>{getDisplayValue(result?.contactphone)}</Typography>
             </div>
             <div className="my-[25px]">
               <Typography fontSize="lg">Contact Person</Typography>
-              <Typography>{employerData.contactPerson}</Typography>
+              <Typography>{getDisplayValue(result?.contactPerson)}</Typography>
             </div>
             <div className="my-[25px]">
               <Typography fontSize="lg">Website</Typography>
-              <Typography>{employerData.websiteLink}</Typography>
+              <Typography>{getDisplayValue(result?.websitelink)}</Typography>
             </div>
             <div className="my-[25px]">
               <Typography fontSize="lg">Employees</Typography>
-              <Typography>{employerData.totalEmployees}</Typography>
+              <Typography>
+                {getDisplayValue(result?.numberOfemployees)}
+              </Typography>
             </div>
           </div>
           <div className="w-full">
             <div className="my-[25px]">
               <Typography fontSize="lg">Location</Typography>
-              <Typography>{employerData.location}</Typography>
+              <Typography>{getDisplayValue(result?.location)}</Typography>
             </div>
             <div className="my-[25px]">
               <Typography fontSize="lg">Address</Typography>
-              <Typography>{employerData.address}</Typography>
+              <Typography>{getDisplayValue(result?.address)}</Typography>
             </div>
             <div className="my-[25px]">
               <Typography fontSize="lg">Company Description</Typography>
-              <Typography>{employerData.description}</Typography>
+              <Typography>
+                {getDisplayValue(result?.companydescription)}
+              </Typography>
             </div>
           </div>
         </div>

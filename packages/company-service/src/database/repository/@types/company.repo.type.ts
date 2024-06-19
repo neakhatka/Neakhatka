@@ -12,7 +12,7 @@ export interface companycreateschema {
   location?: string;
   contactemail?: string;
   contactperson?: string;
-  numberOfemployees?: number;
+  numberOfemployees?: string;
   address?: string;
   companydescription?: string;
 }

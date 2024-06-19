@@ -6,7 +6,7 @@ export interface ICompanyDocument {
   location?: string;
   contactemail?: string | undefined;
   contactperson: string;
-  numberOfemployees: number;
+  numberOfemployees: string;
   address: string;
   companydescription: string;
   userId?: string;

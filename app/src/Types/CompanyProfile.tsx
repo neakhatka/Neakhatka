@@ -6,7 +6,7 @@ export interface ICompanyProfile {
   websitelink?: string;
   location?: string;
   contactPerson?: string;
-  numberOfemployees?: number[];
+  numberOfemployees?: string;
   address?: string;
   companydescription?: string;
 }
