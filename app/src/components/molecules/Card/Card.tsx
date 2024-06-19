@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 interface CardData {
   id: string;
   companyId: string;
+  companyname?: string;
   companyLogo: string;
   position: string;
   jobDescription: string;

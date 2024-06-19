@@ -1,10 +1,11 @@
-'use client'
+"use client";
 import React, { createContext, useState, ReactNode } from "react";
 
 interface CardModal {
   id: string;
   companyId: string;
   companyLogo: string;
+  companyname: string;
   position: string;
   jobDescription: string;
   location: string;
