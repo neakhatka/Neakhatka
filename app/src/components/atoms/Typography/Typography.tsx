@@ -4,7 +4,17 @@ interface TypographyProps {
   children: ReactNode;
   className?: string;
   align?: "left" | "center" | "right" | "justify";
-  fontSize?: "xs" | "sm" | "base" | "md" | "lg" | "xl" | "2xl" | "3xl" | "5xl" | "text-title";
+  fontSize?:
+    | "xs"
+    | "sm"
+    | "base"
+    | "md"
+    | "lg"
+    | "xl"
+    | "2xl"
+    | "3xl"
+    | "5xl"
+    | "text-title";
   variant?:
     | "thin"
     | "extralight"
@@ -14,6 +24,7 @@ interface TypographyProps {
     | "extrabold"
     | "black"
     | "normal";
+  onClick?: (event: any) => void;
 }
 
 const Typography: React.FC<TypographyProps> = ({
@@ -22,6 +33,7 @@ const Typography: React.FC<TypographyProps> = ({
   align = "left",
   fontSize = "base",
   variant = "normal",
+  onClick,
 }) => {
   const textAlign = (align: string) => {
     switch (align) {

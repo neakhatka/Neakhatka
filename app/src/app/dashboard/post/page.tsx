@@ -1,13 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Typography, Input, Button } from "@/components";
-import { FaTrash } from "react-icons/fa";
+import { Typography, Button } from "@/components";
 import Modal from "@/components/molecules/Modal/Modal";
 import PostJob from "../edit-post/page";
 
 interface Post {
-  id: string;
+  _id: string;
   position?: string;
   salary?: string;
   duration?: string;
@@ -15,11 +14,10 @@ interface Post {
 }
 
 const Post: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]); // Array of posts
+  const [posts, setPosts] = useState<Post[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch data from the backend using Axios
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
@@ -27,7 +25,7 @@ const Post: React.FC = () => {
           {
             withCredentials: true,
           }
-        ); // Adjust the endpoint as needed
+        );
         console.log("data : ", response.data);
         setPosts(response.data.data);
       } catch (error) {
@@ -36,12 +34,23 @@ const Post: React.FC = () => {
     };
 
     fetchPosts();
-  }, []); // Empty dependency array to run only once on mount
+  }, []);
+
+  const handleDelete = async (postId: string) => {
+    try {
+      await axios.delete(`http://localhost:4000/v1/jobs/${postId}`, {
+        withCredentials: true,
+      });
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <Typography fontSize="2xl">Total Post </Typography>
+        <Typography fontSize="2xl">Total Post</Typography>
         <Button
           onClick={() => setIsOpen(true)}
           colorScheme="primary"
@@ -74,19 +83,28 @@ const Post: React.FC = () => {
           <tbody className="text-gray-500">
             {Array.isArray(posts) &&
               posts.map((post) => (
-                <tr key={post.id}>
+                <tr key={post._id}>
                   <td className="py-4 px-6 text-sm">{post.position}</td>
-                  <td className="py-4 px-6 text-sm">{post.salary}</td>
-                  <td className="py-4 px-6 text-sm">{post.duration}</td>
+                  <td className="py-4 px-6 text-sm">${post.salary}</td>
+                  <td className="py-4 px-6 text-sm">{post.duration} months</td>
                   <td className="py-4 px-6 text-sm">{post.endDate}</td>
                   <td className="py-4 px-6 flex justify-center items-center space-x-4">
                     <div className="text-blue-500 cursor-pointer">
-                      <Typography fontSize="sm">Edit</Typography>
+                      <Typography fontSize="sm" onClick={() => setIsOpen(true)}>
+                        Edit
+                      </Typography>
                     </div>
                     <div
                       className="text-red-500 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this post?"
+                          )
+                        ) {
+                          handleDelete(post._id);
+                        }
                       }}
                     >
                       <Typography fontSize="sm">Delete</Typography>
