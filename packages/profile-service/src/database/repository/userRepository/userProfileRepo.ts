@@ -107,6 +107,16 @@ class UserRepository {
       }
     }
   }
+  async RemoveFavoriteJob(userId: string, jobid: string) {
+    try {
+      const user = await seeker_profile.findById(userId);
+      if (user) {
+        await user.removeFavorite(jobid);
+      } else {
+        throw new APIError("User does not exist", StatusCode.NotFound);
+      }
+    } catch (error) {}
+  }
 }
 
 export default UserRepository;

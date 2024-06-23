@@ -30,7 +30,7 @@ export class UserController extends Controller {
     try {
       const userService = new UserService();
 
-      const userProfile = await userService.createuser(requestBody);
+      const userProfile = await userService.CreateUser(requestBody);
 
       return userProfile;
     } catch (error) {
@@ -130,7 +130,10 @@ export class UserController extends Controller {
       throw error;
     }
   }
-  // ADD FAVORITE JOB
+  // ==========================
+  // ACTION  FOR FAVORITE JOB
+  // ==========================
+
   @Post(ROUTE_PATHS.PROFILE.ADD_FAVORITE)
   @Middlewares(authorize(["seeker"]))
   public async AddFavorites(
@@ -141,11 +144,54 @@ export class UserController extends Controller {
       const userId = (req as AuthRequest).seeker.id;
       const userservice = new UserService();
       const user = await userservice.FindByAuthId({ userId });
-      const addfavorite = await userservice.addFavoriteJobPost(user._id, jobid);
+      const addfavorite = await userservice.AddFavoriteJobPost(user._id, jobid);
       if (addfavorite) {
         return { message: "Successfully added favorite", data: null };
       } else {
         return { message: "Profile Not Found", data: null };
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  @Get(ROUTE_PATHS.PROFILE.GET_FAVORITE)
+  @Middlewares(authorize(["seeker"]))
+  public async GetFavorite(
+    @Request() req: Express.Request
+  ): Promise<{ message: string; data: any }> {
+    try {
+      const userId = (req as AuthRequest).seeker.id;
+      console.log("Userid:", userId);
+
+      const userservice = new UserService();
+      const user = await userservice.FindByAuthId({ userId });
+      if (!user) {
+        return { message: "Profile Not Found", data: null };
+      } else {
+        return { message: "Found", data: user.favorite };
+      }
+      console.log("User:", user);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  @Delete(ROUTE_PATHS.PROFILE.DELETE_FAVORITE)
+  @Middlewares(authorize(["seeker"]))
+  public async DeleteFavorites(
+    @Path() jobid: string,
+    @Request() req: Express.Request
+  ): Promise<{ message: string; data: any }> {
+    try {
+      const userId = (req as AuthRequest).seeker.id;
+      const userservice = new UserService();
+      const user = await userservice.FindByAuthId({ userId });
+      if (user) {
+        await userservice.RemovequetJobPost(user._id, jobid);
+        return { message: "Favorite job deleted successfully", data: null };
+      } else {
+        return { message: "Favorite job can not delete", data: null };
       }
     } catch (error) {
       throw error;

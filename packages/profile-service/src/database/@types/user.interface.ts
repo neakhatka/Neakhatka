@@ -12,5 +12,6 @@ export interface IUserDocument {
   address?: string;
   educationbackground?: string;
   favorite?: string[];
+  removeFavorite(jobid: string): Promise<string>;
   createdAt?: Date;
 }

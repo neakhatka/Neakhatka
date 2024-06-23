@@ -29,6 +29,10 @@ const userschema: Schema = new Schema(
   }
 );
 
+userschema.methods.removeFavorite = function (jobid: string) {
+  return this.updateOne({ $pull: { favorite: jobid } });
+};
+
 const seeker_profile = model<IUserDocument>("seeker_profile", userschema);
 
 export { seeker_profile };
