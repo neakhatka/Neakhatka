@@ -48,11 +48,9 @@ function SideNav({ companyProfile }: { companyProfile: ICompanyProfile }) {
       ? getInitials(companyProfile.companyname)
       : "";
 
+  // console.log("inititals : ", initials);
 
-    console.log("inititals : ", initials);
-    
-
-  console.log('company profile in sidenav : ', companyProfile)
+  // console.log('company profile in sidenav : ', companyProfile)
 
   return (
     <div className="flex h-full flex-col bg-white px-5 border-r-1 border-gray-200">

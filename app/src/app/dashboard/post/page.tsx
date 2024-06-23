@@ -4,6 +4,8 @@ import axios from "axios";
 import { Typography, Button } from "@/components";
 import Modal from "@/components/molecules/Modal/Modal";
 import PostJob from "../edit-post/page";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Post {
   _id: string;
@@ -16,6 +18,7 @@ interface Post {
 const Post: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -42,8 +45,30 @@ const Post: React.FC = () => {
         withCredentials: true,
       });
       setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+      toast({
+        variant: "default",
+        title: "Post Deleted",
+        description: "The post has been successfully deleted.",
+        className: "bg-green-600 text-white top-0",
+      });
     } catch (error) {
       console.error("Error deleting post:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem deleting the post.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    }
+  };
+
+  const handleEdit = async (postId: string) => {
+    try {
+      await axios.put(`http://localhost:4000/v1/jobs/${postId}`, {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error("Error update post : ", error);
     }
   };
 

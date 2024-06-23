@@ -1,6 +1,7 @@
 import { SideNav } from "../../components/organisms/dashboard/sidenav";
 import axios from "axios";
 import { cookies } from "next/headers";
+import { Toaster } from "@/components/ui/toaster";
 
 async function getProfileCompany() {
   const cookieStore = cookies();
@@ -36,7 +37,10 @@ export default async function Layout({ children }: { children: React.ReactNode }
       <div className="w-full flex-none md:w-64">
         <SideNav companyProfile={result} />
       </div>
-      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+        {children}
+        <Toaster />
+      </div>
     </div>
   );
 }
