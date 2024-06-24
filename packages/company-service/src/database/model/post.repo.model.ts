@@ -1,3 +1,4 @@
+
 import mongoose, { Schema, model } from "mongoose";
 const postingSchema: Schema = new Schema(
   {

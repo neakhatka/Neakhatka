@@ -249,10 +249,10 @@ const Detail = () => {
                 height={100}
                 className="rounded-full mb-4"
               />
-              <Typography
+              {/* <Typography
                 fontSize="lg"
                 className="mt-5"
-              >{`${CardDetail?.companyname}`}</Typography>
+              >{`${CardDetail?.companyname}`}</Typography> */}
             </div>
             <div className="mt-10">
               <Typography className="leading-10 truncate">San Visal</Typography>

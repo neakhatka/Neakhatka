@@ -5,6 +5,7 @@ const ROUTE_PATHS = {
     UPDATE: "/profile", // As an example
     GET_BY_ID: "/profile",
     DELETE: "/profile",
+    ADD_FAVORITE: "/profile/:jobid",
     // Add other auth-related routes here
   },
   // Define other route groups as needed

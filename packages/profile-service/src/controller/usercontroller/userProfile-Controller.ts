@@ -9,6 +9,7 @@ import {
   Delete,
   Middlewares,
   Request,
+  Path,
 } from "tsoa";
 import { UserService } from "../../service/userService/userProfileService";
 // import { IUserDocument } from "../../database/@types/user.interface";
@@ -122,6 +123,27 @@ export class UserController extends Controller {
       });
       if (deleteuser) {
         return { message: "Successfully deleted profile", data: null };
+      } else {
+        return { message: "Profile Not Found", data: null };
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  // ADD FAVORITE JOB
+  @Post(ROUTE_PATHS.PROFILE.ADD_FAVORITE)
+  @Middlewares(authorize(["seeker"]))
+  public async AddFavorites(
+    @Path() jobid: string,
+    @Request() req: Express.Request
+  ): Promise<{ message: string; data: any }> {
+    try {
+      const userId = (req as AuthRequest).seeker.id;
+      const userservice = new UserService();
+      const user = await userservice.FindByAuthId({ userId });
+      const addfavorite = await userservice.addFavoriteJobPost(user._id, jobid);
+      if (addfavorite) {
+        return { message: "Successfully added favorite", data: null };
       } else {
         return { message: "Profile Not Found", data: null };
       }

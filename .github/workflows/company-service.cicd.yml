@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Generate API documentation
+        run: yarn gen:all
+
       - name: Build the project
         run: yarn build
 
@@ -53,8 +56,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            mkdir -p /home/ubuntu/apps
-            chown ubuntu:ubuntu /home/ubuntu/apps
+            mkdir -p /home/ubuntu/packages/company-service/build/configs
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@master
@@ -64,7 +66,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "packages/company-service/build/*"
-          target: "/home/ubuntu/apps/"
+          target: "/home/ubuntu/packages/company-service/build/"
 
       - name: Create .env file
         uses: appleboy/ssh-action@master
@@ -74,7 +76,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cat <<EOF > /home/ubuntu/apps/auth-service/build/configs/.env.prod
+            cat <<EOF > /home/ubuntu/packages/company-service/build/configs/.env
             NODE_ENV=${{ secrets.NODE_ENV }}
             PORT=${{ secrets.PORT }}
             COOKIE_SECRET_KEY_ONE=${{ secrets.COOKIE_SECRET_KEY_ONE }}
@@ -84,9 +86,8 @@ jobs:
             RABBITMQ_ENDPOINT=${{ secrets.RABBITMQ_ENDPOINT }}
             USER_SERVICE_URL=${{ secrets.USER_SERVICE_URL }}
             AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }}
-            COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL}}
+            COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL }}
             API_GATEWAY=${{ secrets.API_GATEWAY }}
-           
             EOF
 
       - name: Start
@@ -99,7 +100,7 @@ jobs:
           script: |
             source /home/ubuntu/.nvm/nvm.sh
             source /home/ubuntu/.profile
-            cd /home/ubuntu/apps/auth-service
+            cd /home/ubuntu/packages/company-service/build
             echo "Checking directory contents..."
             ls -alh
             yarn install

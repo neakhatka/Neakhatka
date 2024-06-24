@@ -6,6 +6,12 @@
   "description": "profile microservice for our micro sample app",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon --legacy-watch src/server.ts",
+    "start": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop all",
+    "restart": "pm2 restart ecosystem.config.js",
+    "delete": "pm2 delete all",
+   "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/ && [ -d configs ] && cp -R configs ./build/ || echo 'configs directory not found, skipping...' && cp ecosystem.config.js ./build/",
+    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
     "gen:spec": "tsoa spec",
     "gen:routes": "tsoa routes",
     "gen:all": "npm run gen:spec && npm run gen:routes",
