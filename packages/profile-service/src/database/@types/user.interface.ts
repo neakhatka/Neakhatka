@@ -1,7 +1,7 @@
 export interface IUserDocument {
   _id?: string;
   authid?: string;
-  profile?: string;
+  profile?: Buffer;
   fullname: string;
   email: string;
   contactphone?: string;

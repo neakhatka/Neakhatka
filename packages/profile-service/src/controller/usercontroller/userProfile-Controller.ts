@@ -10,6 +10,9 @@ import {
   Middlewares,
   Request,
   Path,
+  // UploadedFiles,
+  UploadedFile,
+  FormField,
 } from "tsoa";
 import { UserService } from "../../service/userService/userProfileService";
 // import { IUserDocument } from "../../database/@types/user.interface";
@@ -86,11 +89,43 @@ export class UserController extends Controller {
   @Put(ROUTE_PATHS.PROFILE.UPDATE)
   @SuccessResponse(StatusCode.OK, "Successfully Update profile")
   public async UpdateProfile(
-    // @Path() companyid: string,
-    @Body() update: updateuser,
-    @Request() req: Express.Request
+    @Request() req: Express.Request,
+    @FormField() fullname: string,
+    @FormField() email: string,
+    @FormField() contactphone?: string,
+    @FormField() gender?: string,
+    @FormField() location?: string,
+    @FormField() DOB?: string,
+    @FormField() nationality?: string,
+    @FormField() address?: string,
+    @FormField() educationbackground?: string,
+    @UploadedFile() profile?: Express.Multer.File
   ): Promise<{ message: string; data: any }> {
+    console.log("Received data", {
+      fullname,
+      email,
+      contactphone,
+      gender,
+      location,
+      DOB,
+      nationality,
+      address,
+      educationbackground,
+      profile,
+    });
     try {
+      const update: updateuser = {
+        profile: profile ? Buffer.from(profile.buffer) : undefined,   
+        fullname,
+        email,
+        contactphone,
+        gender,
+        location,
+        DOB,
+        nationality,
+        address,
+        educationbackground,
+      };
       const userId = (req as AuthRequest).seeker.id;
       const userservice = new UserService();
       const user = await userservice.FindByAuthId({ userId });

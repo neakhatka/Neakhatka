@@ -3,7 +3,7 @@ import { IUserDocument } from "../../@types/user.interface";
 
 const userschema: Schema = new Schema(
   {
-    profile: { type: String, required: false, default: "" },
+    profile: { type: Buffer, required: false, default: "" },
     authid: { type: String, required: false, default: "" },
     fullname: { type: String, required: true, default: "" },
     // lastName: { type: String, required: true },
