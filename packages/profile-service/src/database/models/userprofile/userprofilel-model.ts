@@ -3,7 +3,7 @@ import { IUserDocument } from "../../@types/user.interface";
 
 const userschema: Schema = new Schema(
   {
-    profile: { type: String, required: false, default: "" },
+    profile: { type: Buffer, required: false, default: "" },
     authid: { type: String, required: false, default: "" },
     fullname: { type: String, required: true, default: "" },
     // lastName: { type: String, required: true },
@@ -28,6 +28,10 @@ const userschema: Schema = new Schema(
     timestamps: true,
   }
 );
+
+userschema.methods.removeFavorite = function (jobid: string) {
+  return this.updateOne({ $pull: { favorite: jobid } });
+};
 
 const seeker_profile = model<IUserDocument>("seeker_profile", userschema);
 
