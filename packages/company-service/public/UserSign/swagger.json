@@ -43,8 +43,7 @@
 						"type": "string"
 					},
 					"totalEmployees": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"time": {
 						"type": "string",
@@ -57,8 +56,7 @@
 						"type": "string"
 					},
 					"availablePositions": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"gender": {
 						"type": "string"
@@ -103,8 +101,7 @@
 						"type": "string"
 					},
 					"totalEmployees": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"time": {
 						"type": "string",
@@ -117,8 +114,7 @@
 						"type": "string"
 					},
 					"availablePositions": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					},
 					"gender": {
 						"type": "string"
@@ -140,43 +136,6 @@
 					"companyname",
 					"contactemail"
 				],
-				"type": "object",
-				"additionalProperties": true
-			},
-			"companyupdateschema": {
-				"properties": {
-					"companyname": {
-						"type": "string"
-					},
-					"logo": {
-						"type": "string"
-					},
-					"contactphone": {
-						"type": "string"
-					},
-					"websiteLink": {
-						"type": "string"
-					},
-					"location": {
-						"type": "string"
-					},
-					"contactemail": {
-						"type": "string"
-					},
-					"contactperson": {
-						"type": "string"
-					},
-					"numberOfemployees": {
-						"type": "number",
-						"format": "double"
-					},
-					"address": {
-						"type": "string"
-					},
-					"companydescription": {
-						"type": "string"
-					}
-				},
 				"type": "object",
 				"additionalProperties": true
 			}
@@ -529,9 +488,53 @@
 				"requestBody": {
 					"required": true,
 					"content": {
-						"application/json": {
+						"multipart/form-data": {
 							"schema": {
-								"$ref": "#/components/schemas/companyupdateschema"
+								"type": "object",
+								"properties": {
+									"companyname": {
+										"type": "string"
+									},
+									"contactphone": {
+										"type": "string"
+									},
+									"websiteLink": {
+										"type": "string"
+									},
+									"location": {
+										"type": "string"
+									},
+									"contactemail": {
+										"type": "string"
+									},
+									"contactperson": {
+										"type": "string"
+									},
+									"numberOfemployees": {
+										"type": "string"
+									},
+									"address": {
+										"type": "string"
+									},
+									"companydescription": {
+										"type": "string"
+									},
+									"logo": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"companyname",
+									"contactphone",
+									"websiteLink",
+									"location",
+									"contactemail",
+									"contactperson",
+									"numberOfemployees",
+									"address",
+									"companydescription"
+								]
 							}
 						}
 					}

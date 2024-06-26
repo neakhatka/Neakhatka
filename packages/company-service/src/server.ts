@@ -1,6 +1,6 @@
 import { logger, logInit } from "./util/logger";
 import { Channel } from "amqplib";
-import { ConnectToMongoDB } from "./database/connectBD/conneed.DB";
+import { ConnectToMongoDB } from "./database/connectDB/conneed.DB";
 import getConfig from "./util/config";
 import app from "./app";
 
@@ -24,5 +24,4 @@ async function run() {
     logger.info("Error", error);
   }
 }
-
 run();
