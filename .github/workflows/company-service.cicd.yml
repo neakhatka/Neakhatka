@@ -105,7 +105,7 @@ jobs:
             cd /home/ubuntu/packages/company-service/build
             echo "Checking directory contents..."
             ls -alh
-            yarn install
+            yarn install --production
             if pm2 show company-service > /dev/null; then
               echo "Application is running. Restarting..."
               yarn restart
