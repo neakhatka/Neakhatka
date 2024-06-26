@@ -2379,6 +2379,24 @@
     yaml "^2.4.1"
     yargs "^17.7.1"
 
+"@tsoa/cli@^6.3.1":
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/@tsoa/cli/-/cli-6.3.1.tgz#405c6d66751c3c4ce51231ba21b5802aecc8f518"
+  integrity sha512-KOlsShmAZ8Ju8KCkBFFzdURlGa9YNgf6gAvU6GwnOQl7mcvqvKMk8IDy2bcotpqNcabHo6fbkeExztF/n0Z0kg==
+  dependencies:
+    "@tsoa/runtime" "^6.3.0"
+    "@types/multer" "^1.4.11"
+    fs-extra "^11.2.0"
+    glob "^10.3.10"
+    handlebars "^4.7.8"
+    merge-anything "^5.1.4"
+    minimatch "^9.0.1"
+    ts-deepmerge "^7.0.0"
+    typescript "^5.3.3"
+    validator "^13.11.0"
+    yaml "^2.4.1"
+    yargs "^17.7.1"
+
 "@tsoa/runtime@^6.2.1":
   version "6.2.1"
   resolved "https://registry.npmjs.org/@tsoa/runtime/-/runtime-6.2.1.tgz"
@@ -8654,6 +8672,14 @@ tsoa@^6.2.0, tsoa@^6.2.1:
   dependencies:
     "@tsoa/cli" "^6.2.1"
     "@tsoa/runtime" "^6.2.1"
+
+tsoa@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/tsoa/-/tsoa-6.3.1.tgz#5968d8a83099d8d466c7325a5d512c70a2048022"
+  integrity sha512-w2INTVkjqQDlWo5aLv/ZIVAgWSfOOUstOW1WWVYOa+9mY2Er/W9E9BcBpIdaoJ5BtUZimhhhs5BQ2Nn76OfQpw==
+  dependencies:
+    "@tsoa/cli" "^6.3.1"
+    "@tsoa/runtime" "^6.3.0"
 
 tsscmp@1.0.6:
   version "1.0.6"
