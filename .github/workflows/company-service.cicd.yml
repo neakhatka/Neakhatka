@@ -56,7 +56,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            mkdir -p /home/ubuntu/packages/company-service/build/configs
+            mkdir -p /home/ubuntu
+            chown ubuntu:ubuntu /home/ubuntu
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@master
@@ -66,7 +67,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "packages/company-service/build/*"
-          target: "/home/ubuntu/packages/company-service/build/"
+          target: "/home/ubuntu"
 
       - name: Create .env file
         uses: appleboy/ssh-action@master
