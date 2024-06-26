@@ -10,7 +10,7 @@
     "stop": "pm2 stop all",
     "restart": "pm2 restart ecosystem.config.js",
     "delete": "pm2 delete all",
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/ && cp -R configs ./build/ && cp ecosystem.config.js ./build/",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/ && cp ecosystem.config.js ./build/",
     "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
     "gen:spec": "tsoa spec",
     "gen:routes": "tsoa routes",
