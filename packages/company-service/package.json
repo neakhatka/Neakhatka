@@ -26,6 +26,7 @@
   },
   "author": "San Visal",
   "dependencies": {
+    "@tsoa/runtime": "^6.3.0",
     "@types/mongodb-memory-server": "^2.3.0",
     "@types/on-headers": "^1.0.3",
     "amqplib": "^0.10.4",
@@ -80,4 +81,3 @@
     "typescript": "^5.4.5"
   }
 }
-
