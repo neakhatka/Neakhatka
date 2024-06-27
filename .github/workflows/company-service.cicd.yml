@@ -90,6 +90,7 @@ jobs:
             AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }}
             COMPANY_SERVICE_URL=${{ secrets.COMPANY_SERVICE_URL }}
             API_GATEWAY=${{ secrets.API_GATEWAY }}
+            MONGODB_URL=${{ secrets.MONGODB_URL }}
             EOF
 
       - name: Start
