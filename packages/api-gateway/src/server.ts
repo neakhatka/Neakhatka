@@ -10,12 +10,12 @@ export const publicKey = fs.readFileSync(
   "utf-8"
 );
 
-console.log("############ Server is running on port " + 3000);
 
 // RUN THE SERVER
 async function run() {
   try {
     const config = getConfig();
+    console.log('Hello server')
 
     // Activate Logger
     logInit({ env: process.env.NODE_ENV, logLevel: config.logLevel });
@@ -24,6 +24,8 @@ async function run() {
     logger.info(`Gateway server has started with process id ${process.pid}`);
 
     const server = app.listen(config.port, () => {
+      console.log("############ Server is running on port " + 3000);
+
       logger.info(`Gateway server is listening on port: ${config.port}`);
     });
 
