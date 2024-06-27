@@ -148,13 +148,13 @@ const Card: React.FC<CardProps> = ({
       <Link href={`/detail/${data.id}`}>
         <div className="flex justify-between items-center">
           <div className="flex">
-            <Image
+            {/* <Image
               className="rounded-full"
               src={companyLogo}
               alt="company logo"
               width={48}
               height={48}
-            />
+            /> */}
             <div className="font-Poppins ml-2">
               <Typography>{position}</Typography>
               <Typography fontSize="sm" className="text-gray-500">

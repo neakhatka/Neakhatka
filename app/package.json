@@ -67,11 +67,18 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "eslint-plugin-storybook": "^0.6.15",
+    "msw": "^2.3.1",
+    "msw-storybook-addon": "^2.0.2",
     "postcss": "^8",
     "sst": "2.41.5",
     "storybook": "^7.6.12",
     "tailwindcss": "^3.3.0",
     "typescript": "^5",
     "webpack": "^5.91.0"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

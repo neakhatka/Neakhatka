@@ -3,6 +3,11 @@ import type { Preview } from "@storybook/react";
 import "../src/app/globals.css";
 import { Nav } from "@/components/organisms/Navbar/Nav";
 import { Footer } from "@/components";
+import { initialize, mswLoader } from "msw-storybook-addon";
+
+// Initialize MSW
+initialize();
+
 
 const preview: Preview = {
   parameters: {
@@ -14,6 +19,7 @@ const preview: Preview = {
       },
     },
   },
+  loaders: [mswLoader],
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
     (Story, { parameters }) => {
