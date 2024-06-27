@@ -1,6 +1,6 @@
 export interface ICompanyDocument {
   companyname?: string;
-  logo?: string;
+  logo?: Buffer;
   contactphone?: string;
   websiteLink?: string;
   location?: string;

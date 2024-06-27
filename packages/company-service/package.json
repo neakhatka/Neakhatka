@@ -6,6 +6,12 @@
   "description": "profile microservice for our micro sample app",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon --legacy-watch src/server.ts",
+    "start": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop all",
+    "restart": "pm2 restart ecosystem.config.js",
+    "delete": "pm2 delete all",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/ && cp ecosystem.config.js ./build/",
+    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
     "gen:spec": "tsoa spec",
     "gen:routes": "tsoa routes",
     "gen:all": "npm run gen:spec && npm run gen:routes",
@@ -20,6 +26,7 @@
   },
   "author": "San Visal",
   "dependencies": {
+    "@tsoa/runtime": "^6.3.0",
     "@types/mongodb-memory-server": "^2.3.0",
     "@types/on-headers": "^1.0.3",
     "amqplib": "^0.10.4",
@@ -43,6 +50,7 @@
     "redoc-express": "^2.1.0",
     "swagger-ui": "^5.17.14",
     "swagger-ui-express": "^5.0.0",
+    "tsoa": "^6.3.1",
     "winston": "^3.13.0",
     "zod": "^3.22.4"
   },

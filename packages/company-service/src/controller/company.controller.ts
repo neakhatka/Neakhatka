@@ -1,5 +1,4 @@
 import {
-  // DeleteCompanyRequest,
   companycreateschema,
   companyupdateschema,
 } from "../database/repository/@types/company.repo.type";
@@ -10,22 +9,24 @@ import {
   Controller,
   Post,
   Get,
-  // Path,
   Route,
   Put,
   SuccessResponse,
   Delete,
   Middlewares,
   Request,
+  UploadedFile,
+  FormField,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
-// import {
-//   postcreateschema,
-//   postupdateschema,
-// } from "../database/repository/@types/post.repo.type";
-// import PostService from "../service/post-service";
-import { AuthRequest, authorize } from "../middleware/authMiddleware";
+import { authorize } from "../middleware/auth_middleware";
 // import { logger } from "../util/logger";
+
+interface AuthRequest extends Request {
+  employer?: {
+    id: string;
+  };
+}
 
 @Route("v1/companies")
 export class CompanyController extends Controller {
@@ -55,7 +56,8 @@ export class CompanyController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      const userId = (req as AuthRequest).employer.id;
+      const authReq = req as unknown as AuthRequest;
+      const userId = authReq!.employer!.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -91,19 +93,54 @@ export class CompanyController extends Controller {
         message: "Can not create that User!",
         detail: error.message,
       };
-      // throw error;
     }
   }
   @Middlewares(authorize(["employer"]))
   @SuccessResponse(StatusCode.Found, "Successfully Update profile")
   @Put(ROUTE_PATHS.COMPANY.UPDATE)
   public async UpdateCompany(
-    // @Path() id: string,
     @Request() req: Express.Request,
-    @Body() update: companyupdateschema
+    @FormField() companyname: string,
+    @FormField() contactphone: string,
+    @FormField() websiteLink: string,
+    @FormField() location: string,
+    @FormField() contactemail: string,
+    @FormField() contactperson: string,
+    @FormField() numberOfemployees: string,
+    @FormField() address: string,
+    @FormField() companydescription: string,
+    @UploadedFile() logo?: Express.Multer.File
   ): Promise<{ message: string; data: any }> {
+    console.log(
+      "Data:",
+      companyname,
+      contactemail,
+      contactperson,
+      numberOfemployees,
+      address,
+      contactphone,
+      location,
+      websiteLink,
+      contactemail,
+      contactperson,
+      companydescription,
+      logo
+    );
     try {
-      const userId = (req as AuthRequest).employer.id;
+      const update: companyupdateschema = {
+        logo: logo ? Buffer.from(logo.buffer) : undefined,
+        companyname,
+        contactphone,
+        websiteLink,
+        location,
+        contactemail,
+        contactperson,
+        numberOfemployees,
+        address,
+        companydescription,
+      };
+      const authReq = req as unknown as AuthRequest;
+      const userId = authReq!.employer!.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -127,7 +164,8 @@ export class CompanyController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string }> {
     try {
-      const userId = (req as AuthRequest).employer.id;
+      const authReq = req as unknown as AuthRequest;
+      const userId = authReq!.employer!.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -145,8 +183,4 @@ export class CompanyController extends Controller {
       };
     }
   }
-
-  // ===================================================
-  // ============= JOBS RESOURCE =======================
-  // ===================================================
 }

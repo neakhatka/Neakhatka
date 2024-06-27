@@ -1,40 +1,53 @@
 "use client";
-import React, { useEffect } from "react";
-import { useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Icon, Typography } from "@/components";
 import { Button } from "@nextui-org/react";
 import Image from "next/legacy/image";
 import "../../globals.css";
 import { MyContext } from "@/contexts/CardInfoContext";
-// import { useParams } from "next/navigation";
 import Modal from "@/components/molecules/Modal/Modal";
-import { useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
+
+interface JobDetail {
+  availablePositions: string;
+  companyId: string;
+  companyName: string;
+  createdAt: string;
+  duration: string;
+  endDate: string;
+  gender: string;
+  jobDescription: string[];
+  jobResponsibilities: string[];
+  location: string;
+  position: string;
+  salary: string;
+  startDate: string;
+  time: string;
+  totalEmployees: string;
+  updatedAt: string;
+  workplace: string;
+  _id: string;
+  [key: string]: any; // Optional: For any additional properties
+}
+
 
 const Detail = () => {
   const params = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  // console.log("id : ", params.id);
-  const [posts, setPosts] = useState([]);
+  const [post, setPosts] = useState<Partial<JobDetail>>({});
 
   const id = params.id;
-  console.log("ID : ", id);
-  
 
   useEffect(() => {
     const fetchCard = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/v1/jobs/${id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
-        console.log("data : ", response.data);
+        const response = await axios.get(`http://localhost:4000/v1/jobs/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
         setPosts(response.data.data);
       } catch (error) {
         console.error("Error fetching card : ", error);
@@ -42,7 +55,7 @@ const Detail = () => {
     };
 
     fetchCard();
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -51,17 +64,15 @@ const Detail = () => {
           <div className="col-span-7 p-2 lg:py-8 lg:px-14 border rounded-lg">
             <div className="flex justify-between mt-5">
               <div>
-                {/* intern title */}
                 <Typography className="text-[#4B9960] text-[18px] md:text-[24px]">
-                  position
+                  {post.position}
                 </Typography>
-                {/* salary */}
-                <Typography>salary</Typography>
+                <p>${post.salary}</p>
               </div>
               <div className="flex justify-center items-center">
-                <button>
+                {/* <button>
                   <Icon className="mr-5" size="md" label="Star" />
-                </button>
+                </button> */}
                 <Button
                   onClick={() => setIsOpen(true)}
                   className="bg-[#4B9960] outline-none text-white text-[14px] md:text-[16px]"
@@ -90,7 +101,7 @@ const Detail = () => {
                           Drag and drop file here
                         </p>
                         <p>or</p>
-                        <p className="text-blue-600">Brow your file here</p>
+                        <p className="text-blue-600">Browse your file here</p>
                       </label>
                     </h1>
                     <div className="flex flex-col text-white">
@@ -108,9 +119,7 @@ const Detail = () => {
                 </Modal>
               </div>
             </div>
-            {/* table */}
             <div className="mt-10 overflow-x-auto">
-              {/* row */}
               <div className="grid grid-cols-2 lg:grid-cols-4">
                 <div className="col-span-2">
                   <table className="w-full border-collapse border border-slate-500">
@@ -119,8 +128,8 @@ const Detail = () => {
                         <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
                           Duration
                         </td>
-                        <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          3 months
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.duration}
                         </td>
                       </tr>
                     </tbody>
@@ -133,40 +142,68 @@ const Detail = () => {
                         <td className="w-1/2 border border-l-0 outline-none bg-[#F2F2F2] py-2 px-2">
                           Location
                         </td>
-                        <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          {/* {`${CardDetail?.location}`} */}
-                          Location
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.location}
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
-              {/* row */}
               <div className="grid grid-cols-2 lg:grid-cols-4">
                 <div className="col-span-2">
                   <table className="w-full border-collapse border border-slate-500">
                     <tbody>
                       <tr>
                         <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
-                          Duration
+                          Deadline
                         </td>
-                        <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          3 months
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.endDate}
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
                 <div className="col-span-2">
-                  <table className="w-full border-collapse border">
+                  <table className="w-full border-collapse border border-slate-500">
                     <tbody>
                       <tr>
-                        <td className="w-1/2 border border-l-0 outline-none bg-[#F2F2F2] py-2 px-2">
-                          Deadline
+                        <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
+                          Gender
                         </td>
-                        <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          endDate
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.gender}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4">
+                <div className="col-span-2">
+                  <table className="w-full border-collapse border border-slate-500">
+                    <tbody>
+                      <tr>
+                        <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
+                          Internship Type
+                        </td>
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.time}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="col-span-2">
+                  <table className="w-full border-collapse border border-slate-500">
+                    <tbody>
+                      <tr>
+                        <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
+                          Available Position
+                        </td>
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.availablePositions} pax
                         </td>
                       </tr>
                     </tbody>
@@ -174,106 +211,63 @@ const Detail = () => {
                 </div>
               </div>
             </div>
-
             <div className="mt-8">
-              {/* description */}
               <Typography fontSize="lg">Job Descriptions</Typography>
               <Typography fontSize="sm" className="text-gray-600 mt-1">
-                We are currently looking for a talented and team player to join
-                with us!
+                {post.jobDescription}
               </Typography>
             </div>
             <div className="mt-8">
-              {/* responsibilities */}
               <Typography fontSize="lg">Job Responsibilities</Typography>
               <Typography fontSize="sm" className="text-gray-600 mt-1">
                 <ul className="leading-10">
-                  <li className="list-disc ml-4">
-                    Follow the software development while applying internal
-                    coding standards and provide detailed project estimates and
-                    work plan.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Interact with project leaders and business on assigned
-                    projects.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Complete assigned tasks in a timely manner with high quality
-                    and documentation.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Collaborate with a team to define, design, and completely
-                    new features.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Identify and correct bottlenecks and fix bugs.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Help maintain code quality, organization, and
-                    automatization.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Take smart risks and champion new ideas.
-                  </li>
+                  {post.jobResponsibilities ? (
+                    post.jobResponsibilities.map((item, index) => (
+                      <li key={index} className="list-disc ml-4">
+                        {item}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-disc ml-4">
+                      No responsibilities listed
+                    </li>
+                  )}
                 </ul>
               </Typography>
             </div>
             <div className="mt-8">
-              {/* requirements */}
               <Typography fontSize="lg">Job Requirements</Typography>
               <Typography fontSize="sm" className="text-gray-600 mt-1">
                 <ul className="leading-10">
-                  <li className="list-disc ml-4">
-                    Honest, responsible, hard-working with positive attitude and
-                    drive for self-improvement.
-                  </li>
-                  <li className="list-disc ml-4">
-                    1 years+ experience in web development.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Fluency in Python or Go or C++.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Experience REST/RESTful API and web service.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Experience in HTML5, JavaScript, CSS, or SCSS/SASS.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Help maintain code quality, organization, and
-                    automatization.
-                  </li>
-                  <li className="list-disc ml-4">
-                    Fluency in ASP.Net, JQuery, PHP and/or NodeJS is a plus
-                  </li>
+                  {post.requirements ? (
+                    post.requirements.map((item, index) => (
+                      <li key={index} className="list-disc ml-4">
+                        {item}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-disc ml-4">No requirements listed</li>
+                  )}
                 </ul>
               </Typography>
             </div>
           </div>
-          <div className="col-span-7 lg:col-span-3 rounded-lg py-10 px-5 border h-[500px] ">
+          <div className="col-span-7 lg:col-span-3 rounded-lg py-10 px-5 border h-[500px]">
             <div className="flex justify-center items-center flex-col">
-              <Image
+              {/* <Image
                 src="/company.svg"
                 alt="company logo"
                 width={100}
                 height={100}
                 className="rounded-full mb-4"
-              />
+              /> */}
               <Typography fontSize="lg" className="mt-5">
-                company
+                {post.companyName}
               </Typography>
             </div>
             <div className="mt-10">
-              <Typography className="leading-10 truncate">San Visal</Typography>
-
               <Typography className="leading-10 truncate">
-                smilecomputertechnology@gmail.com
-              </Typography>
-              <Typography className="leading-10 truncate">
-                +855 984 383 330
-              </Typography>
-              <Typography className="leading-10 truncate">
-                2972 Westheimer Rd. Santa Ana, Illinois 85486
+                {post.workplace}
               </Typography>
             </div>
           </div>

@@ -6,7 +6,7 @@ export interface companycreateschema {
 }
   export interface companyupdateschema {
   companyname?: string;
-  logo?: string;
+  logo?: Buffer;
   contactphone?: string;
   websiteLink?: string;
   location?: string;

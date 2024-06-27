@@ -6,17 +6,11 @@ import getConfig from "./util/config";
 // import swaggerUi from "swagger-ui-express";
 // import * as swaggerDocument from "../public/UserSign/swagger.json";
 import { RegisterRoutes } from "./routes/v1/routes";
-import { errorHandler } from "./middleware/errorHandlerMiddleware";
+import { errorHandler } from "./middleware/error_HandlerMiddleware";
 
 const app = express();
 
 app.set("trust proxy", 1);
-
-app.use((_req, _res, next) => {
-  console.log("hellllllllll");
-  next();
-});
-
 app.use(hpp());
 app.use(helmet());
 app.use(

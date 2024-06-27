@@ -8,10 +8,10 @@ export interface postcreateschema {
   startDate?: string;
   endDate?: string;
   salary?: string;
-  totalEmployees?: number;
+  totalEmployees?: string;
   time?: "full-time" | "part-time";
   duration?: string;
-  availablePositions?: number;
+  availablePositions?: string;
   gender?: string;
 }
 
@@ -25,9 +25,9 @@ export interface postupdateschema {
   startDate?: string;
   endDate?: string;
   salary?: string;
-  totalEmployees?: number;
+  totalEmployees?: string;
   time?: "full-time" | "part-time";
   duration?: string;
-  availablePositions?: number;
+  availablePositions?: string;
   gender?: string;
 }

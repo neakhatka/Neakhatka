@@ -10,8 +10,19 @@ const path_1 = __importDefault(require("path"));
 function createConfig(configPath) {
     dotenv_1.default.config({ path: configPath });
     // "RABBITMQ_ENDPOINT",
-    // Validate essential configuration    , "CLIENT_URL", "COOKIE_SECRET_KEY_ONE", "COOKIE_SECRET_KEY_TWO", "AUTH_SERVICE_URL", "USER_SERVICE_URL", "NOTIFICATION_SERVICE_URL"
-    const requiredConfig = ["NODE_ENV", "PORT", "LOG_LEVEL"];
+    // Validate essential configuration
+    const requiredConfig = [
+        "NODE_ENV",
+        "PORT",
+        "LOG_LEVEL",
+        "CLIENT_URL",
+        "COOKIE_SECRET_KEY_ONE",
+        "COOKIE_SECRET_KEY_TWO",
+        "AUTH_SERVICE_URL",
+        "USER_SERVICE_URL",
+        "COMPANY_SERVICE_URL",
+        "NOTIFICATION_SERVICE_URL",
+    ];
     const missingConfig = requiredConfig.filter((key) => !process.env[key]);
     if (missingConfig.length > 0) {
         throw new api_error_1.default(`Missing required environment variables: ${missingConfig.join(", ")}`);
@@ -25,12 +36,13 @@ function createConfig(configPath) {
         clientUrl: process.env.CLIENT_URL,
         cookieSecretKeyOne: process.env.COOKIE_SECRET_KEY_ONE,
         cookieSecretKeyTwo: process.env.COOKIE_SECRET_KEY_TWO,
-        // authServiceUrl: process.env.AUTH_SERVICE_URL,
-        // userServiceUrl: process.env.USER_SERVICE_URL,
-        // notificationUrl: process.env.NOTIFICATION_SERVICE_URL
+        authServiceUrl: process.env.AUTH_SERVICE_URL,
+        userServiceUrl: process.env.USER_SERVICE_URL,
+        companyserviceurl: process.env.COMPANY_SERVICE_URL,
+        notificationUrl: process.env.NOTIFICATION_SERVICE_URL,
     };
 }
-const getConfig = (currentEnv = 'development') => {
+const getConfig = (currentEnv = "development") => {
     const configPath = currentEnv === "development"
         ? path_1.default.join(__dirname, `../../configs/.env`)
         : path_1.default.join(__dirname, `../../configs/.env.${currentEnv}`);
