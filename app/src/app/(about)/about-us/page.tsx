@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
 const AboutUs = () => {
   return (
     <>
@@ -154,8 +153,8 @@ const AboutUs = () => {
                 many are designed for students and recent graduates with little
                 to no prior experience. Employers understand that internships
                 are meant to provide you with hands-on learning opportunities,
-                so do not hesitate to apply even if you have not had previous work
-                experience.
+                so do not hesitate to apply even if you have not had previous
+                work experience.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

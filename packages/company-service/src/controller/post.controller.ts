@@ -15,7 +15,7 @@ import {
 import { StatusCode } from "../util/consts/status.code";
 import PostService from "../service/post-service";
 import ROUTE_PATHS from "../routes/v1/company.route";
-import { AuthRequest, authorize } from "../middleware/auth_middleware";
+import { AuthRequest, authorize } from "../middleware/authMiddleware";
 import {
   postcreateschema,
   postupdateschema,

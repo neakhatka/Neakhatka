@@ -44,7 +44,7 @@ const EmployerProfile = async () => {
         <div className="w-full flex md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <Image
-              src="/company.svg"
+              src="/"
               alt="company logo"
               width={80}
               height={80}

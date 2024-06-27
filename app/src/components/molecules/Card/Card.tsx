@@ -1,73 +1,53 @@
-"use client";
-import React, { useEffect, useState } from "react";
+'use client'
+import React, { useState } from "react";
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { Icon } from "@/components";
 import { Typography } from "../../atoms/Typography";
-import { motion } from "framer-motion";
-import { IUserProfile } from "@/Types/UserProfile";
-import { useToast } from "@/components/ui/use-toast";
+import { useCount } from "../../../contexts/CountContext";
+// import { toast } from "sonner";
 
-interface CardData {
+export interface CardData {
   id: string;
-  companyId: string;
-  companyname?: string;
   companyLogo: string;
-  position: string;
-  jobDescription: string;
-  location: string;
-  time: string;
+  companyName?: string;
+  peopleAmount: string;
+  jobTitle: string;
   salary: string;
-  availablePositions: number;
-  totalEmployees: number;
-  duration: string;
-  gender: string;
-  jobResponsibilities: string[];
-  startDate: string;
-  endDate: string;
+  Emploment: string;
+  location: string;
+  DeadLine: string;
+  onClick?: (event: any) => void;
 }
 
-interface CardProps {
+export interface CardProps {
   className?: string;
-  data: CardData; // Use the new interface
+  data: CardData;
   iconType?: "star" | "close" | "StarFill";
-  userProfile: IUserProfile;
   onDelete?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Card: React.FC<CardProps> = ({
   className = "",
   data,
   iconType = "star",
-  userProfile,
   onDelete,
 }) => {
   const {
     id,
-    companyId,
     companyLogo,
-    position,
-    jobDescription,
-    location,
-    time,
+    companyName,
+    peopleAmount,
+    jobTitle,
     salary,
-    availablePositions,
-    totalEmployees,
-    duration,
-    gender,
-    jobResponsibilities,
-    startDate,
-    endDate,
+    Emploment,
+    location,
+    DeadLine,
   } = data;
 
   const [isFavorited, setIsFavorited] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  const { toast } = useToast();
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
+  const { increment, descrement } = useCount();
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -80,67 +60,22 @@ const Card: React.FC<CardProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    // Check if cookies are set
-    if (userProfile) {
-      // Toggle the isFavorited state
-      setIsFavorited((prev) => !prev);
+    setIsFavorited((prev) => !prev);
 
-      // Check if Favorite
+    if (iconType === "star") {
       if (isFavorited) {
-        // Decrement Favorites
-        const totalFavorites = localStorage.getItem(
-          "numberOfFavorites"
-        ) as string;
-        const result = parseInt(totalFavorites) - 1;
-
-        // Set New Total Count of Favorite
-        localStorage.setItem("numberOfFavorites", result.toString());
-
-        // Notify Event Storage So That Listener could know total favorite is changing
-        window.dispatchEvent(new Event("storage"));
+        descrement();
       } else {
-        // Increment Favorites
-        const totalFavorites = localStorage.getItem("numberOfFavorites")
-          ? (localStorage.getItem("numberOfFavorites") as string)
-          : "0";
-        const result = parseInt(totalFavorites) + 1;
-
-        // Set New Total Count of Favorite
-        localStorage.setItem("numberOfFavorites", result.toString());
-
-        // Notify Event Storage So That Listener could know total favorite is changing
-        window.dispatchEvent(new Event("storage"));
-        toast({
-          description: isFavorited
-            ? "Removed from favorites successfully."
-            : "Added to favorite successfully.",
-        });
+        increment();
       }
-    } else {
-      // Display a message to the user indicating that they need to enable cookies
-      // alert("Please enable cookies to use this feature.");
-      // You can also use a notification library like 'toast' to display a message to the user
-      // Example: toast.error("Please enable cookies to use this feature.");
-      toast({
-        variant: "destructive",
-        title: "Uh oh! You don't have an account",
-        description: "Please signup or login first",
-      });
     }
   };
 
   return (
-    <motion.div
+    <div
       className={`h-auto rounded-xl shadow-lg p-5 font-Poppins ${className}`}
       onClick={(e) => {
         e.preventDefault();
-      }}
-      whileHover={{ scale: 1.025 }}
-      whileTap={{ scale: 0.975 }}
-      transition={{
-        type: "tween",
-        duration: 0.3,
-        ease: "easeInOut",
       }}
     >
       <Link href={`/detail/${id}`}>
@@ -154,9 +89,9 @@ const Card: React.FC<CardProps> = ({
               height={48}
             />
             <div className="font-Poppins ml-2">
-              <Typography>{position}</Typography>
+              <Typography>{companyName}</Typography>
               <Typography fontSize="sm" className="text-gray-500">
-                {totalEmployees} people
+                {peopleAmount}
               </Typography>
             </div>
           </div>
@@ -180,7 +115,7 @@ const Card: React.FC<CardProps> = ({
         <div className="flex">
           <div>
             <Typography className="mt-5" fontSize="sm">
-              Salary
+              {jobTitle}
             </Typography>
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
@@ -195,7 +130,7 @@ const Card: React.FC<CardProps> = ({
               <Typography className="text-gray-500" fontSize="sm">
                 <div className="flex">
                   <Icon className="mr-2" label="Bag" size="sm" />
-                  {time}
+                  {Emploment}
                 </div>
               </Typography>
             </div>
@@ -216,14 +151,14 @@ const Card: React.FC<CardProps> = ({
             <Typography className="text-gray-500" fontSize="sm">
               <div className="flex">
                 <Icon className="mr-2" label="Calendar" size="sm" />
-                {endDate}
+                {DeadLine}
               </div>
             </Typography>
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };
 
-export { Card, type CardData, type CardProps };
+export { Card };

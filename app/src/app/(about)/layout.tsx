@@ -5,6 +5,7 @@ import { Footer } from "@/components";
 import "../globals.css";
 import { cookies } from "next/headers";
 import axios from "axios";
+import React from "react";
 
 async function getProfileUser() {
   const cookieStore = cookies();

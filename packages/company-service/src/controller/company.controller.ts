@@ -1,4 +1,5 @@
 import {
+  // DeleteCompanyRequest,
   companycreateschema,
   companyupdateschema,
 } from "../database/repository/@types/company.repo.type";
@@ -9,6 +10,7 @@ import {
   Controller,
   Post,
   Get,
+  // Path,
   Route,
   Put,
   SuccessResponse,
@@ -17,14 +19,13 @@ import {
   Request,
 } from "tsoa";
 import { StatusCode } from "../util/consts/status.code";
-import { authorize } from "../middleware/auth_middleware";
+// import {
+//   postcreateschema,
+//   postupdateschema,
+// } from "../database/repository/@types/post.repo.type";
+// import PostService from "../service/post-service";
+import { AuthRequest, authorize } from "../middleware/authMiddleware";
 // import { logger } from "../util/logger";
-
-interface AuthRequest extends Request {
-  employer?: {
-    id: string;
-  };
-}
 
 @Route("v1/companies")
 export class CompanyController extends Controller {
@@ -54,8 +55,7 @@ export class CompanyController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string; data: any }> {
     try {
-      const authReq = req as unknown as AuthRequest;
-      const userId = authReq!.employer!.id;
+      const userId = (req as AuthRequest).employer.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -91,6 +91,7 @@ export class CompanyController extends Controller {
         message: "Can not create that User!",
         detail: error.message,
       };
+      // throw error;
     }
   }
   @Middlewares(authorize(["employer"]))
@@ -102,8 +103,7 @@ export class CompanyController extends Controller {
     @Body() update: companyupdateschema
   ): Promise<{ message: string; data: any }> {
     try {
-      const authReq = req as unknown as AuthRequest;
-      const userId = authReq!.employer!.id;
+      const userId = (req as AuthRequest).employer.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -127,8 +127,7 @@ export class CompanyController extends Controller {
     @Request() req: Express.Request
   ): Promise<{ message: string }> {
     try {
-      const authReq = req as unknown as AuthRequest;
-      const userId = authReq!.employer!.id;
+      const userId = (req as AuthRequest).employer.id;
       console.log("Auth ID:", userId);
       const companyservice = new CompanyService();
       const company = await companyservice.FindByAuthId({ userId });
@@ -146,4 +145,8 @@ export class CompanyController extends Controller {
       };
     }
   }
+
+  // ===================================================
+  // ============= JOBS RESOURCE =======================
+  // ===================================================
 }

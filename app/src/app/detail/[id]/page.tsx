@@ -37,7 +37,7 @@ const Detail = () => {
               <div>
                 {/* intern title */}
                 <Typography className="text-[#4B9960] text-[18px] md:text-[24px]">
-                  {`${CardDetail?.position}`}
+                  {`${CardDetail?.jobTitle}`}
                 </Typography>
                 {/* salary */}
                 <Typography>{`${CardDetail?.salary}`}</Typography>
@@ -156,7 +156,7 @@ const Detail = () => {
                           Deadline
                         </td>
                         <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          {`${CardDetail?.endDate}`}
+                          {`${CardDetail?.DeadLine}`}
                         </td>
                       </tr>
                     </tbody>
@@ -252,7 +252,7 @@ const Detail = () => {
               <Typography
                 fontSize="lg"
                 className="mt-5"
-              >{`${CardDetail?.companyname}`}</Typography>
+              >{`${CardDetail?.companyName}`}</Typography>
             </div>
             <div className="mt-10">
               <Typography className="leading-10 truncate">San Visal</Typography>

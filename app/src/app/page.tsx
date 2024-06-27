@@ -1,5 +1,5 @@
 import React from "react";
-import { Banner, CardReview, Footer, Nav } from "@/components";
+import { Banner, CardReview, Footer, Login, Nav } from "@/components";
 import "./globals.css";
 import CardTip from "@/components/molecules/Card/CardTip";
 import CardList from "@/components/molecules/Card/CardList";
