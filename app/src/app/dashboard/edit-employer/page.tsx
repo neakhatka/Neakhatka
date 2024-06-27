@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Typography, Input, Button } from "@/components";
 
-const EditEmployer = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<
-    string | ArrayBuffer | null
-  >(null);
+interface EditEmployerProps {
+  onClose: () => void; // Define the prop with correct casing
+}
+
+
+const EditEmployer: React.FC<EditEmployerProps> = ({ onClose }) => {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     companyname: "",
     contactemail: "",
@@ -27,18 +29,14 @@ const EditEmployer = () => {
   }, []);
 
   const handleCancel = () => {
-    setIsOpen(false);
+    onClose(); // Call onClose function from props to close the modal
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setSelectedImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+    setSelectedImage(file);
   };
 
   const handleRemoveImage = () => {
@@ -60,17 +58,28 @@ const EditEmployer = () => {
     setIsSubmitting(true);
     setError(null);
     console.log("Form Data:", formData); // Debugging statement
+
     try {
+      const formDataToSubmit = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSubmit.append(key, value);
+      });
+
+      if (selectedImage) {
+        formDataToSubmit.append("image", selectedImage);
+      }
+
       const response = await axios.put(
         "http://localhost:4000/v1/companies/profile",
-        {
-          ...formData,
-          image: selectedImage,
-        },
+        formDataToSubmit,
         {
           withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
+
       console.log("Response:", response.data);
       // Handle success (e.g., display a success message, redirect, etc.)
     } catch (error: any | unknown) {
@@ -96,7 +105,7 @@ const EditEmployer = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="w-full flex justify-center items-center mx-auto">
-        <div className="max-w-[880px] mx-auto rounded-lg shadow-sm">
+        <div className="max-w-[880px] mx-auto rounded-lg">
           <Typography fontSize="xl" className="text-center">
             Edit Company Profile
           </Typography>
@@ -116,7 +125,9 @@ const EditEmployer = () => {
             <div
               className="avatar rounded-full h-32 w-32 my-2 bg-gray-300 font-[700] flex items-center justify-center"
               style={{
-                backgroundImage: `url(${selectedImage})`,
+                backgroundImage: `url(${
+                  selectedImage ? URL.createObjectURL(selectedImage) : ""
+                })`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -268,6 +279,7 @@ const EditEmployer = () => {
               type="submit"
               colorScheme="primary"
               className="w-[175px] text-white"
+              
             >
               {isSubmitting ? "Submitting..." : "Save changes"}
             </Button>

@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Typography, Button } from "@/components";
@@ -18,6 +18,7 @@ interface Post {
 const Post: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [updatedPostData, setUpdatedPostData] = useState<Partial<Post>>({});
   const { toast } = useToast();
 
   useEffect(() => {
@@ -62,13 +63,36 @@ const Post: React.FC = () => {
     }
   };
 
-  const handleEdit = async (postId: string) => {
+  const handleEdit = async (postId: string, updatedData: Partial<Post>) => {
     try {
-      await axios.put(`http://localhost:4000/v1/jobs/${postId}`, {
-        withCredentials: true,
+      const response = await axios.put(
+        `http://localhost:4000/v1/jobs/${postId}`,
+        updatedData,
+        {
+          withCredentials: true,
+        }
+      );
+      const updatedPost = response.data; // Assuming backend returns updated post data
+
+      // Update the posts state with the updated post
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => (post._id === postId ? updatedPost : post))
+      );
+
+      toast({
+        variant: "default",
+        title: "Post Updated",
+        description: "The post has been successfully updated.",
+        className: "bg-green-600 text-white top-0",
       });
     } catch (error) {
-      console.error("Error update post : ", error);
+      console.error("Error updating post:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem updating the post.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     }
   };
 
@@ -114,10 +138,14 @@ const Post: React.FC = () => {
                   <td className="py-4 px-6 text-sm">{post.duration} months</td>
                   <td className="py-4 px-6 text-sm">{post.endDate}</td>
                   <td className="py-4 px-6 flex justify-center items-center space-x-4">
-                    <div className="text-blue-500 cursor-pointer">
-                      <Typography fontSize="sm" onClick={() => setIsOpen(true)}>
-                        Edit
-                      </Typography>
+                    <div
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() => {
+                        setIsOpen(true);
+                        setUpdatedPostData(post); // Ensure `updatedPostData` contains the correct fields for updating
+                      }}
+                    >
+                      <Typography fontSize="sm">Edit</Typography>
                     </div>
                     <div
                       className="text-red-500 cursor-pointer"

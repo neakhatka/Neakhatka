@@ -13,7 +13,7 @@ const config: StorybookConfig = {
         ...config.resolve.alias,
         "@": path.resolve(__dirname, "../src"),
       };
-    }
+    };
     return config;
   },
   addons: [
@@ -33,3 +33,4 @@ const config: StorybookConfig = {
   staticDirs: ["../public"],
 };
 export default config;
+

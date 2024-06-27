@@ -9,9 +9,9 @@ const CardReview = () => {
   return (
     <>
       <div className="flex justify-center items-center mt-12">
-        <Button colorOutline="primary" size="md" rounded="lg">
+        {/* <Button colorOutline="primary" size="md" rounded="lg">
           See more
-        </Button>
+        </Button> */}
       </div>
       <div className="w-full h-auto mt-10 bg-[#efefef] font-Poppins">
         <div className="container h-auto mx-auto">

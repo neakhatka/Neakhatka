@@ -1,32 +1,48 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { Icon, Typography } from "@/components";
 import { Button } from "@nextui-org/react";
 import Image from "next/legacy/image";
 import "../../globals.css";
 import { MyContext } from "@/contexts/CardInfoContext";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 import Modal from "@/components/molecules/Modal/Modal";
 import { useState } from "react";
+import { useParams } from "next/navigation";
+import axios from "axios";
 
 const Detail = () => {
-  const { CardInfo } = useContext(MyContext);
-  const route = useParams();
-  const card = route.jobDetail;
-  const CardDetail = CardInfo.find((data) => data.id == card);
+  const params = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
+  // console.log("id : ", params.id);
+  const [posts, setPosts] = useState([]);
 
-  const toggleFavorite = () => {
-    setIsFavorited((prevState) => !prevState);
-  };
-  const [starred, setStarred] = useState(false);
-  const handleStarClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault(); // To prevent default behavior of link
-    e.stopPropagation(); // To prevent redirect when star icon is clicked
-    setStarred((prev) => !prev);
-  };
+  const id = params.id;
+  console.log("ID : ", id);
+  
+
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/v1/jobs/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        console.log("data : ", response.data);
+        setPosts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching card : ", error);
+      }
+    };
+
+    fetchCard();
+  }, []);
 
   return (
     <>
@@ -37,21 +53,14 @@ const Detail = () => {
               <div>
                 {/* intern title */}
                 <Typography className="text-[#4B9960] text-[18px] md:text-[24px]">
-                  {`${CardDetail?.position}`}
+                  position
                 </Typography>
                 {/* salary */}
-                <Typography>{`${CardDetail?.salary}`}</Typography>
+                <Typography>salary</Typography>
               </div>
-              <div
-                className="flex justify-center items-center"
-                onClick={handleStarClick}
-              >
-                <button onClick={toggleFavorite}>
-                  <Icon
-                    className="mr-5"
-                    size="md"
-                    label={isFavorited ? "StarFill" : "Star"}
-                  />
+              <div className="flex justify-center items-center">
+                <button>
+                  <Icon className="mr-5" size="md" label="Star" />
                 </button>
                 <Button
                   onClick={() => setIsOpen(true)}
@@ -125,7 +134,8 @@ const Detail = () => {
                           Location
                         </td>
                         <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          {`${CardDetail?.location}`}
+                          {/* {`${CardDetail?.location}`} */}
+                          Location
                         </td>
                       </tr>
                     </tbody>
@@ -156,7 +166,7 @@ const Detail = () => {
                           Deadline
                         </td>
                         <td className="w-1/2 border text-gray-500 py-2 px-2">
-                          {`${CardDetail?.endDate}`}
+                          endDate
                         </td>
                       </tr>
                     </tbody>
@@ -249,10 +259,9 @@ const Detail = () => {
                 height={100}
                 className="rounded-full mb-4"
               />
-              <Typography
-                fontSize="lg"
-                className="mt-5"
-              >{`${CardDetail?.companyname}`}</Typography>
+              <Typography fontSize="lg" className="mt-5">
+                company
+              </Typography>
             </div>
             <div className="mt-10">
               <Typography className="leading-10 truncate">San Visal</Typography>

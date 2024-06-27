@@ -60,6 +60,8 @@ const Card: React.FC<CardProps> = ({
     endDate,
   } = data;
 
+  console.log('data : ', data);
+
   const [isFavorited, setIsFavorited] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -143,7 +145,7 @@ const Card: React.FC<CardProps> = ({
         ease: "easeInOut",
       }}
     >
-      <Link href={`/detail/${id}`}>
+      <Link href={`/detail/${data.id}`}>
         <div className="flex justify-between items-center">
           <div className="flex">
             <Image
