@@ -10,6 +10,8 @@ export const publicKey = fs.readFileSync(
   "utf-8"
 );
 
+console.log("############ Server is running on port " + 3000);
+
 // RUN THE SERVER
 async function run() {
   try {
