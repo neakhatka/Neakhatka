@@ -31,7 +31,6 @@ interface JobDetail {
   [key: string]: any; // Optional: For any additional properties
 }
 
-
 const Detail = () => {
   const params = useParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -42,12 +41,15 @@ const Detail = () => {
   useEffect(() => {
     const fetchCard = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/v1/jobs/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `http://localhost:4000/v1/jobs/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
         setPosts(response.data.data);
       } catch (error) {
         console.error("Error fetching card : ", error);
@@ -60,7 +62,7 @@ const Detail = () => {
   return (
     <>
       <div className="w-full md:container mx-auto p-2 lg:p-0">
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-5">
+        <div className="grid grid-cols-1 gap-5 container mx-auto">
           <div className="col-span-7 p-2 lg:py-8 lg:px-14 border rounded-lg">
             <div className="flex justify-between mt-5">
               <div>
@@ -126,10 +128,40 @@ const Detail = () => {
                     <tbody>
                       <tr>
                         <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
+                          Company
+                        </td>
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.companyName} 
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="col-span-2">
+                  <table className="w-full border-collapse border">
+                    <tbody>
+                      <tr>
+                        <td className="w-1/2 border border-l-0 outline-none bg-[#F2F2F2] py-2 px-2">
+                          Workplace
+                        </td>
+                        <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
+                          {post.workplace}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4">
+                <div className="col-span-2">
+                  <table className="w-full border-collapse border border-slate-500">
+                    <tbody>
+                      <tr>
+                        <td className="w-1/2 border bg-[#F2F2F2] py-2 px-2">
                           Duration
                         </td>
                         <td className="w-1/2 border text-gray-500 py-2 px-2 capitalize">
-                          {post.duration}
+                          {post.duration} months
                         </td>
                       </tr>
                     </tbody>
@@ -214,18 +246,15 @@ const Detail = () => {
             <div className="mt-8">
               <Typography fontSize="lg">Job Descriptions</Typography>
               <Typography fontSize="sm" className="text-gray-600 mt-1">
-                {post.jobDescription}
-              </Typography>
-            </div>
-            <div className="mt-8">
-              <Typography fontSize="lg">Job Responsibilities</Typography>
-              <Typography fontSize="sm" className="text-gray-600 mt-1">
                 <ul className="leading-10">
-                  {post.jobResponsibilities ? (
-                    post.jobResponsibilities.map((item, index) => (
-                      <li key={index} className="list-disc ml-4">
-                        {item}
-                      </li>
+                  {post.jobDescription ? (
+                    post.jobDescription.map((item, index) => (
+                      <ul key={index} className="my-4">
+                        <div
+                          className="list-disc ml-4"
+                          dangerouslySetInnerHTML={{ __html: item }}
+                        />
+                      </ul>
                     ))
                   ) : (
                     <li className="list-disc ml-4">
@@ -236,6 +265,27 @@ const Detail = () => {
               </Typography>
             </div>
             <div className="mt-8">
+              <Typography fontSize="lg">Job Responsibilities</Typography>
+              <Typography fontSize="sm" className="text-gray-600 mt-1">
+                <ul className="leading-10">
+                  {post.jobResponsibilities ? (
+                    post.jobResponsibilities.map((item, index) => (
+                      <ul key={index} className="my-4">
+                        <div
+                          className="list-disc ml-4"
+                          dangerouslySetInnerHTML={{ __html: item }}
+                        />
+                      </ul>
+                    ))
+                  ) : (
+                    <li className="list-disc ml-4">
+                      No responsibilities listed
+                    </li>
+                  )}
+                </ul>
+              </Typography>
+            </div>
+            {/* <div className="mt-8">
               <Typography fontSize="lg">Job Requirements</Typography>
               <Typography fontSize="sm" className="text-gray-600 mt-1">
                 <ul className="leading-10">
@@ -250,17 +300,17 @@ const Detail = () => {
                   )}
                 </ul>
               </Typography>
-            </div>
+            </div> */}
           </div>
-          <div className="col-span-7 lg:col-span-3 rounded-lg py-10 px-5 border h-[500px]">
+          {/* <div className="col-span-7 lg:col-span-3 rounded-lg py-10 px-5 border h-[500px]">
             <div className="flex justify-center items-center flex-col">
-              {/* <Image
+              <Image
                 src="/company.svg"
                 alt="company logo"
                 width={100}
                 height={100}
                 className="rounded-full mb-4"
-              /> */}
+              />
               <Typography fontSize="lg" className="mt-5">
                 {post.companyName}
               </Typography>
@@ -270,7 +320,7 @@ const Detail = () => {
                 {post.workplace}
               </Typography>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
