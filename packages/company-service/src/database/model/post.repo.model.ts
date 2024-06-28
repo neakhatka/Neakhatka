@@ -8,6 +8,7 @@ const postingSchema: Schema = new Schema(
       ref: "companymodels",
       required: false,
     },
+    logo:{ type: String, required: false, default:"" },
     companyName: { type: String, required: false },
     workplace: { type: String, required: false },
     position:{type :String , required: false},

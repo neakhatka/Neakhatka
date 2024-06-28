@@ -18,6 +18,7 @@ const models: TsoaRoute.Models = {
     "postcreateschema": {
         "dataType": "refObject",
         "properties": {
+            "logo": {"dataType":"string","required":true},
             "companyName": {"dataType":"string"},
             "workplace": {"dataType":"string"},
             "position": {"dataType":"string"},
@@ -39,6 +40,7 @@ const models: TsoaRoute.Models = {
     "postupdateschema": {
         "dataType": "refObject",
         "properties": {
+            "logo": {"dataType":"string"},
             "companyName": {"dataType":"string"},
             "workplace": {"dataType":"string"},
             "position": {"dataType":"string"},
@@ -349,7 +351,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/v1/companies/profile',
-            upload.fields([{"name":"logo"}]),
+            upload.fields([{"name":"logo","maxCount":1,"multiple":false}]),
             ...(fetchMiddlewares<RequestHandler>(CompanyController)),
             ...(fetchMiddlewares<RequestHandler>(CompanyController.prototype.UpdateCompany)),
 
