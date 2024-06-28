@@ -1,4 +1,5 @@
 export interface postcreateschema {
+  logo: string;
   companyName?: string;
   workplace?: string;
   position?: string;
@@ -16,6 +17,7 @@ export interface postcreateschema {
 }
 
 export interface postupdateschema {
+  logo?: string;
   companyName?: string;
   workplace?: string;
   position?: string;

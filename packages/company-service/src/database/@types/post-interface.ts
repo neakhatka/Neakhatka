@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export interface IpostDocument {
   companyId?: mongoose.Schema.Types.ObjectId;
+  logo?: string;
   companyName?: string;
   workplace?: string;
   position?: string;
